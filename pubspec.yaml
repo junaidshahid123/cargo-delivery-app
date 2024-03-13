@@ -1,0 +1,45 @@
+name: cargo_delivery_app
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.6 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_screenutil: ^5.9.0
+  get: ^4.6.6
+  flutter_otp_text_field: ^1.1.1
+  motion_tab_bar_v2: ^0.3.0
+  intl: ^0.18.1
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  country_code_picker: ^3.0.0
+  pinput: ^4.0.0
+  image_picker: ^1.0.7
+  google_maps_flutter: ^2.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+  # example:
+  fonts:
+    - family: RadioCanada
+      fonts:
+        - asset: fonts/RadioCanada-Regular.ttf
+        - asset: fonts/RadioCanada-Light.ttf
+        - asset: fonts/RadioCanada-Medium.ttf
+        - asset: fonts/RadioCanada-SemiBold.ttf
+        - asset: fonts/RadioCanada-Bold.ttf
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
