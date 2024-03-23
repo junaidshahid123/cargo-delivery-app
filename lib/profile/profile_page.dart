@@ -1,5 +1,11 @@
+import 'package:cargo_delivery_app/alltrips/all_trip_page.dart';
+import 'package:cargo_delivery_app/notification/notifcation_page.dart';
+import 'package:cargo_delivery_app/payment/payment_page.dart';
+import 'package:cargo_delivery_app/profile/update_profile.dart';
+import 'package:cargo_delivery_app/widgets/build_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import '../constant/colors_utils.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -31,7 +37,7 @@ class ProfilePage extends StatelessWidget {
               height: 100.h,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(16.0.h),
               child: Column(
                 children: [
                   CircleAvatar(
@@ -55,6 +61,7 @@ class ProfilePage extends StatelessWidget {
               height: 50.h,
             ),
             ListTile(
+              onTap: () => Get.to(() => UpdateProfile()),
               dense: true,
               leading: Image.asset(
                 'assets/images/profile_icon.png',
@@ -69,6 +76,7 @@ class ProfilePage extends StatelessWidget {
               trailing: const Icon(Icons.keyboard_arrow_right),
             ),
             ListTile(
+              onTap: () => Get.to(() => const AllTripsPage()),
               dense: true,
               leading: Image.asset(
                 'assets/images/driver_way.png',
@@ -83,6 +91,7 @@ class ProfilePage extends StatelessWidget {
               trailing: const Icon(Icons.keyboard_arrow_right),
             ),
             ListTile(
+              onTap: () => Get.to(() => const NotificationPage()),
               dense: true,
               leading: Image.asset(
                 'assets/images/notification.png',
@@ -97,6 +106,7 @@ class ProfilePage extends StatelessWidget {
               trailing: const Icon(Icons.keyboard_arrow_right),
             ),
             ListTile(
+              onTap: () => Get.to(() => const PaymentPage()),
               dense: true,
               leading: Image.asset(
                 'assets/images/payment.png',
@@ -111,6 +121,10 @@ class ProfilePage extends StatelessWidget {
               trailing: const Icon(Icons.keyboard_arrow_right),
             ),
             ListTile(
+              onTap: () => buildDialog(
+                  isDelete: true,
+                  title: 'Delete Account',
+                  subtitle: 'Are You Sure You Want To\n Delete Your Account?'),
               dense: true,
               leading: Image.asset(
                 'assets/images/deletacnt.png',
@@ -127,10 +141,16 @@ class ProfilePage extends StatelessWidget {
             ),
             const Divider(),
             const Spacer(),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [Icon(Icons.logout), Text('Sign Out')],
+            InkWell(
+              onTap: () => buildDialog(
+                  isDelete: false,
+                  title: 'Sign Out',
+                  subtitle: 'Are You Sure You Want To\nSign Out?'),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [Icon(Icons.logout), Text('Sign Out')],
+              ),
             ),
             const Spacer(),
           ],

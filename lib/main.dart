@@ -1,4 +1,4 @@
-import 'package:cargo_delivery_app/notification/notification_setting.dart';
+import 'package:cargo_delivery_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +31,7 @@ class CargoApp extends StatelessWidget {
             ),
             debugShowCheckedModeBanner: false,
             title: 'Cargo App',
-            home: const NotificationSetting(),
+            home: const SplashScreen(),
           );
         });
   }

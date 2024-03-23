@@ -34,9 +34,6 @@ class UpdateProfile extends StatelessWidget {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: 50.h,
-            ),
             Padding(
               padding: EdgeInsets.all(8.0.h),
               child: buildBackButton(context, onTap: Get.back),
@@ -47,53 +44,55 @@ class UpdateProfile extends StatelessWidget {
               child: Image.asset('assets/images/profile.png'),
             ),
             SizedBox(
-              height: 50.h,
+              height: 30.h,
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      controller: _nameController,
-                      hintText: 'Abdullah',
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    CustomTextField(
-                      controller: _addressController,
-                      hintText: 'Address',
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    CustomTextField(
-                      controller: _phoneController,
-                      hintText: 'Phone Number',
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    CustomTextField(
-                      controller: _emailController,
-                      hintText: 'Email',
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    CustomTextField(
-                      controller: _passwordController,
-                      hintText: 'Password',
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    CustomTextField(
-                      controller: _confirmPassController,
-                      hintText: 'Confirm Password',
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        controller: _nameController,
+                        hintText: 'Abdullah',
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      CustomTextField(
+                        controller: _addressController,
+                        hintText: 'Address',
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      CustomTextField(
+                        controller: _phoneController,
+                        hintText: 'Phone Number',
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      CustomTextField(
+                        controller: _emailController,
+                        hintText: 'Email',
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      CustomTextField(
+                        controller: _passwordController,
+                        hintText: 'Password',
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      CustomTextField(
+                        controller: _confirmPassController,
+                        hintText: 'Confirm Password',
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -102,7 +101,7 @@ class UpdateProfile extends StatelessWidget {
               child: CustomButton(buttonText: 'Update', onPress: () {}),
             ),
             SizedBox(
-              height: 30.h,
+              height: 20.h,
             )
           ],
         ),

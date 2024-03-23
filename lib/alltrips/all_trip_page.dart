@@ -1,6 +1,7 @@
 import 'package:cargo_delivery_app/widgets/back_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../constant/colors_utils.dart';
 
@@ -27,12 +28,14 @@ class AllTripsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 50.h,
-            ),
             Padding(
               padding: EdgeInsets.all(8.0.h),
-              child: buildBackButton(context, isAction: true),
+              child: buildBackButton(
+                context,
+                isAction: true,
+                isTitle: false,
+                onTap: () => Get.back(),
+              ),
             ),
             SizedBox(
               height: 30.h,

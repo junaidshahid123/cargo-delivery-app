@@ -2,6 +2,7 @@ import 'package:cargo_delivery_app/auth_screen/forgot_password.dart';
 import 'package:cargo_delivery_app/auth_screen/register_screen.dart';
 import 'package:cargo_delivery_app/constant/colors_utils.dart';
 import 'package:cargo_delivery_app/home/bottom_navbar.dart';
+import 'package:cargo_delivery_app/home/confirm_location_screen.dart';
 import 'package:cargo_delivery_app/widgets/contact_field.dart';
 import 'package:cargo_delivery_app/widgets/custom_button.dart';
 import 'package:cargo_delivery_app/widgets/custom_field.dart';
@@ -113,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomButton(
                     buttonText: "Login",
                     onPress: () {
-                      Get.offAll(() => const BottomBarScreen());
+                      Get.offAll(() => const LocationPage());
                     }),
                 // SizedBox(height: 25.h),
                 // InkWell(

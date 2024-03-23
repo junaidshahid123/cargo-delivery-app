@@ -12,7 +12,7 @@ Widget buildBackButton(BuildContext context,
   return Padding(
     padding: EdgeInsets.only(top: 50.0.h, left: 30.w),
     child: Row(
-      mainAxisAlignment: (isTitle == true && isAction == true)
+      mainAxisAlignment: (isAction == true)
           ? MainAxisAlignment.spaceBetween
           : MainAxisAlignment.start,
       children: [

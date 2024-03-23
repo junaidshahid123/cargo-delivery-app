@@ -62,9 +62,7 @@ class _DriverRequestNotificationScreenState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                          onTap: () {
-                            Scaffold.of(context).openDrawer();
-                          },
+                          onTap: () {},
                           child: const Icon(
                             Icons.menu,
                             color: Colors.white,

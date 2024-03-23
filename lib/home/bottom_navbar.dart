@@ -1,5 +1,7 @@
-import 'package:cargo_delivery_app/home/confirm_location_screen.dart';
+import 'package:cargo_delivery_app/home/chat/chat_page.dart';
+import 'package:cargo_delivery_app/home/delivery_details_screen.dart';
 import 'package:cargo_delivery_app/home/home_screen.dart';
+import 'package:cargo_delivery_app/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,10 +16,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const LocationPage(),
     const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
+    const DeliveryDetailsScreen(),
+    const ChatPage(),
+    const ProfilePage()
   ];
   @override
   Widget build(BuildContext context) {
