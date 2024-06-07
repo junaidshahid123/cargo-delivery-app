@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "googleapis": "^137.1.0"
+  }
+}

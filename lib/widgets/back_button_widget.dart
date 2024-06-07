@@ -1,4 +1,5 @@
 import 'package:cargo_delivery_app/constant/colors_utils.dart';
+import 'package:cargo_delivery_app/widgets/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
@@ -32,7 +33,11 @@ Widget buildBackButton(BuildContext context,
             title ?? '',
             style: TextStyle(color: color ?? textcyanColor, fontSize: 16.sp),
           ),
-        if (isAction == true) const Icon(Icons.search)
+        if (isAction == true)
+          InkWell(
+              onTap: () => showSearch(
+                  context: context, delegate: CustomSearchDelegate()),
+              child: const Icon(Icons.search))
       ],
     ),
   );

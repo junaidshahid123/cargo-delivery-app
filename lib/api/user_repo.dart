@@ -1,13 +1,13 @@
+import 'dart:io';
 import 'package:dio/dio.dart' as dio;
-import 'package:mtag_flutterapp/api/application_url.dart';
-
-import '../constants/auth_utils.dart';
+import '../../api/application_url.dart';
 import 'api_constants.dart';
 import 'api_structure.dart';
 
 //testing comment
 class UserRepo {
   UserRepo();
+
   Future<Map<String, dynamic>> registerUser({
     required String cnic,
     required String fullName,
@@ -26,140 +26,94 @@ class UserRepo {
       },
     );
 
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
+  }
+
+//Confirm Locatiom
+  Future<Map<String, dynamic>> confirmLocation({
+    required String userId,
+    required String address,
+    required String lat,
+    required String lang,
+    required String city,
+  }) async {
+    APISTRUCTURE apiObject = APISTRUCTURE(
+      apiUrl: ApplicationUrl.CONFIRMLOCATION_URL,
+      apiRequestMethod: APIREQUESTMETHOD.POST,
+      isWantSuccessMessage: true,
+      body: {
+        "user_id": userId,
+        "street_address": address,
+        "latitude": lat,
+        "longitude": lang,
+        "city": city,
+      },
+    );
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
 // DashBoard Data
-  Future<Map<String, dynamic>> getdashBoardData({String? appVersion, deviceID}) async {
+  Future<Map<String, dynamic>> getCategories(
+      {String? appVersion, deviceID}) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.DASHBOARD_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      isWantSuccessMessage: true,
-      body: {"AppVer": "2.0.0", "deviceId": "0"},
-    );
-
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getNotifications() async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETNOTIFICATION_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
+      apiUrl: ApplicationUrl.GETALLCATEGORIES_URL,
+      apiRequestMethod: APIREQUESTMETHOD.GET,
       isWantSuccessMessage: true,
     );
 
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
-  Future<Map<String, dynamic>> deleteNotifications({String? notificationId}) async {
+// Get Banners
+  Future<Map<String, dynamic>> getBanners(
+      {String? appVersion, deviceID}) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.DELETENOTIFICATION_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      body: {'notification_id': notificationId ?? ''},
+      apiUrl: ApplicationUrl.GETBANNERS_URL,
+      apiRequestMethod: APIREQUESTMETHOD.GET,
       isWantSuccessMessage: true,
     );
 
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: false, isCheckAuthorization: true);
   }
 
-  Future<Map<String, dynamic>> getSmsStatus({String? newValue, String? mtagID}) async {
+  Future<Map<String, dynamic>> getOffersList() async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETSMSSTATUS_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      isWantSuccessMessage: true,
-      body: {'New_Value': newValue ?? '', 'mtag_id': mtagID ?? ''},
-    );
-
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getDlinkOptions() async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETDLINKOPTIONS_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
+      apiUrl: ApplicationUrl.RIDEREQUESTS_URL,
+      apiRequestMethod: APIREQUESTMETHOD.GET,
       isWantSuccessMessage: true,
     );
 
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
-  Future<Map<String, dynamic>> deleteAccount({String? comments}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-        apiUrl: ApplicationUrl.DELETEACCOUNT_URL,
-        apiRequestMethod: APIREQUESTMETHOD.POST,
-        isWantSuccessMessage: true,
-        body: {"Comments": comments ?? ''});
-
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> delinkVehicle({String? mtagID, String? rDesc, String? rID}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.DELINK_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      isWantSuccessMessage: true,
-      body: {"MTagId": mtagID, "R_Desc": rDesc, "R_Id": rID},
-    );
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getTollHistory({String? endDate, String? startDate, String? mtagID, int? pageNo}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETALLTARNSACTIONS_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      isWantSuccessMessage: true,
-      body: {"End_Date": endDate ?? "", "Start_Date": startDate ?? "", "mTagID": mtagID, "pageNumber": pageNo ?? 1},
-    );
-
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getMotorWays() async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETMOTORWAYS_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      isWantSuccessMessage: true,
-    );
-
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getStations({int? mwid}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-        apiUrl: ApplicationUrl.GETMOTOSTATIONS_URL,
-        apiRequestMethod: APIREQUESTMETHOD.POST,
-        isWantSuccessMessage: true,
-        body: dio.FormData.fromMap({'mwid': mwid ?? 1}));
-
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> calCulateToll({
-    int? id,
-    int? entry,
-    int? exit,
+  Future<Map<String, dynamic>> acceptDriverRequest({
+    required String requestId,
+    required String offerId,
+    required String amount,
+    required String card,
+    String? description,
   }) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-        apiUrl: ApplicationUrl.TOLLCALCULATE_URL,
-        apiRequestMethod: APIREQUESTMETHOD.POST,
-        isWantSuccessMessage: true,
-        body: dio.FormData.fromMap({
-          'type': id,
-          'entry': entry,
-          'exit': exit,
-        }));
-
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> updateUserEmail({String? email, String? fullName, String? password}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.UPDATEMAIL_URL,
+      apiUrl: ApplicationUrl.ACEPTRIDEREQUESTS_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
+      body: dio.FormData.fromMap({
+        "request_id": requestId,
+        "offer_id": offerId,
+        "amount": amount,
+        "card": 4111111111111111,
+        "description": "From makkah to madinah",
+        "payment_method": 2,
+      }),
       isWantSuccessMessage: true,
-      body: {"Email": email ?? '', "Fullname": fullName ?? '', "Password": password ?? ''},
     );
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
+
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
   Future<Map<String, dynamic>> addFeedBack({
@@ -175,7 +129,7 @@ class UserRepo {
     String? dataofIssue,
   }) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.FEEDBACKURL,
+      apiUrl: '',
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
       body: dio.FormData.fromMap({
@@ -186,64 +140,89 @@ class UserRepo {
         'vehicleCategory': '',
         'complaintCategory': '',
         'vehicleNumber': '',
-        'dateOfIssue': AuthenticationUtil.formatedDateToDD(DateTime.now()),
-        'submissionDate': AuthenticationUtil.formatedDateToDD(DateTime.now()),
         'remarks': remarks,
       }),
     );
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
+  }
+
+  Future<Map<String, dynamic>> createRideRequest({
+    required List<File> image,
+    required String? category_id,
+    required String? parcel_city,
+    required String? parcelLat,
+    required String? parcelLong,
+    required String? parcellAddress,
+    required String? receiveLat,
+    required String? receiverLong,
+    required String? receiverAddress,
+    required String? receiverMob,
+    required String? delivery_date,
+  }) async {
+    List<dio.MultipartFile> imageFiles = [];
+
+    for (File file in image) {
+      String fileName = file.path.split('/').last;
+      imageFiles
+          .add(await dio.MultipartFile.fromFile(file.path, filename: fileName));
+    }
+
+    APISTRUCTURE apiObject = APISTRUCTURE(
+      apiUrl: ApplicationUrl.CREATERIDEREQUEST_URL,
+      apiRequestMethod: APIREQUESTMETHOD.POST,
+      isWantSuccessMessage: true,
+      body: dio.FormData.fromMap({
+        "parcel_lat": parcelLat,
+        "parcel_long": parcelLong,
+        "parcel_address": parcellAddress,
+        "receiver_lat": receiveLat,
+        "receiver_long": receiverLong,
+        "receiver_address": receiverAddress,
+        "receiver_mobile": receiverMob,
+        "category_id": category_id,
+        "delivery_date": delivery_date,
+        "parcel_city": parcel_city,
+        "images[]": imageFiles,
+      }),
+    );
+
+    print(
+        'Images in createRideRequest: ${imageFiles.map((e) => e.filename).toList()}');
+
+    return await apiObject.requestAPI(
+      isShowLoading: true,
+      isCheckAuthorization: true,
+    );
   }
 
   Future<Map<String, dynamic>> getUserDetails() async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.CUSTOMERDETAILS_URL,
+      apiUrl: ApplicationUrl.GENERATEOTP_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
     );
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: false, isCheckAuthorization: true);
   }
 
-  Future<Map<String, dynamic>> getActivities() async {
+  Future<Map<String, dynamic>> getRideRequests() async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GEACTIVITIES_URL,
+      apiUrl: ApplicationUrl.GENERATEOTP_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
     );
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: false, isCheckAuthorization: true);
   }
 
-  Future<Map<String, dynamic>> getRechargeDetails({required String? cr, required String? uID, String? itoken}) async {
+  Future<Map<String, dynamic>> getAllUsersTrips() async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETREACHARGE_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      body: {"CR": cr, "U_ID": uID, "ITOKEN_NO": itoken ?? ''},
+      apiUrl: ApplicationUrl.GETALLUSERTRIPS_URL,
+      apiRequestMethod: APIREQUESTMETHOD.GET,
       isWantSuccessMessage: true,
     );
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getTransacDetails({required String? cr, required String? uID, String? itoken}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETRNSDETAILS_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      body: {"CR": cr, "U_ID": uID, "ITOKEN_NO": itoken},
-      isWantSuccessMessage: true,
-    );
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
-  }
-
-  Future<Map<String, dynamic>> getOwnerRechargeDetails(
-      {required String? mtagId, required String? payId, String? amount}) async {
-    APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: ApplicationUrl.GETOWNERCHARGES_URL,
-      apiRequestMethod: APIREQUESTMETHOD.POST,
-      body: {
-        "Mtag_Id": mtagId,
-        "Pay_Id": payId,
-        "Amount": amount,
-      },
-      isWantSuccessMessage: true,
-    );
-    return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 }

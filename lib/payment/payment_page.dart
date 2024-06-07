@@ -30,7 +30,7 @@ class PaymentPage extends StatelessWidget {
           children: [
             buildBackButton(
               context,
-              title: 'Payments',
+              title: 'Payments'.tr,
               isTitle: true,
               color: Colors.white,
               onTap: () => Get.back(),
@@ -54,41 +54,41 @@ class PaymentPage extends StatelessWidget {
                             SliverList(
                               delegate: SliverChildListDelegate(
                                 [
-                                  const Text('Contact Information'),
-                                  const ListTile(
+                                   Text('Contact Information'.tr),
+                                   ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     leading: Icon(Icons.email_outlined),
                                     title: Text('sampleemail@gmail.com'),
-                                    subtitle: Text('Email'),
+                                    subtitle: Text('Email'.tr),
                                     trailing: Icon(Icons.edit),
                                   ),
-                                  const ListTile(
+                                   ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     leading: Icon(Icons.phone_outlined),
                                     title: Text('+96-123-456-789'),
-                                    subtitle: Text('Email'),
+                                    subtitle: Text('Email'.tr),
                                     trailing: Icon(Icons.edit),
                                   ),
-                                  const Text('Address'),
+                                   Text('Address'.tr),
                                   ExpansionTile(
                                     childrenPadding: EdgeInsets.zero,
-                                    title: const Text(
-                                        'Airport Road,  Al-Ryadh   '),
+                                    title:  Text(
+                                        'Airport Road,Al-Ryadh'.tr),
                                     children: [
                                       Image.asset('assets/images/map.png')
                                     ],
                                   ),
-                                  const Text('Payment Method'),
-                                  const ExpansionTile(
+                                   Text('Payment Method'.tr),
+                                   ExpansionTile(
                                     leading: Icon(Icons.paypal_outlined),
-                                    title: Text('Debit Card'),
+                                    title: Text('Debit Card'.tr),
                                     subtitle: Text('***** 0696 4629'),
                                   ),
-                                  const Text('Pay by receiver method'),
+                                   Text('Pay by receiver method'.tr),
                                   CustomTextField(
                                     fillColor: Colors.grey.shade100,
                                     controller: TextEditingController(),
-                                    hintText: 'enter details',
+                                    hintText: 'enter details'.tr,
                                   )
                                 ],
                               ),
@@ -103,7 +103,7 @@ class PaymentPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.all(16.0.h),
-              child: CustomButton(buttonText: 'Save Now', onPress: () {}),
+              child: CustomButton(buttonText: 'Save Now'.tr, onPress: () {}),
             ),
             SizedBox(
               height: 30.h,

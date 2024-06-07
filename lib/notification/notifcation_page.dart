@@ -35,7 +35,7 @@ class NotificationPage extends StatelessWidget {
               padding: EdgeInsets.all(8.0.h),
               child: buildBackButton(
                 context,
-                title: 'Notifications',
+                title: 'Notifications'.tr,
                 isTitle: true,
                 onTap: () => Get.back(),
               ),
@@ -46,7 +46,7 @@ class NotificationPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Recent',
+                'Recent'.tr,
                 style: TextStyle(fontSize: 16.sp, color: textcyanColor),
               ),
             ),
@@ -67,23 +67,23 @@ class NotificationPage extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              const Align(
+                               Align(
                                   alignment: Alignment.topRight,
-                                  child: Text('7 min ago')),
-                              const Text(
+                                  child: Text('7 min ago'.tr)),
+                               Text(
                                   textAlign: TextAlign.justify,
                                   maxLines: 2,
-                                  'Now you can send anything anywhere in a very low cost'),
+                                  'Now you can send anything anywhere in a very low cost'.tr),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('SAR 74.67'),
+                                   Text('SAR 74.67'.tr),
                                   SizedBox(
                                     width: 20.h,
                                   ),
-                                  const Text(
-                                    'SAR 56.56',
+                                   Text(
+                                    'SAR 74.67'.tr,
                                     textWidthBasis: TextWidthBasis.parent,
                                     style: TextStyle(
                                         decoration: TextDecoration.lineThrough),

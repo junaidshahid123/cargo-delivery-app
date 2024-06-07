@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "865707638760",
+    "project_id": "cargo-delivery-app-4fbb8",
+    "storage_bucket": "cargo-delivery-app-4fbb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865707638760:android:21e70955ef9bf1bf006e5d",
+        "android_client_info": {
+          "package_name": "com.tarud.cargo_delivery_user_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865707638760-s0aqpc046e91dpjeue2j1qq5f7aleu90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tarud.cargo_delivery_user_app",
+            "certificate_hash": "b8e68656beb6a6c4df29d333016a3c7c5841d9e2"
+          }
+        },
+        {
+          "client_id": "865707638760-5fqg2s7hdcd3kc3dken4vt486cph5b1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4St7XwuVp3dwp9lomlR0taGdSLY2X0NM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865707638760-5fqg2s7hdcd3kc3dken4vt486cph5b1l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

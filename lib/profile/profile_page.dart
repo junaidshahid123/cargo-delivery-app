@@ -1,4 +1,6 @@
 import 'package:cargo_delivery_app/alltrips/all_trip_page.dart';
+import 'package:cargo_delivery_app/api/auth_controller.dart';
+import 'package:cargo_delivery_app/home/riderrequest/rider_request_page.dart';
 import 'package:cargo_delivery_app/notification/notifcation_page.dart';
 import 'package:cargo_delivery_app/payment/payment_page.dart';
 import 'package:cargo_delivery_app/profile/update_profile.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../constant/colors_utils.dart';
+import '../home/controller/home_controller.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -51,14 +54,15 @@ class ProfilePage extends StatelessWidget {
                     height: 30.h,
                   ),
                   Text(
-                    'Abdullah',
+                    Get.find<AuthController>().getLoginUserData()?.user?.name ??
+                        '',
                     style: TextStyle(fontSize: 20.sp),
                   ),
                 ],
               ),
             ),
             SizedBox(
-              height: 50.h,
+              height: 20.h,
             ),
             ListTile(
               onTap: () => Get.to(() => UpdateProfile()),
@@ -70,7 +74,23 @@ class ProfilePage extends StatelessWidget {
                 width: 20.h,
               ),
               title: Text(
-                'Profile',
+                'Profile'.tr,
+                style: TextStyle(fontSize: 16.sp),
+              ),
+              trailing: const Icon(Icons.keyboard_arrow_right),
+            ),
+            ListTile(
+              onTap: () =>
+                  Get.to(() => const DriverRequestNotificationScreen()),
+              dense: true,
+              leading: Image.asset(
+                'assets/images/driver_way.png',
+                color: Colors.black,
+                height: 20.h,
+                width: 20.h,
+              ),
+              title: Text(
+                'Near by drivers'.tr,
                 style: TextStyle(fontSize: 16.sp),
               ),
               trailing: const Icon(Icons.keyboard_arrow_right),
@@ -85,7 +105,7 @@ class ProfilePage extends StatelessWidget {
                 width: 20.h,
               ),
               title: Text(
-                'Trips',
+                'Trips'.tr,
                 style: TextStyle(fontSize: 16.sp),
               ),
               trailing: const Icon(Icons.keyboard_arrow_right),
@@ -100,7 +120,7 @@ class ProfilePage extends StatelessWidget {
                 width: 20.h,
               ),
               title: Text(
-                'Notifications',
+                'Notifications'.tr,
                 style: TextStyle(fontSize: 16.sp),
               ),
               trailing: const Icon(Icons.keyboard_arrow_right),
@@ -115,16 +135,21 @@ class ProfilePage extends StatelessWidget {
                 width: 20.h,
               ),
               title: Text(
-                'Payment',
+                'Payment'.tr,
                 style: TextStyle(fontSize: 16.sp),
               ),
               trailing: const Icon(Icons.keyboard_arrow_right),
             ),
             ListTile(
               onTap: () => buildDialog(
+                  onTapOk: () {
+                    Get.back();
+                    Get.find<AuthController>().deleteAccount();
+                  },
                   isDelete: true,
-                  title: 'Delete Account',
-                  subtitle: 'Are You Sure You Want To\n Delete Your Account?'),
+                  title: 'Delete Account'.tr,
+                  subtitle:
+                      'Are You Sure You Want To\n Delete Your Account?'.tr),
               dense: true,
               leading: Image.asset(
                 'assets/images/deletacnt.png',
@@ -132,7 +157,7 @@ class ProfilePage extends StatelessWidget {
                 width: 20.h,
               ),
               title: Text(
-                'Delete Account',
+                'Delete Account'.tr,
                 style: TextStyle(fontSize: 16.sp),
               ),
             ),
@@ -143,13 +168,21 @@ class ProfilePage extends StatelessWidget {
             const Spacer(),
             InkWell(
               onTap: () => buildDialog(
+                  onTap: () async {
+                    Get.back();
+                  },
+                  onTapOk: () async {
+                    Get.back();
+                    await Get.find<AuthController>().logout();
+                    Get.delete<HomeController>();
+                  },
                   isDelete: false,
-                  title: 'Sign Out',
-                  subtitle: 'Are You Sure You Want To\nSign Out?'),
-              child: const Row(
+                  title: 'Sign Out'.tr,
+                  subtitle: 'Are You Sure You Want To\nSign Out?'.tr),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Icon(Icons.logout), Text('Sign Out')],
+                children: [Icon(Icons.logout), Text('Sign Out'.tr)],
               ),
             ),
             const Spacer(),

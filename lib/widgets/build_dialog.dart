@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-buildDialog({bool? isDelete, String? title, String? subtitle}) {
+buildDialog({
+  bool? isDelete,
+  String? title,
+  String? subtitle,
+  void Function()? onTapOk,
+  void Function()? onTap,
+}) {
   return showDialog(
       context: Get.context!,
       builder: (_) => AlertDialog(
@@ -28,16 +34,16 @@ buildDialog({bool? isDelete, String? title, String? subtitle}) {
                     borderRadius: 8,
                     height: 30,
                     width: 40,
-                    buttonText: 'NO',
-                    onPress: Get.back,
+                    buttonText: 'NO'.tr,
+                    onPress: onTap ?? () {},
                   ),
                   CustomButton(
                     buttonColor: isDelete == true ? Colors.red : textBrownColor,
                     borderRadius: 8,
                     height: 30,
                     width: 40,
-                    buttonText: 'YES',
-                    onPress: Get.back,
+                    buttonText: 'YES'.tr,
+                    onPress: onTapOk ?? () {},
                   )
                 ],
               ),

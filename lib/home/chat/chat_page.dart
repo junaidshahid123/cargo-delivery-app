@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../widgets/search_widget.dart';
+
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
@@ -38,8 +40,8 @@ class ChatPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  const Text(
-                    'Driver',
+                   Text(
+                    'Driver'.tr,
                     style: TextStyle(color: Colors.white),
                   ),
                   InkWell(
@@ -128,102 +130,18 @@ Widget buildChatBubble(bool isMe) {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: const Color(0xffFFF2D8)),
-              child: const Text('How May i help you?'),
+              child:  Text('How May i help you?'.tr),
             )
           : Container(
               padding: EdgeInsets.all(10.h),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: textcyanColor),
-              child: const Text(
-                'How May i help you?',
+              child:  Text(
+                'How May i help you?'.tr,
                 style: TextStyle(color: Colors.white),
               ),
             )
     ],
   );
-}
-
-class CustomSearchDelegate extends SearchDelegate<String> {
-  // Dummy list
-  final List<String> searchList = [
-    "Apple",
-    "Banana",
-    "Cherry",
-    "Date",
-    "Fig",
-    "Grapes",
-    "Kiwi",
-    "Lemon",
-    "Mango",
-    "Orange",
-    "Papaya",
-    "Raspberry",
-    "Strawberry",
-    "Tomato",
-    "Watermelon",
-  ];
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-          // When pressed here the query will be cleared from the search bar.
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () => Navigator.of(context).pop(),
-      // Exit from the search screen.
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    final List<String> searchResults = searchList
-        .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-    return ListView.builder(
-      itemCount: searchResults.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(searchResults[index]),
-          onTap: () {
-            // Handle the selected search result.
-            close(context, searchResults[index]);
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final List<String> suggestionList = query.isEmpty
-        ? []
-        : searchList
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-
-    return ListView.builder(
-      itemCount: suggestionList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(suggestionList[index]),
-          onTap: () {
-            query = suggestionList[index];
-            // Show the search results based on the selected suggestion.
-          },
-        );
-      },
-    );
-  }
 }

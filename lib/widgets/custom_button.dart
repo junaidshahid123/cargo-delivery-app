@@ -29,7 +29,7 @@ class CustomButton extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         width: width ?? MediaQuery.of(context).size.width,
-        height: height ?? 55.h,
+        height: height ?? 45.h,
         padding: const EdgeInsets.only(left: 5, right: 5),
         decoration: BoxDecoration(
             color: buttonColor ?? textBrownColor,

@@ -2,12 +2,14 @@
 
 import 'dart:convert';
 
+import 'package:cargo_delivery_app/main.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as apiClient;
 import '../../api/api_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pages/login/user_model.dart';
+import '../model/user_model.dart';
+
 import 'api_structure.dart';
 import 'application_url.dart';
 import 'auth_controller.dart';
@@ -19,7 +21,7 @@ class AuthRepo {
   String? getAuthToken() {
     try {
       UserModel? userInfo = getLoginUserData();
-      return userInfo?.data?.accessToken;
+      return userInfo?.token;
     } catch (e) {
       throw Exception(e);
     }
@@ -49,7 +51,8 @@ class AuthRepo {
     }
   }
 
-  Future<Map<String, dynamic>> updateFcmToken({required String fcmToken}) async {
+  Future<Map<String, dynamic>> updateFcmToken(
+      {required String fcmToken}) async {
     try {
       APISTRUCTURE apiObject = APISTRUCTURE(
         apiUrl: 'updateFcmtokenurlhere',
@@ -59,7 +62,8 @@ class AuthRepo {
           "fcm_token": fcmToken,
         }),
       );
-      return await apiObject.requestAPI(isShowLoading: false, isCheckAuthorization: true);
+      return await apiObject.requestAPI(
+          isShowLoading: false, isCheckAuthorization: true);
     } catch (e) {
       throw Exception(e);
     }
@@ -70,70 +74,89 @@ class AuthRepo {
       String? userData = sharedPreferences.getString(
         'Login',
       );
-      return userData != null ? UserModel.fromJson(json.decode(userData)) : null;
+      return userData != null
+          ? UserModel.fromJson(json.decode(userData))
+          : null;
     } catch (e) {
       throw Exception(e);
     }
   }
 
   Future<Map<String, dynamic>> login({
-    required String cnic,
+    required String password,
     required String mobileNumber,
-    String? fcmToken,
-    String? metaData,
+    String? userType,
+    String? fcmToken
   }) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
       apiUrl: ApplicationUrl.LOGIN_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
-      body: {
-        "CnicNumber": cnic,
-        "MobileNum": mobileNumber,
-        "meta_data": metaData ?? 'Android__14__Google sdk_gphone64_x86_64__9a0112a0ad6ea61d__fcmToken__2.0.0',
-        "fcmToken": getFcmToken()
-      },
+      body: apiClient.FormData.fromMap({
+        "password": password,
+        "mobile": mobileNumber,
+        "user_type": userType,
+        "device_id": 'this is device id',
+        "device_token": fcmToken,
+      }),
     );
 
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: false);
+
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: false);
+  }
+
+  Future<Map<String, dynamic>> deleteAccount() async {
+    APISTRUCTURE apiObject = APISTRUCTURE(
+      apiUrl: ApplicationUrl.DELETEUSER_URL,
+      apiRequestMethod: APIREQUESTMETHOD.GET,
+      isWantSuccessMessage: true,
+    );
+
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: false);
   }
 
 // Register
-  Future<Map<String, dynamic>> registerUser({
-    required String fullName,
-    required String cnic,
-    required String mobileNumber,
-    String? fcmToken,
-  }) async {
+  Future<Map<String, dynamic>> registerUser(
+      {required String fullName,
+      required String email,
+      required String mobileNumber,
+      required String password,
+      required String confirmPass}) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
       apiUrl: ApplicationUrl.REGISTER_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
       body: apiClient.FormData.fromMap({
-        "fullName": fullName,
-        "cnicNumber": cnic,
-        "mobileNumber": mobileNumber,
-        // 'fcm_token': getFcmToken(),
+        "name": fullName,
+        "email": email,
+        'password': password,
+        "password_confirmation": confirmPass,
+        "mobile": mobileNumber,
+        "user_type": '1',
+        "image": '',
+        "name_ar": '',
+        "address": ''
       }),
     );
 
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: false);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: false);
   }
 
 // OTP Generating Api
-  Future<Map<String, dynamic>> genearateOtp({String? smsText, String? cnic, int? islogin}) async {
+  Future<Map<String, dynamic>> genearateOtp(
+      {String? smsText, String? cnic, int? islogin}) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
       apiUrl: ApplicationUrl.GENERATEOTP_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
-      body: {
-        "sms_text":
-            "Your authentication code for M-TAG One Network app is VERIFICATION_CODE_HERE. Never share it with anyone, ever.",
-        "CnicNumber": cnic,
-        "is_login": islogin
-      },
+      body: {},
     );
 
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: false);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: false);
   }
 
   //Verify Otp
@@ -142,24 +165,44 @@ class AuthRepo {
         apiUrl: ApplicationUrl.VERIFYOTP_URL,
         apiRequestMethod: APIREQUESTMETHOD.POST,
         isWantSuccessMessage: true,
-        body: {"Code": code, "is_login": islogin, "meta_data": "", "fcmToken": getAuthToken()});
+        body: {});
 
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
   Future<Map<String, dynamic>> logout() async {
     APISTRUCTURE apiObject = APISTRUCTURE(
       apiUrl: ApplicationUrl.LOGOUT_URL,
+      apiRequestMethod: APIREQUESTMETHOD.GET,
+      isWantSuccessMessage: true,
+    );
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: false);
+  }
+
+// Reset Password
+  Future<Map<String, dynamic>> resetPassword(
+      {required String password, required String confirmPassword}) async {
+    APISTRUCTURE apiObject = APISTRUCTURE(
+      apiUrl: ApplicationUrl.RESETPASS_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
       body: apiClient.FormData.fromMap({
-        "token_value": Get.find<AuthController>().authRepo.getAuthToken(),
+        "mobile": Get.find<AuthController>()
+            .authRepo
+            .getLoginUserData()
+            ?.user
+            ?.mobile,
+        "password": password,
+        "password_confirmation": confirmPassword,
       }),
     );
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: false);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: false);
   }
-  //Uppdate Info
 
+  //Uppdate Info
   Future<Map<String, dynamic>> updateUserInfo({
     required String name,
     required String email,
@@ -179,7 +222,8 @@ class AuthRepo {
         "registration_no": registerationNo,
       },
     );
-    return await apiObject.requestAPI(isShowLoading: true, isCheckAuthorization: true);
+    return await apiObject.requestAPI(
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
   bool isLoggedIn() {
@@ -192,7 +236,8 @@ class AuthRepo {
     return true;
   }
 
-  Future<void> saveUserNumberAndPassword(String number, String password, String countryCode) async {
+  Future<void> saveUserNumberAndPassword(
+      String number, String password, String countryCode) async {
     try {
       await sharedPreferences.setString('AppConstants.USER_PASSWORD', password);
     } catch (e) {

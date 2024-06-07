@@ -1,3 +1,4 @@
+import 'package:cargo_delivery_app/api/auth_controller.dart';
 import 'package:cargo_delivery_app/widgets/back_button_widget.dart';
 import 'package:cargo_delivery_app/widgets/custom_button.dart';
 import 'package:cargo_delivery_app/widgets/custom_field.dart';
@@ -14,6 +15,7 @@ class UpdateProfile extends StatelessWidget {
       _phoneController = TextEditingController(),
       _passwordController = TextEditingController(),
       _confirmPassController = TextEditingController();
+  final _controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,28 +55,40 @@ class UpdateProfile extends StatelessWidget {
                   child: Column(
                     children: [
                       CustomTextField(
-                        controller: _nameController,
+                        controller: _nameController
+                          ..text =
+                              _controller.getLoginUserData()?.user?.name ?? '',
                         hintText: 'Abdullah',
                       ),
                       SizedBox(
                         height: 10.h,
                       ),
                       CustomTextField(
-                        controller: _addressController,
+                        controller: _addressController
+                          ..text = _controller
+                                  .getLoginUserData()
+                                  ?.user
+                                  ?.streetAddress ??
+                              '',
                         hintText: 'Address',
                       ),
                       SizedBox(
                         height: 10.h,
                       ),
                       CustomTextField(
-                        controller: _phoneController,
+                        controller: _phoneController
+                          ..text =
+                              _controller.getLoginUserData()?.user?.mobile ??
+                                  '',
                         hintText: 'Phone Number',
                       ),
                       SizedBox(
                         height: 10.h,
                       ),
                       CustomTextField(
-                        controller: _emailController,
+                        controller: _emailController
+                          ..text =
+                              _controller.getLoginUserData()?.user?.email ?? '',
                         hintText: 'Email',
                       ),
                       SizedBox(
@@ -82,14 +96,14 @@ class UpdateProfile extends StatelessWidget {
                       ),
                       CustomTextField(
                         controller: _passwordController,
-                        hintText: 'Password',
+                        hintText: 'Password'.tr,
                       ),
                       SizedBox(
                         height: 10.h,
                       ),
                       CustomTextField(
                         controller: _confirmPassController,
-                        hintText: 'Confirm Password',
+                        hintText: 'Confirm Password'.tr,
                       ),
                     ],
                   ),
@@ -98,7 +112,7 @@ class UpdateProfile extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.all(16.0.h),
-              child: CustomButton(buttonText: 'Update', onPress: () {}),
+              child: CustomButton(buttonText: 'Update'.tr, onPress: () {}),
             ),
             SizedBox(
               height: 20.h,
