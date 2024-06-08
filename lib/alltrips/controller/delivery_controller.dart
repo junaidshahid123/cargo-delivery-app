@@ -16,6 +16,7 @@ class DeliveryController extends GetxController {
   }
 
   RxString selectedVehicleId = '0'.obs;
+  RxString selectedVehicleName='-1'.obs;
   MDGetVehicleCategories? mdGetVehicleCategories;
   RxBool showDropDown = false.obs;
   DateTime? _selectedDate;
@@ -23,6 +24,7 @@ class DeliveryController extends GetxController {
 
   tapOnVehicle(int index) {
     selectedVehicleId.value = mdGetVehicleCategories!.categories![index].id!;
+    selectedVehicleName.value=mdGetVehicleCategories!.categories![index].name!;
     showDropDown.value = !showDropDown.value;
 
     update();

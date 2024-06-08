@@ -6,6 +6,7 @@ import 'package:cargo_delivery_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import '../alltrips/controller/delivery_controller.dart';
 import '../widgets/auto_place_textfield.dart';
@@ -39,6 +40,18 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
   final _parcelLan = Rx<String>('0.0');
 
   final _receiverLan = Rx<String>('0.0');
+
+  final parcelCity = Rx<String>('0.0');
+  final receiverCity = Rx<String>('0.0');
+
+  String? _extractCity(Prediction prediction) {
+    String? formattedAddress = prediction.description;
+    List<String> addressComponents = formattedAddress!.split(',');
+    if (addressComponents.length >= 2) {
+      return addressComponents[addressComponents.length - 2].trim();
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,14 +156,19 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         ),
                         SizedBox(height: 30.h),
                         AutoCompleteField(
-                          hintText: 'Parcel Location'.tr,
+                          hintText: 'Parcel Location',
                           controller: _parcelLoc,
                           getPlaceDetailWithLatLng: (p0) {
-                            _parcelLat.value = p0.lat ?? '0.0';
-                            _parcelLan.value = p0.lng ?? '0.0';
+                            if (p0 != null) {
+                              _parcelLat.value = p0.lat ?? '0.0';
+                              _parcelLan.value = p0.lng ?? '0.0';
+                            }
                           },
                           itemClick: (p0) {
-                            return _parcelLoc.text = p0.description ?? '';
+                            _parcelLoc.text = p0.description ?? '';
+                            String? city = _extractCity(p0);
+                            print('_parcelLoc city: $city');
+                            parcelCity.value = city!;
                           },
                         ),
                         SizedBox(height: 20.h),
@@ -162,7 +180,10 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                             _receiverLan.value = p0.lng ?? '0.0';
                           },
                           itemClick: (p0) {
-                            return _receiverLoc.text = p0.description ?? '';
+                            _receiverLoc.text = p0.description ?? '';
+                            String? city = _extractCity(p0);
+                            print('_receiverLoc city: $city');
+                            receiverCity.value = city!;
                           },
                         ),
                         SizedBox(height: 40.h),
@@ -197,7 +218,13 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            'Select Vehicle Category'.tr,
+                                            deliveryController
+                                                        .selectedVehicleName
+                                                        .value !=
+                                                    '-1'
+                                                ? deliveryController
+                                                    .selectedVehicleName!.value
+                                                : 'Select Vehicle Category'.tr,
                                             style: TextStyle(
                                                 color: Color(0xffBCA37F)),
                                           ),
@@ -337,9 +364,16 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         CustomButton(
                             buttonText: "Submit".tr,
                             onPress: () {
+                              print('parcelCity.value===${parcelCity.value}');
+                              print('_parcelLat.value===${_parcelLat.value}');
+                              print('_parcelLan.value===${_parcelLan.value}');
+                              print(
+                                  '_receiverLat.value===${_receiverLat.value}');
+                              print(
+                                  '_receiverLan.value===${_receiverLan.value}');
                               Get.find<RequestRideController>()
                                   .createRideRequest(
-                                      parcel_city: "lahore",
+                                      parcel_city: parcelCity.value,
                                       image: pickedImage
                                           .map((xFile) => File(xFile.path))
                                           .toList(),

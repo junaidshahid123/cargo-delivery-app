@@ -47,31 +47,50 @@ class AutoCompleteField extends StatefulWidget {
 }
 
 class _AutoCompleteFieldState extends State<AutoCompleteField> {
+
+
+  // String? _extractCity(Prediction prediction) {
+  //   // Example: "1600 Amphitheatre Parkway, Mountain View, CA, USA"
+  //   String? formattedAddress = prediction.description;
+  //
+  //   // Split the formatted address by commas
+  //   List<String> addressComponents = formattedAddress!.split(',');
+  //
+  //   // The city is typically the second to last component
+  //   if (addressComponents.length >= 2) {
+  //     return addressComponents[addressComponents.length - 2].trim();
+  //   }
+  //
+  //   return null;
+  // }
   @override
   Widget build(BuildContext context) {
     return GooglePlaceAutoCompleteTextField(
+
       getPlaceDetailWithLatLng: widget.getPlaceDetailWithLatLng,
+      // itemClick: widget.itemClick,
       itemClick: widget.itemClick,
+
       googleAPIKey: 'AIzaSyDdwlGhZKKQqYyw9f9iME40MzMgC9RL4ko',
       textEditingController: widget.controller,
       inputDecoration: InputDecoration(
         focusColor: Colors.white,
         suffixIcon: widget.obscureText != null
             ? GestureDetector(
-                onTap: () {
-                  setState(() {
-                    widget.obscureText = !widget.obscureText!;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Icon(
-                    widget.obscureText!
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                    color: textBrownColor,
-                  ),
-                ))
+            onTap: () {
+              setState(() {
+                widget.obscureText = !widget.obscureText!;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Icon(
+                widget.obscureText!
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                color: textBrownColor,
+              ),
+            ))
             : const SizedBox(),
         fillColor: widget.fillColor ?? Colors.white,
         filled: true,
