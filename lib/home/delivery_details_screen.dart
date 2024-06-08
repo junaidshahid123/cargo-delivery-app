@@ -5,6 +5,7 @@ import 'package:cargo_delivery_app/widgets/contact_field.dart';
 import 'package:cargo_delivery_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,14 +45,23 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
   final parcelCity = Rx<String>('0.0');
   final receiverCity = Rx<String>('0.0');
 
-  String? _extractCity(Prediction prediction) {
+
+  Future<String?> _extractCity(Prediction prediction) async {
     String? formattedAddress = prediction.description;
-    List<String> addressComponents = formattedAddress!.split(',');
-    if (addressComponents.length >= 2) {
-      return addressComponents[addressComponents.length - 2].trim();
+    if (formattedAddress == null) return null;
+
+    List<Location> locations = await locationFromAddress(formattedAddress);
+    if (locations.isNotEmpty) {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          locations.first.latitude, locations.first.longitude);
+      if (placemarks.isNotEmpty) {
+        return placemarks.first.locality;
+      }
     }
+
     return null;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -164,9 +174,9 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                               _parcelLan.value = p0.lng ?? '0.0';
                             }
                           },
-                          itemClick: (p0) {
+                          itemClick: (p0) async {
                             _parcelLoc.text = p0.description ?? '';
-                            String? city = _extractCity(p0);
+                            String? city = await _extractCity(p0);
                             print('_parcelLoc city: $city');
                             parcelCity.value = city!;
                           },
@@ -179,9 +189,9 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                             _receiverLat.value = p0.lat ?? '0.0';
                             _receiverLan.value = p0.lng ?? '0.0';
                           },
-                          itemClick: (p0) {
+                          itemClick: (p0) async {
                             _receiverLoc.text = p0.description ?? '';
-                            String? city = _extractCity(p0);
+                            String? city = await _extractCity(p0);
                             print('_receiverLoc city: $city');
                             receiverCity.value = city!;
                           },
