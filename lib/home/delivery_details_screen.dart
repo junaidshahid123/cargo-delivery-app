@@ -166,7 +166,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         ),
                         SizedBox(height: 30.h),
                         AutoCompleteField(
-                          hintText: 'Parcel Location',
+                          hintText: 'Parcel Location'.tr,
                           controller: _parcelLoc,
                           getPlaceDetailWithLatLng: (p0) {
                             if (p0 != null) {
