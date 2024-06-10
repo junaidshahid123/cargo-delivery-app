@@ -72,7 +72,7 @@ class _DriverRequestNotificationScreenState
               compassEnabled: true,
               rotateGesturesEnabled: true,
               scrollGesturesEnabled: true,
-              // polylines: _polylines,
+               polylines: _polylines,
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
               markers: Set<Marker>.of(markers),

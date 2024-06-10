@@ -57,6 +57,8 @@ class RideRequestsController extends GetxController implements GetxService {
 
   @override
   void onReady() {
+    getOffersList();
+
     timer = Timer.periodic(const Duration(seconds: 50), (_) {
       getOffersList();
     });

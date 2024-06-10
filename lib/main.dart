@@ -9,10 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'api/user_repo.dart';
 import 'fcm_handle.dart';
-import 'home/MySample.dart';
-import 'home/controller/request_ridecontroller.dart';
 import 'localization_service.dart';
 import 'localized_translations.dart';
 
