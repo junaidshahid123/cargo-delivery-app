@@ -112,7 +112,9 @@ class UpdateProfile extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.all(16.0.h),
-              child: CustomButton(buttonText: 'Update'.tr, onPress: () {}),
+              child: CustomButton(buttonText: 'Update'.tr, onPress: () {
+                Get.find<AuthController>().updateUser(fullName: _nameController.text, mobileNumber: _phoneController.text, email: _emailController.text, street: _addressController.text);
+              }),
             ),
             SizedBox(
               height: 20.h,

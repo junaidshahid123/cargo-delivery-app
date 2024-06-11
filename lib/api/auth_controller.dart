@@ -126,6 +126,52 @@ class AuthController extends GetxController implements GetxService {
     return response;
   }
 
+  //UpdateUser
+  Future<Map<String, dynamic>> updateUser({
+    required String fullName,
+    required String mobileNumber,
+    required String email,
+    required String street,
+  }) async {
+    Map<String, dynamic> response = await authRepo.updateUserInfo(
+        name: fullName,
+        email: email,
+        mobile: mobileNumber,
+        street: street,);
+
+    if (response.containsKey(APIRESPONSE.SUCCESS)) {
+      print("THis is update user success");
+      showCupertinoModalPopup(
+        context: Get.context!,
+        builder: (_) => CupertinoAlertDialog(
+          content: const Text('User Updated Successfully'),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Get.offAll(() => LoginScreen()),
+              child: const Text('Ok'),
+            )
+          ],
+        ),
+      );
+    } else {
+      print("THis is update user failed");
+      showCupertinoModalPopup(
+        context: Get.context!,
+        builder: (_) => CupertinoAlertDialog(
+          content: Text('${response['message']}'),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: Get.back,
+              child: const Text('Ok'),
+            )
+          ],
+        ),
+      );
+    }
+
+    return response;
+  }
+
   Future<Map<String, dynamic>> updateFcmToken(
       {required String fcmToken}) async {
     debugPrint("updateFcmToken:->$fcmToken");

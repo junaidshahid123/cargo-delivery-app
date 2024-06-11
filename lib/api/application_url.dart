@@ -5,6 +5,8 @@ class ApplicationUrl {
   static String get IMAGE_ULR => _IMAGE_ULR;
   static const String _LOGIN_URL = '$_BASE_URL/login';
   static String get LOGIN_URL => _LOGIN_URL;
+  static const String _UPDATEUSER_URL = '$_BASE_URL/updateUser';
+  static String get UPDATEUSER_URL => _UPDATEUSER_URL;
   static const String _VERIFYOTP_URL = '$_BASE_URL/verifyOTP';
   static String get VERIFYOTP_URL => _VERIFYOTP_URL;
   static const String _GENERATEOTP_URL = '$_BASE_URL/generateOTP_6';

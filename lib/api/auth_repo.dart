@@ -204,22 +204,25 @@ class AuthRepo {
 
   //Uppdate Info
   Future<Map<String, dynamic>> updateUserInfo({
-    required String name,
-    required String email,
-    String? userName,
-    String? registerationNo,
-    String? signature,
+    String? name,
+    String? email,
+    String? mobile,
+    String? street,
   }) async {
     APISTRUCTURE apiObject = APISTRUCTURE(
-      apiUrl: '',
-      apiRequestMethod: APIREQUESTMETHOD.PUT,
+      apiUrl: ApplicationUrl.UPDATEUSER_URL,
+      apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
       body: {
         "name": name,
+        "mobile": mobile,
         "email": email,
-        "username": userName,
-        "signature": signature,
-        "registration_no": registerationNo,
+        "street_address": street,
+        "city": "",
+        "state": "",
+        "postal_code": "",
+        "latitude": "",
+        "longitude": "",
       },
     );
     return await apiObject.requestAPI(
