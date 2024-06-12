@@ -11,12 +11,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../model/MDCreateRequest.dart';
 import '../MySample.dart';
 import '../bottom_navbar.dart';
+import '../payment_screen.dart';
 
 class DriverRequestNotificationScreen extends StatefulWidget {
-  final List<Drivers>? drivers;
+  final MDCreateRequest? mdCreateRequest;
 
   const DriverRequestNotificationScreen(
-      {Key? key, this.drivers // Optional parameter with a default empty list
+      {Key? key,
+      this.mdCreateRequest // Optional parameter with a default empty list
       })
       : super(key: key);
 
@@ -72,7 +74,7 @@ class _DriverRequestNotificationScreenState
               compassEnabled: true,
               rotateGesturesEnabled: true,
               scrollGesturesEnabled: true,
-               polylines: _polylines,
+              polylines: _polylines,
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
               markers: Set<Marker>.of(markers),
@@ -106,14 +108,14 @@ class _DriverRequestNotificationScreenState
             right: 10,
             top: MediaQuery.sizeOf(context).height / 10,
             height: MediaQuery.sizeOf(context).height - 180,
-            child: _buildRiderRequests(),
+            child: _buildRiderRequests(widget.mdCreateRequest),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRiderRequests() {
+  Widget _buildRiderRequests(MDCreateRequest? mdCreateRequest) {
     var rideController = Get.put(RideRequestsController(userRepo: UserRepo()));
     return Obx(() {
       return SingleChildScrollView(
@@ -271,14 +273,20 @@ class _DriverRequestNotificationScreenState
                                         ) ??
                                         0.0,
                                   ));
-                                  Get.find<RideRequestsController>()
-                                      .acceptDriverRequest(
-                                    requestId: '${request?.requestId}',
-                                    offerId: '${request?.id}',
-                                    amount: "${request?.amount}",
-                                    card: '36436636343',
-                                    driverId: request?.userId ?? '',
-                                  );
+                                  print('requestAmount====${request!.amount}');
+                                  print(
+                                      'requestAmount====${mdCreateRequest!.request!.id!}');
+
+                                  Get.to(() => PaymentScreen(mdCreateRequest,
+                                      request.amount, request.id));
+                                  // Get.find<RideRequestsController>()
+                                  //     .acceptDriverRequest(
+                                  //   requestId: '${request?.requestId}',
+                                  //   offerId: '${request?.id}',
+                                  //   amount: "${request?.amount}",
+                                  //   card: '36436636343',
+                                  //   driverId: request?.userId ?? '',
+                                  // );
                                 },
                                 width: 145,
                                 height: 37,
@@ -302,7 +310,7 @@ class _DriverRequestNotificationScreenState
   initState() {
     super.initState();
 
-    if (widget.drivers != null && widget.drivers!.isNotEmpty) {
+    if (widget.mdCreateRequest!.drivers != null) {
       addInitialPositionMarker();
       addDriverMarkers();
       final Polyline polyline = Polyline(
@@ -376,8 +384,8 @@ class _DriverRequestNotificationScreenState
   }
 
   addDriverMarkers() {
-    for (int i = 0; i < widget.drivers!.length; i++) {
-      final driver = widget.drivers![i];
+    for (int i = 0; i < widget.mdCreateRequest!.drivers!.length; i++) {
+      final driver = widget.mdCreateRequest!.drivers![i];
       if (driver.latitude != null && driver.longitude != null) {
         try {
           final lat = double.parse(driver.latitude!);

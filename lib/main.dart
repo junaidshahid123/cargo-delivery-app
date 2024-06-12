@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cargo_delivery_app/bindings/controller_bindings.dart';
 import 'package:cargo_delivery_app/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';

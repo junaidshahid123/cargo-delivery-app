@@ -45,7 +45,6 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
   final parcelCity = Rx<String>('0.0');
   final receiverCity = Rx<String>('0.0');
 
-
   Future<String?> _extractCity(Prediction prediction) async {
     String? formattedAddress = prediction.description;
     if (formattedAddress == null) return null;
@@ -61,7 +60,6 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
 
     return null;
   }
-
 
   @override
   Widget build(BuildContext context) {

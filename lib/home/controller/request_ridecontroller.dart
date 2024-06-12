@@ -46,7 +46,6 @@ import '../riderrequest/rider_request_page.dart';
         print('This is response In createRideRequest==========${response} ');
         mdCreateRequest = MDCreateRequest.fromJson(response);
         print('This is mdCreateRequest==========${mdCreateRequest!.drivers!.length} ');
-
         requestAlert(mdCreateRequest!);
       } else {
         AppUtils.showDialog(response['message'], () => Get.back());
@@ -94,8 +93,8 @@ void requestAlert(mdCreateRequest) {
               CustomButton(
                 buttonText: "OK".tr,
                 onPress: () {
-                  print('mdCreateRequest.drivers=${mdCreateRequest.drivers!.length}');
-                  Get.to(() => DriverRequestNotificationScreen(drivers: mdCreateRequest.drivers));
+                  print('mdCreateRequest.drivers=${mdCreateRequest}');
+                  Get.to(() => DriverRequestNotificationScreen(mdCreateRequest:mdCreateRequest));
                 },
 
                 width: 97.w,

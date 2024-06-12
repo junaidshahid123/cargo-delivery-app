@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:ui' as ui;
-
 import 'package:cargo_delivery_app/api/api_constants.dart';
 import 'package:cargo_delivery_app/api/user_repo.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +8,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../bottom_navbar.dart';
 
 class LocationController extends GetxController implements GetxService {

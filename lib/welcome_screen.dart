@@ -53,7 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       onPressed: () {
                         // Change language to Arabic
                         // Add logic here to change the language to Arabic
-                        changeLanguage('ar');
+                       changeLanguage('ar');
 
                       },
                       child: Text("عربى"),
