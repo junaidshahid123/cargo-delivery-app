@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>865707638760-chu8qnn5fddcalf05kkmef14mbhgbd2s.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.865707638760-chu8qnn5fddcalf05kkmef14mbhgbd2s</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>865707638760-s0aqpc046e91dpjeue2j1qq5f7aleu90.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCaDNXETY9fDSucXhdlxV8agwcwdoNjVo8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>865707638760</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tarud.cargo-delivery-user-app</string>
+	<key>PROJECT_ID</key>
+	<string>cargo-delivery-app-4fbb8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cargo-delivery-app-4fbb8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:865707638760:ios:9e7c59cb3d3b286f006e5d</string>
+</dict>
+</plist>
