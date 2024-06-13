@@ -145,171 +145,183 @@ class HomeScreen extends StatelessWidget {
                             style: TextStyle(color: Colors.white),
                           )),
                         )
-                      : Row(
-                          children: controller.dasboardModel.value?.currentRides
-                                  .map((e) => Center(
-                                        child: Container(
-                                          margin: const EdgeInsets.all(5),
-                                          padding: const EdgeInsets.only(
-                                              left: 20,
-                                              right: 20,
-                                              top: 10,
-                                              bottom: 10),
-                                          height: 156.h,
-                                          width: 327.w,
-                                          decoration: BoxDecoration(
-                                              color: curvedBlueColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "Current Shipping",
-                                                        style: TextStyle(
-                                                            fontSize: 22.sp,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                textBrownColor),
-                                                      ),
-                                                      SizedBox(height: 5.h),
-                                                      Text(
-                                                        "ID: GJ012345",
-                                                        style: TextStyle(
-                                                            fontSize: 20.sp,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        Get.to(() =>
-                                                            const DriverTrackingScreen());
-                                                      },
-                                                      child: Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(5),
-                                                          height: 36.h,
-                                                          width: 102.w,
-                                                          alignment: Alignment
-                                                              .center,
-                                                          decoration: BoxDecoration(
+                      : SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: controller
+                                    .dasboardModel.value?.currentRides
+                                    .map((e) => Center(
+                                          child: Container(
+                                            margin: const EdgeInsets.all(5),
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                top: 10,
+                                                bottom: 10),
+                                            height: 156.h,
+                                            width: 327.w,
+                                            decoration: BoxDecoration(
+                                                color: curvedBlueColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Current Shipping",
+                                                          style: TextStyle(
+                                                              fontSize: 22.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
                                                               color:
-                                                                  textBrownColor,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                          child: Text(
-                                                            "Track",
-                                                            style: TextStyle(
-                                                                fontSize: 14.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .black),
-                                                          )),
+                                                                  textBrownColor),
+                                                        ),
+                                                        SizedBox(height: 5.h),
+                                                        Text(
+                                                          "ID: GJ012345",
+                                                          style: TextStyle(
+                                                              fontSize: 20.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    height: 12.h,
-                                                    width: 12.w,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color: Colors.white,
-                                                            shape: BoxShape
-                                                                .circle),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 1.h,
+                                                    Expanded(
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Get.to(() =>
+                                                              const DriverTrackingScreen());
+                                                        },
+                                                        child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(5),
+                                                            height: 36.h,
+                                                            width: 102.w,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration: BoxDecoration(
+                                                                color:
+                                                                    textBrownColor,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20)),
+                                                            child: Text(
+                                                              "Track",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      14.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black),
+                                                            )),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 12.h,
+                                                      width: 12.w,
                                                       decoration:
                                                           const BoxDecoration(
-                                                              color: Color(
-                                                                  0xff4F4956)),
+                                                              color:
+                                                                  Colors.white,
+                                                              shape: BoxShape
+                                                                  .circle),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    height: 12.h,
-                                                    width: 12.w,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color: Colors.white,
-                                                            shape: BoxShape
-                                                                .circle),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 1.h,
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 1.h,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                color: Color(
+                                                                    0xff4F4956)),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 12.h,
+                                                      width: 12.w,
                                                       decoration:
                                                           const BoxDecoration(
-                                                              color: Color(
-                                                                  0xff4F4956)),
+                                                              color:
+                                                                  Colors.white,
+                                                              shape: BoxShape
+                                                                  .circle),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    height: 12.h,
-                                                    width: 12.w,
-                                                    decoration: BoxDecoration(
-                                                        color: textBrownColor,
-                                                        shape: BoxShape.circle),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 1.h,
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                              color: Color(
-                                                                  0xff4F4956)),
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 1.h,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                color: Color(
+                                                                    0xff4F4956)),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    height: 12.h,
-                                                    width: 12.w,
-                                                    decoration: BoxDecoration(
-                                                        color: textBrownColor,
-                                                        shape: BoxShape.circle),
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                "Madina",
-                                                style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              )
-                                            ],
+                                                    Container(
+                                                      height: 12.h,
+                                                      width: 12.w,
+                                                      decoration: BoxDecoration(
+                                                          color: textBrownColor,
+                                                          shape:
+                                                              BoxShape.circle),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 1.h,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                color: Color(
+                                                                    0xff4F4956)),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 12.h,
+                                                      width: 12.w,
+                                                      decoration: BoxDecoration(
+                                                          color: textBrownColor,
+                                                          shape:
+                                                              BoxShape.circle),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Text(
+                                                  "Madina",
+                                                  style: TextStyle(
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ))
-                                  .toList() ??
-                              <Widget>[],
+                                        ))
+                                    .toList() ??
+                                <Widget>[],
+                          ),
                         ),
                   Padding(
                     padding: const EdgeInsets.symmetric(

@@ -143,7 +143,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
         );
       } else {
         print('Invoice link not found in the response');
-        Get.snackbar('Success', 'Request Accepted',backgroundColor: Colors.blue,colorText: Colors.white);
+        Get.snackbar('Success', 'Request Accepted',
+            backgroundColor: Colors.blue, colorText: Colors.white);
         // Handle the case where the invoice link is not present
       }
     } else {

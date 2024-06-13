@@ -4,6 +4,7 @@ import 'package:cargo_delivery_app/auth_screen/login_screen.dart';
 import 'package:cargo_delivery_app/home/confirm_location_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:googleapis/calendar/v3.dart';
 
 import '../../api/api_constants.dart';
 
@@ -12,17 +13,22 @@ import './auth_repo.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
+
   AuthController({required this.authRepo});
 
   int? forgotUserId;
   String? forgotUserPhoneNo;
   final bool _notification = true;
   final bool _acceptTerms = true;
+
   bool get notification => _notification;
+
   bool get acceptTerms => _acceptTerms;
   String? _userPhoneNo;
   String? _userCountryCode;
+
   String? get userPhoneNo => _userPhoneNo;
+
   String? get userCountryCode => _userCountryCode;
 
   UserModel? getLoginUserData() {
@@ -45,24 +51,44 @@ class AuthController extends GetxController implements GetxService {
     authRepo.clearSharedData();
     return true;
   }
+
   //Login Api
 
-  Future<Map<String, dynamic>> login({
-    required String password,
-    required String mobileNumber,
-    String? userType,
-    required String fcmToken
-  }) async {
+  Future<Map<String, dynamic>> login(
+      {required String password,
+      required String mobileNumber,
+      String? userType,
+      required String fcmToken}) async {
     Map<String, dynamic> response = await authRepo.login(
-      password: password,
-      mobileNumber: mobileNumber,
-      userType: userType, fcmToken:fcmToken
-    );
+        password: password,
+        mobileNumber: mobileNumber,
+        userType: userType,
+        fcmToken: fcmToken);
     log(response.toString());
+    response['message'];
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       Map<String, dynamic> result = response[APIRESPONSE.SUCCESS];
-      authRepo.saveLoginUserData(user: UserModel.fromJson(result));
-      Get.offAll(() => const LocationPage());
+
+      if (result['message'] == 'user_type does not matched') {
+        print('result[message]====${result['message']}');
+        String message= 'User Type does not matched, Try another number';
+        showCupertinoModalPopup(
+          context: Get.context!,
+          builder: (_) => CupertinoAlertDialog(
+            content: Text('${message}'),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: Get.back,
+                child: const Text('Ok'),
+              )
+            ],
+          ),
+        );      } else {
+        print('result[message]====${result['message']}');
+
+        authRepo.saveLoginUserData(user: UserModel.fromJson(result));
+        Get.offAll(() => const LocationPage());
+      }
     } else {
       showCupertinoModalPopup(
         context: Get.context!,
@@ -134,10 +160,11 @@ class AuthController extends GetxController implements GetxService {
     required String street,
   }) async {
     Map<String, dynamic> response = await authRepo.updateUserInfo(
-        name: fullName,
-        email: email,
-        mobile: mobileNumber,
-        street: street,);
+      name: fullName,
+      email: email,
+      mobile: mobileNumber,
+      street: street,
+    );
 
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       print("THis is update user success");

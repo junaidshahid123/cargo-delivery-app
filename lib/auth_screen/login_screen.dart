@@ -133,7 +133,8 @@ class LoginScreen extends StatelessWidget {
                       onPress: () async {
                         if (_formKey.currentState!.validate()) {
                           Get.find<AuthController>().login(
-                            fcmToken: fcmToken!,
+                              userType: '1',
+                              fcmToken: fcmToken!,
                               password: _passwordController.text,
                               mobileNumber:
                                   countryCode + _mobileController.text);
