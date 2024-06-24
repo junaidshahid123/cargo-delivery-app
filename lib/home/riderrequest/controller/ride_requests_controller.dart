@@ -46,7 +46,7 @@ class RideRequestsController extends GetxController implements GetxService {
       if (response.containsKey(APIRESPONSE.SUCCESS)) {
         MQTTClient.mqttForUser(driverId);
         if (timer != null) timer!.cancel();
-        Get.to(() => const DriverTrackingScreen(shouldEmitLocation: true));
+        // Get.to(() => const DriverTrackingScreen(shouldEmitLocation: true));
       } else {
         AppUtils.showDialog(response['message'], () => Get.back());
       }

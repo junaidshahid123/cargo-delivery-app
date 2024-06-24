@@ -59,7 +59,13 @@ class AuthController extends GetxController implements GetxService {
       required String mobileNumber,
       String? userType,
       required String fcmToken}) async {
-    Map<String, dynamic> response = await authRepo.login(
+    // Print out all parameters
+    print('Password: $password');
+    print('Mobile Number: $mobileNumber');
+    print('User Type: $userType');
+    print('FCM Token: $fcmToken');
+
+     Map<String, dynamic> response = await authRepo.login(
         password: password,
         mobileNumber: mobileNumber,
         userType: userType,
@@ -71,19 +77,20 @@ class AuthController extends GetxController implements GetxService {
 
       if (result['message'] == 'user_type does not matched') {
         print('result[message]====${result['message']}');
-        String message= 'User Type does not matched, Try another number';
+        String message = 'User Type does not matched, Try another number';
         showCupertinoModalPopup(
           context: Get.context!,
           builder: (_) => CupertinoAlertDialog(
             content: Text('${message}'),
-            actions: [
+            actions: [  
               CupertinoDialogAction(
                 onPressed: Get.back,
                 child: const Text('Ok'),
               )
             ],
           ),
-        );      } else {
+        );
+      } else {
         print('result[message]====${result['message']}');
 
         authRepo.saveLoginUserData(user: UserModel.fromJson(result));

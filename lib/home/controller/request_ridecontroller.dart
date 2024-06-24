@@ -11,47 +11,48 @@ import '../../widgets/custom_button.dart';
 import '../MySample.dart';
 import '../riderrequest/rider_request_page.dart';
 
-  class RequestRideController extends GetxController implements GetxService {
-    final UserRepo userRepo;
-    MDCreateRequest? mdCreateRequest;
+class RequestRideController extends GetxController implements GetxService {
+  final UserRepo userRepo;
+  MDCreateRequest? mdCreateRequest;
 
-    RequestRideController({required this.userRepo});
+  RequestRideController({required this.userRepo});
 
-    createRideRequest({
-      required List<File> image,
-      required String parcel_city,
-      required String parcelLat,
-      required String category_id,
-      required String delivery_date,
-      required String parcelLong,
-      required String parcel_address,
-      required String receiveLat,
-      required String receiverLong,
-      required String receiverAddress,
-      required String receiverMob,
-    }) async {
-      var response = await userRepo.createRideRequest(
-          image: image,
-          parcelLat: parcelLat,
-          parcelLong: parcelLong,
-          parcellAddress: parcel_address,
-          receiveLat: receiveLat,
-          receiverLong: receiverLong,
-          receiverAddress: receiverAddress,
-          receiverMob: receiverMob,
-          category_id: category_id,
-          delivery_date: delivery_date,
-          parcel_city: parcel_city);
-      if (response.containsKey(APIRESPONSE.SUCCESS)) {
-        print('This is response In createRideRequest==========${response} ');
-        mdCreateRequest = MDCreateRequest.fromJson(response);
-        print('This is mdCreateRequest==========${mdCreateRequest!.drivers!.length} ');
-        requestAlert(mdCreateRequest!);
-      } else {
-        AppUtils.showDialog(response['message'], () => Get.back());
-      }
+  createRideRequest({
+    required List<File> image,
+    required String parcel_city,
+    required String parcelLat,
+    required String category_id,
+    required String delivery_date,
+    required String parcelLong,
+    required String parcel_address,
+    required String receiveLat,
+    required String receiverLong,
+    required String receiverAddress,
+    required String receiverMob,
+  }) async {
+    var response = await userRepo.createRideRequest(
+        image: image,
+        parcelLat: parcelLat,
+        parcelLong: parcelLong,
+        parcellAddress: parcel_address,
+        receiveLat: receiveLat,
+        receiverLong: receiverLong,
+        receiverAddress: receiverAddress,
+        receiverMob: receiverMob,
+        category_id: category_id,
+        delivery_date: delivery_date,
+        parcel_city: parcel_city);
+    if (response.containsKey(APIRESPONSE.SUCCESS)) {
+      print('This is response In createRideRequest==========${response} ');
+      mdCreateRequest = MDCreateRequest.fromJson(response);
+      print(
+          'This is mdCreateRequest==========${mdCreateRequest!.drivers!.length} ');
+      requestAlert(mdCreateRequest!);
+    } else {
+      AppUtils.showDialog(response['message'], () => Get.back());
     }
   }
+}
 
 void requestAlert(mdCreateRequest) {
   showDialog(
@@ -94,9 +95,9 @@ void requestAlert(mdCreateRequest) {
                 buttonText: "OK".tr,
                 onPress: () {
                   print('mdCreateRequest.drivers=${mdCreateRequest}');
-                  Get.to(() => DriverRequestNotificationScreen(mdCreateRequest:mdCreateRequest));
+                  Get.to(() => DriverRequestNotificationScreen(
+                      mdCreateRequest: mdCreateRequest));
                 },
-
                 width: 97.w,
                 height: 38.h,
               )

@@ -115,7 +115,7 @@ class ParcelPickPage extends StatelessWidget {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              Get.to(() => const DriverTrackingScreen());
+                              // Get.to(() => const DriverTrackingScreen());
                             },
                             child: Container(
                                 margin: const EdgeInsets.all(5),
