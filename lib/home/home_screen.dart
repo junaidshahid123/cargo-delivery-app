@@ -8,6 +8,7 @@ import 'package:cargo_delivery_app/profile/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -209,9 +210,9 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                             Expanded(
                                               child: InkWell(
-                                                onTap: () {
-                                                  print(
-                                                      'currentRide.requestId=======${currentRide.requestId}');
+                                                onTap: () async {
+                                                  print('currentRide.requestId=======${currentRide.requestId}');
+
                                                   Get.to(() =>
                                                       DriverTrackingScreen(
                                                         requestId: currentRide

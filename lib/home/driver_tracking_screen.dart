@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-
 import '../api/auth_controller.dart';
 import '../model/MDTracking.dart';
 
@@ -28,7 +27,6 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
   final Set<Polyline> _polyline = {};
   List<LatLng> pathPoints = [];
   late GoogleMapController _mapController;
-
 
   Future<void> setPolyLines({
     required String sourceLat,
@@ -131,6 +129,8 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
   }
 
   Future<void> trackShipment(String requestId) async {
+    print(
+        'Get.find<AuthController>().authRepo.getAuthToken()====${Get.find<AuthController>().authRepo.getAuthToken()}');
     final url = Uri.parse('http://delivershipment.com/public/api/tracking');
 
     try {
@@ -165,6 +165,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
       throw e;
     }
   }
+
   void adjustCamera() {
     if (_polyline.isNotEmpty) {
       double minLat = _polyline
@@ -192,8 +193,6 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
       _mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
     }
   }
-
-
 
   @override
   void initState() {
@@ -254,20 +253,22 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
                     ),
                   ),
                   Expanded(
-                    child:
-                    GoogleMap(
+                    child: GoogleMap(
                       polylines: _polyline,
-                      markers: _polyline.isNotEmpty ? {
-                        Marker(
-                          markerId: const MarkerId('destination'),
-                          position: LatLng(
-                            double.parse(mdTracking!.data!.receiverLat!),
-                            double.parse(mdTracking!.data!.receiverLong!),
-                          ),
-                          icon: BitmapDescriptor.defaultMarker,
-                          infoWindow: const InfoWindow(title: 'Destination'),
-                        ),
-                      } : {},
+                      markers: _polyline.isNotEmpty
+                          ? {
+                              Marker(
+                                markerId: const MarkerId('destination'),
+                                position: LatLng(
+                                  double.parse(mdTracking!.data!.receiverLat!),
+                                  double.parse(mdTracking!.data!.receiverLong!),
+                                ),
+                                icon: BitmapDescriptor.defaultMarker,
+                                infoWindow:
+                                    const InfoWindow(title: 'Destination'),
+                              ),
+                            }
+                          : {},
                       initialCameraPosition: CameraPosition(
                         target: LatLng(
                           double.parse(mdTracking!.data!.parcelLat!),
@@ -280,12 +281,10 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
                         adjustCamera();
                       },
                     ),
-
                   ),
                 ],
               ),
             ),
     );
   }
-
 }

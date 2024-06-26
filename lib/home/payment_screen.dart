@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../alltrips/controller/delivery_controller.dart';
 import '../api/auth_controller.dart';
@@ -65,7 +66,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         'Get.find<AuthController>().authRepo.getAuthToken()==${Get.find<AuthController>().authRepo.getAuthToken()}');
 
     final url = Uri.parse('http://delivershipment.com/api/paymentMethodList');
-    HttpOverrides.global = MyHttpOverrides();
+    // HttpOverrides.global = MyHttpOverrides();
 
     // Logging URL and Headers
     print('Request URL: $url');
@@ -319,7 +320,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       SizedBox(height: 40.h),
                       CustomButton(
                         buttonText: "Proceed",
-                        onPress: () {
+                        onPress: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString('request_id',
+                              widget.mdCreateRequest.request!.id.toString());
                           print(
                               'This is Request ID====${widget.mdCreateRequest.request!.id}');
 
@@ -337,7 +342,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ? 1
                                   : 2,
                               description: 'Safe Drive');
-                          // Get.to(() => const ChatPage());
+                          Get.to(() => const ChatPage());
                         },
                       ),
                     ],
