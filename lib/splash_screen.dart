@@ -6,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final VoidCallback onInitializationComplete;
+
+  const SplashScreen({super.key, required this.onInitializationComplete});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -17,8 +19,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(const Duration(seconds: 3), () {
-        Get.offAll(() => const WelcomeScreen());
+      Future.delayed(const Duration(seconds: 2), () {
+        widget.onInitializationComplete();
       });
     });
   }

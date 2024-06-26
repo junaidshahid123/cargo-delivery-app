@@ -1,11 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cargo_delivery_app/home/chat/chat_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'home/bottom_navbar.dart';
 
 class MessagingService {
   static String? fcmToken; // Variable to store the FCM token
@@ -133,9 +138,8 @@ class MessagingService {
   // Handling a notification click event by navigating to the specified screen
   void _handleNotificationClick(BuildContext context, RemoteMessage message) {
     final notificationData = message.data;
-    if (notificationData.containsKey('screen')) {
-      final screen = notificationData['screen'];
-      Navigator.of(context).pushNamed(screen);
+    if (message.notification?.title == 'New Message') {
+      Get.offAll(() => ChatPage(message: message,));
     }
   }
 }

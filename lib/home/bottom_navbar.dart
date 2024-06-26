@@ -18,9 +18,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     const DeliveryDetailsScreen(),
-    const ChatPage(),
+    ChatPage(),
     UpdateProfile(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

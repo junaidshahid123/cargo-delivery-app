@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging_platform_interface/src/remote_message.dart';
 import 'package:http/http.dart' as http;
 import 'package:cargo_delivery_app/constant/colors_utils.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,10 @@ import '../../api/auth_controller.dart';
 import '../../widgets/search_widget.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final RemoteMessage?
+  message; // Define a nullable variable to store the message
 
+  ChatPage({Key? key, this.message}) : super(key: key);
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -24,6 +27,7 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // chatList.add(widget.message!.notification!);
   }
 
   // Function to retrieve the request_id from SharedPreferences

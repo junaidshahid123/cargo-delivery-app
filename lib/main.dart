@@ -1,5 +1,7 @@
 import 'package:cargo_delivery_app/bindings/controller_bindings.dart';
+import 'package:cargo_delivery_app/home/chat/chat_page.dart';
 import 'package:cargo_delivery_app/splash_screen.dart';
+import 'package:cargo_delivery_app/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'api/auth_controller.dart';
 import 'fcm_handle.dart';
+import 'home/confirm_location_screen.dart';
 import 'localization_service.dart';
 import 'localized_translations.dart';
 
@@ -43,6 +47,7 @@ final _firebaseMessaging = FirebaseMessaging.instance;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
+  print("message.data: ${message.notification!.title}");
 }
 
 Future<void> initNotifications() async {
@@ -84,13 +89,43 @@ class CargoApp extends StatefulWidget {
 
 class _CargoAppState extends State<CargoApp> {
   final _messagingService = MessagingService();
+  RemoteMessage? _initialMessage;
+  bool _isSplashDone = false;
 
   @override
   void initState() {
     // TODO: implement initState
     _messagingService.init(context);
-
     super.initState();
+    _setupInteractedMessage();
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    // Navigate to the desired screen with the message data
+    if (message.notification?.title == 'New Message') {
+      Get.to(() => ChatPage(message: message));
+    } else if (message.notification?.title == 'Accept Offer') {}
+  }
+
+  void _setupInteractedMessage() async {
+    // Get the initial message
+    _initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the initial message is not null, it means the app was opened via a notification
+    if (_initialMessage != null) {
+      _navigateToInitialRoute();
+    }
+
+    // Handle interaction when app is in background
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      _handleMessage(message);
+    });
+  }
+
+  void _navigateToInitialRoute() {
+    if (_isSplashDone && _initialMessage != null) {
+      _handleMessage(_initialMessage!);
+    }
   }
 
   @override
@@ -114,13 +149,31 @@ class _CargoAppState extends State<CargoApp> {
             ],
             initialBinding: Binding(),
             initialRoute: '/',
+            getPages: [
+              GetPage(
+                  name: '/',
+                  page: () => SplashScreen(onInitializationComplete: () {})),
+              GetPage(
+                  name: '/chatPage',
+                  page: () => ChatPage(message: _initialMessage)),
+            ],
             themeMode: ThemeMode.light,
             theme: ThemeData(
               fontFamily: 'RadioCanada',
             ),
             debugShowCheckedModeBanner: false,
             title: 'Cargo App',
-            home: SplashScreen(),
+            home: SplashScreen(
+              onInitializationComplete: () {
+                _isSplashDone = true;
+                _navigateToInitialRoute();
+                if (_initialMessage == null) {
+                  Get.offAll(() => Get.find<AuthController>().isLogedIn()
+                      ? const LocationPage()
+                      : const WelcomeScreen());
+                }
+              },
+            ),
           );
         });
   }
