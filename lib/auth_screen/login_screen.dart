@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
   final _passwordController = TextEditingController(),
       _mobileController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  var countryCode = Rx<String>('+996');
+  var countryCode = Rx<String>('+966');
 
   @override
   Widget build(BuildContext context) {

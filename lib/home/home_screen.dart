@@ -365,7 +365,30 @@ class HomeScreen extends StatelessWidget {
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                                 color: curvedBlueColor),
-                          )
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Get.to(() =>
+                              const DeliveryDetailsScreen());
+                            },
+                            child: Container(
+                                margin: const EdgeInsets.all(5),
+                                height: 36.h,
+                                width: 103.w,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: textBrownColor,
+                                    borderRadius:
+                                    BorderRadius.circular(
+                                        20)),
+                                child: Text(
+                                  "Book now".tr,
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                )),
+                          ),
                         ],
                       ),
                       Column(
@@ -389,7 +412,30 @@ class HomeScreen extends StatelessWidget {
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                                 color: curvedBlueColor),
-                          )
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Get.to(() =>
+                              const DeliveryDetailsScreen());
+                            },
+                            child: Container(
+                                margin: const EdgeInsets.all(5),
+                                height: 36.h,
+                                width: 103.w,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: textBrownColor,
+                                    borderRadius:
+                                    BorderRadius.circular(
+                                        20)),
+                                child: Text(
+                                  "Book now".tr,
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                )),
+                          ),
                         ],
                       )
                     ],
