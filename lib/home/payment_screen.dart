@@ -342,7 +342,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ? 1
                                   : 2,
                               description: 'Safe Drive');
-                          Get.to(() => ChatPage());
+                          Get.offAll(() => ChatPage());
                         },
                       ),
                     ],

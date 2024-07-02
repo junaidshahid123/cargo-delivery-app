@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
   final _passwordController = TextEditingController(),
       _mobileController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  var countryCode = Rx<String>('+966');
+  var countryCode = Rx<String>('+996');
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
             const Color(0xff113946),
             const Color(0xff113946).withOpacity(0.01),
           ]),
-        ),
+        ),  
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
