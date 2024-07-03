@@ -253,7 +253,8 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
                     ),
                   ),
                   Expanded(
-                    child: GoogleMap(
+                    child:
+                    GoogleMap(
                       polylines: _polyline,
                       markers: _polyline.isNotEmpty
                           ? {

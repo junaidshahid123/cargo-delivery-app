@@ -20,6 +20,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'bottom_navbar.dart';
+
 class PaymentScreen extends StatefulWidget {
   final MDCreateRequest mdCreateRequest;
   final String? amount;
@@ -342,7 +344,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ? 1
                                   : 2,
                               description: 'Safe Drive');
-                          Get.offAll(() => ChatPage());
+                          Get.offAll(() => BottomBarScreen());
                         },
                       ),
                     ],
