@@ -16,6 +16,11 @@ import 'home/confirm_location_screen.dart';
 import 'localization_service.dart';
 import 'localized_translations.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+  print("message.data: ${message.notification!.title}");
+}
+
 void changeLanguage(String languageCode) {
   // Set the new language locale
   if (languageCode == "en") {
@@ -44,11 +49,6 @@ Future<String?> getFCMToken() async {
 }
 
 final _firebaseMessaging = FirebaseMessaging.instance;
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
-  print("message.data: ${message.notification!.title}");
-}
 
 Future<void> initNotifications() async {
   await _firebaseMessaging.requestPermission();

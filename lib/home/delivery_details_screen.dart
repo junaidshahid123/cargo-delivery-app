@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cargo_delivery_app/constant/colors_utils.dart';
 import 'package:cargo_delivery_app/home/controller/request_ridecontroller.dart';
@@ -6,11 +7,14 @@ import 'package:cargo_delivery_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import '../alltrips/controller/delivery_controller.dart';
 import '../widgets/auto_place_textfield.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class DeliveryDetailsScreen extends StatefulWidget {
@@ -21,6 +25,8 @@ class DeliveryDetailsScreen extends StatefulWidget {
 }
 
 class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
+  String? parcelAddress;
+  String? receiverAddress;
   DeliveryController deliveryController = Get.put(DeliveryController());
   var fromCity = Rx<String?>(null);
 
@@ -59,6 +65,51 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     }
 
     return null;
+  }
+
+  Future<String?> _extractCityFor(LatLng? location) async {
+    if (location == null) return null;
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      location.latitude,
+      location.longitude,
+    );
+    if (placemarks.isNotEmpty) {
+      return placemarks.first.locality;
+    }
+    return null;
+  }
+
+  Future<void> _getAddressFromLatLngForParcelAddress(LatLng position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      Placemark place = placemarks[0];
+      setState(() {
+        parcelAddress =
+            '${place.street}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _getAddressFromLatLngForReceiverAddress(LatLng position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      Placemark place = placemarks[0];
+      setState(() {
+        receiverAddress =
+            '${place.street}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -163,36 +214,86 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 30.h),
-                        AutoCompleteField(
-                          hintText: 'Parcel Location'.tr,
-                          controller: _parcelLoc,
-                          getPlaceDetailWithLatLng: (p0) {
-                            if (p0 != null) {
-                              _parcelLat.value = p0.lat ?? '0.0';
-                              _parcelLan.value = p0.lng ?? '0.0';
-                            }
+                        InkWell(
+                          onTap: () async {
+                            LatLng? pickedLocation =
+                                await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PlacePickerMapScreen(),
+                              ),
+                            );
+                            print('pickedLocation====${pickedLocation}');
+                            String? city =
+                                await _extractCityFor(pickedLocation);
+                            print('city====${city}');
+                            _getAddressFromLatLngForParcelAddress(
+                                pickedLocation!);
                           },
-                          itemClick: (p0) async {
-                            _parcelLoc.text = p0.description ?? '';
-                            String? city = await _extractCity(p0);
-                            print('_parcelLoc city: $city');
-                            parcelCity.value = city!;
-                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(12.0),
+                            // margin: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(13.0),
+                            ),
+                            child: Text(
+                              parcelAddress != null
+                                  ? parcelAddress!
+                                  : 'Select your Parcel Location',
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontFamily: 'RadioCanada',
+                                  fontWeight: FontWeight.w400,
+                                  color: textBrownColor),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 20.h),
-                        AutoCompleteField(
-                          hintText: 'Receiver Location'.tr,
-                          controller: _receiverLoc,
-                          getPlaceDetailWithLatLng: (p0) {
-                            _receiverLat.value = p0.lat ?? '0.0';
-                            _receiverLan.value = p0.lng ?? '0.0';
+                        InkWell(
+                          onTap: () async {
+                            LatLng? pickedLocation =
+                                await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PlacePickerMapScreen(),
+                              ),
+                            );
+                            print('pickedLocation====${pickedLocation}');
+                            String? city =
+                                await _extractCityFor(pickedLocation);
+                            print('city====${city}');
+                            _getAddressFromLatLngForReceiverAddress(
+                                pickedLocation!);
                           },
-                          itemClick: (p0) async {
-                            _receiverLoc.text = p0.description ?? '';
-                            String? city = await _extractCity(p0);
-                            print('_receiverLoc city: $city');
-                            receiverCity.value = city!;
-                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(12.0),
+                            // margin: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(13.0),
+                            ),
+                            child: Text(
+                              receiverAddress != null
+                                  ? receiverAddress!
+                                  : 'Select your Receiver Location',
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontFamily: 'RadioCanada',
+                                  fontWeight: FontWeight.w400,
+                                  color: textBrownColor),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 40.h),
                         ContactField(
@@ -379,6 +480,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                   '_receiverLat.value===${_receiverLat.value}');
                               print(
                                   '_receiverLan.value===${_receiverLan.value}');
+                              print('_receiverMob===${_receiverMob.value}');
                               Get.find<RequestRideController>()
                                   .createRideRequest(
                                       parcel_city: parcelCity.value,
@@ -421,5 +523,224 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
         maxLines: 1,
       ),
     ); // Return any Widget you want to display on error
+  }
+}
+
+class PlacePickerMapScreen extends StatefulWidget {
+  @override
+  _PlacePickerMapScreenState createState() => _PlacePickerMapScreenState();
+}
+
+class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
+  GoogleMapController? _mapController;
+  LatLng? _pickedLocation;
+  String? _pickedAddress;
+  LatLng? _currentLocation;
+  final TextEditingController _searchController = TextEditingController();
+  List<String> _suggestions = [];
+  String _apiKey = 'AIzaSyDdwlGhZKKQqYyw9f9iME40MzMgC9RL4ko';
+  final _parcelLoc = TextEditingController(),
+      _receiverLoc = TextEditingController(),
+      _receiverMob = TextEditingController();
+  final _parcelLat = Rx<String>('0.0');
+
+  final _receiverLat = Rx<String>('0.0');
+
+  final _parcelLan = Rx<String>('0.0');
+
+  final _receiverLan = Rx<String>('0.0');
+
+  final parcelCity = Rx<String>('0.0');
+  final receiverCity = Rx<String>('0.0');
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  Future<String?> _extractCity(Prediction prediction) async {
+    String? formattedAddress = prediction.description;
+    if (formattedAddress == null) return null;
+
+    List<Location> locations = await locationFromAddress(formattedAddress);
+    if (locations.isNotEmpty) {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          locations.first.latitude, locations.first.longitude);
+      if (placemarks.isNotEmpty) {
+        return placemarks.first.locality;
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+      _pickedLocation = _currentLocation;
+      _mapController
+          ?.moveCamera(CameraUpdate.newLatLngZoom(_currentLocation!, 14));
+    });
+    await _getAddressFromLatLng(_currentLocation!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Place Picker Map'),
+        actions: [
+          if (_pickedLocation != null)
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                Navigator.of(context).pop(_pickedLocation);
+              },
+            ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          if (_currentLocation != null)
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _currentLocation!,
+                zoom: 14,
+              ),
+              onMapCreated: (controller) {
+                _mapController = controller;
+              },
+              onTap: (position) async {
+                setState(() {
+                  _pickedLocation = position;
+                });
+                await _getAddressFromLatLng(position);
+              },
+              markers: _pickedLocation == null
+                  ? {}
+                  : {
+                      Marker(
+                        markerId: MarkerId('picked-location'),
+                        position: _pickedLocation!,
+                      ),
+                    },
+              circles: _pickedLocation == null
+                  ? {}
+                  : {
+                      Circle(
+                        circleId: CircleId('picked-location-circle'),
+                        center: _pickedLocation!,
+                        radius: 500,
+                        // radius in meters
+                        fillColor: Colors.blue.withOpacity(0.2),
+                        strokeColor: Colors.blue,
+                        strokeWidth: 1,
+                      ),
+                    },
+            ),
+          Positioned(
+            top: 50,
+            left: 10,
+            right: 10,
+            child: AutoCompleteField(
+              hintText: 'Search Location Here',
+              controller: _parcelLoc,
+              getPlaceDetailWithLatLng: (p0) {
+                _parcelLat.value = p0.lat ?? '0.0';
+                _parcelLan.value = p0.lng ?? '0.0';
+              },
+              itemClick: (p0) async {
+                _parcelLoc.text = p0.description ?? '';
+                List<Location> locations =
+                    await locationFromAddress(p0.description!);
+                if (locations.isNotEmpty) {
+                  LatLng newPickedLocation = LatLng(
+                      locations.first.latitude, locations.first.longitude);
+                  String? city =
+                      await _extractCityFromLatLng(newPickedLocation);
+                  setState(() {
+                    _pickedLocation = newPickedLocation;
+                    _mapController?.moveCamera(
+                        CameraUpdate.newLatLngZoom(_pickedLocation!, 14));
+                  });
+                  await _getAddressFromLatLng(newPickedLocation);
+                  print('parcelLoc city: $city');
+                  parcelCity.value = city!;
+                }
+              },
+            ),
+          ),
+          if (_pickedAddress != null)
+            Positioned(
+              bottom: 100,
+              left: 10,
+              right: 10,
+              child: Container(
+                decoration: BoxDecoration(color: Colors.black),
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  _pickedAddress!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<String?> _extractCityFromLatLng(LatLng position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks.isNotEmpty) {
+        return placemarks.first.locality;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<void> _getAddressFromLatLng(LatLng position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      Placemark place = placemarks[0];
+      setState(() {
+        _pickedAddress =
+            '${place.street}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

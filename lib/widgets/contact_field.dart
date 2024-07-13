@@ -30,7 +30,7 @@ class ContactField extends StatelessWidget {
             onChanged: (value) {
               onchange!(value.dialCode.toString());
             },
-            initialSelection: '+996',
+            initialSelection: '+966',
             textStyle: TextStyle(color: textBrownColor),
             showFlag: false,
             padding: EdgeInsets.zero,
@@ -38,7 +38,7 @@ class ContactField extends StatelessWidget {
         ),
         Flexible(
           child: TextFormField(
-            maxLength: 9,
+
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validator,
             controller: controller,
