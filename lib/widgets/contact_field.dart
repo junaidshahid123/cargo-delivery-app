@@ -2,16 +2,38 @@ import 'package:cargo_delivery_app/constant/colors_utils.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 
-class ContactField extends StatelessWidget {
+
+
+class ContactField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String? Function(String value)? onchange;
+
   const ContactField({
     Key? key,
     this.controller,
     this.validator,
     this.onchange,
   }) : super(key: key);
+
+  @override
+  _ContactFieldState createState() => _ContactFieldState();
+}
+
+class _ContactFieldState extends State<ContactField> {
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +50,25 @@ class ContactField extends StatelessWidget {
           child: CountryCodePicker(
             backgroundColor: Colors.white,
             onChanged: (value) {
-              onchange!(value.dialCode.toString());
+              if (widget.onchange != null) {
+                widget.onchange!(value.dialCode.toString());
+              }
             },
             initialSelection: '+966',
-            textStyle: TextStyle(color: textBrownColor),
+            textStyle: TextStyle(color: Colors.brown), // Assuming `textBrownColor` is brown
             showFlag: false,
             padding: EdgeInsets.zero,
           ),
         ),
         Flexible(
           child: TextFormField(
-
+            focusNode: _focusNode,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validator,
-            controller: controller,
+            validator: widget.validator,
+            controller: widget.controller,
+            onFieldSubmitted: (value) {
+              _focusNode.unfocus(); // Unfocus the text field when user is done inputting
+            },
             decoration: const InputDecoration(
               counterText: '',
               contentPadding: EdgeInsets.all(1),

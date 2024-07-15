@@ -89,7 +89,8 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
       Placemark place = placemarks[0];
       setState(() {
         parcelAddress =
-            '${place.street}, ${place.locality}, ${place.postalCode}, ${place.country}';
+        '${place.street}, ${place.locality}, ${place.postalCode}, ${place
+            .country}';
       });
     } catch (e) {
       print(e);
@@ -105,7 +106,8 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
       Placemark place = placemarks[0];
       setState(() {
         receiverAddress =
-            '${place.street}, ${place.locality}, ${place.postalCode}, ${place.country}';
+        '${place.street}, ${place.locality}, ${place.postalCode}, ${place
+            .country}';
       });
     } catch (e) {
       print(e);
@@ -119,15 +121,17 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
             init: DeliveryController(),
             builder: (deliveryController) {
               return Container(
-                height: MediaQuery.sizeOf(context).height,
+                height: MediaQuery
+                    .sizeOf(context)
+                    .height,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.center,
                         colors: [
-                      textcyanColor,
-                      textcyanColor.withOpacity(0.1)
-                    ])),
+                          textcyanColor,
+                          textcyanColor.withOpacity(0.1)
+                        ])),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -160,7 +164,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         InkWell(
                           onTap: () {
                             FocusScopeNode currentFocus =
-                                FocusScope.of(context);
+                            FocusScope.of(context);
 
                             if (!currentFocus.hasPrimaryFocus) {
                               currentFocus.unfocus();
@@ -179,7 +183,10 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         ),
                         Container(
                           height: 100,
-                          width: MediaQuery.of(context).size.width,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
@@ -217,20 +224,32 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         InkWell(
                           onTap: () async {
                             LatLng? pickedLocation =
-                                await Navigator.of(context).push(
+                            await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => PlacePickerMapScreen(),
                               ),
                             );
                             print('pickedLocation====${pickedLocation}');
                             String? city =
-                                await _extractCityFor(pickedLocation);
-                            print('city====${city}');
+                            await _extractCityFor(pickedLocation);
+                            print('city In Parcel====${city}');
+                            if (city != null) {
+                              parcelCity.value = city;
+                              _parcelLat.value =
+                                  pickedLocation!.latitude.toString();
+                              _parcelLan.value =
+                                  pickedLocation.longitude.toString();
+                              print('_parcelLat.value====${_parcelLat.value}');
+                              print('_parcelLan.value ====${_parcelLan.value}');
+                            }
                             _getAddressFromLatLngForParcelAddress(
                                 pickedLocation!);
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             padding: EdgeInsets.all(12.0),
                             // margin: EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
@@ -258,20 +277,32 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         InkWell(
                           onTap: () async {
                             LatLng? pickedLocation =
-                                await Navigator.of(context).push(
+                            await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => PlacePickerMapScreen(),
                               ),
                             );
                             print('pickedLocation====${pickedLocation}');
                             String? city =
-                                await _extractCityFor(pickedLocation);
-                            print('city====${city}');
+                            await _extractCityFor(pickedLocation);
+                            print('city In Receiver====${city}');
+                            _receiverLat.value =
+                                pickedLocation!.latitude.toString();
+                            _receiverLan.value =
+                                pickedLocation.longitude.toString();
+                            print(
+                                '_receiverLat.value====${_receiverLat.value}');
+                            print(
+                                '_receiverLan.value====${_receiverLan.value}');
+
                             _getAddressFromLatLngForReceiverAddress(
-                                pickedLocation!);
+                                pickedLocation);
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             padding: EdgeInsets.all(12.0),
                             // margin: EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
@@ -302,144 +333,152 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         ),
                         SizedBox(height: 40.h),
                         Obx(
-                          () => Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  deliveryController.toggleDropDown();
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 45.h,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: deliveryController
-                                                  .showDropDown.value ==
-                                              true
-                                          ? BorderRadius.only(
-                                              topLeft: Radius.circular(13),
-                                              topRight: Radius.circular(13))
-                                          : BorderRadius.circular(13)),
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.only(left: 20, right: 20),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            deliveryController
-                                                        .selectedVehicleName
-                                                        .value !=
-                                                    '-1'
-                                                ? deliveryController
-                                                    .selectedVehicleName!.value
-                                                : 'Select Vehicle Category'.tr,
-                                            style: TextStyle(
-                                                color: Color(0xffBCA37F)),
-                                          ),
-                                        ),
-                                        Icon(
-                                          Icons.arrow_drop_down,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              deliveryController.showDropDown.value == true
-                                  ? Container(
+                              () =>
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      deliveryController.toggleDropDown();
+                                    },
+                                    child: Container(
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width,
+                                      height: 45.h,
                                       decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(13),
-                                              bottomLeft: Radius.circular(13))),
-                                      height: 100,
-                                      child: deliveryController
-                                                  .mdGetVehicleCategories ==
-                                              null
-                                          ? Center(
-                                              child: CircularProgressIndicator(
-                                                color: Color(0xffBCA37F),
+                                          borderRadius: deliveryController
+                                              .showDropDown.value ==
+                                              true
+                                              ? BorderRadius.only(
+                                              topLeft: Radius.circular(13),
+                                              topRight: Radius.circular(13))
+                                              : BorderRadius.circular(13)),
+                                      child: Container(
+                                        margin:
+                                        EdgeInsets.only(left: 20, right: 20),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                deliveryController
+                                                    .selectedVehicleName
+                                                    .value !=
+                                                    '-1'
+                                                    ? deliveryController
+                                                    .selectedVehicleName.value
+                                                    : 'Select Vehicle Category'
+                                                    .tr,
+                                                style: TextStyle(
+                                                    color: Color(0xffBCA37F)),
                                               ),
-                                            )
-                                          : ListView.builder(
-                                              padding: EdgeInsets.all(0),
-                                              itemBuilder: (context, index) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    deliveryController
-                                                        .tapOnVehicle(index);
-                                                  },
-                                                  child: Container(
-                                                    height: 35,
-                                                    decoration: BoxDecoration(
-                                                        color: deliveryController
-                                                                    .mdGetVehicleCategories!
-                                                                    .categories![
-                                                                        index]
-                                                                    .id ==
-                                                                deliveryController
-                                                                    .selectedVehicleId
-                                                                    .value
-                                                            ? Color(0xffBCA37F)
-                                                            : Colors
-                                                                .transparent,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    13))),
-                                                    margin: EdgeInsets.only(
-                                                        top: 5,
-                                                        bottom: 5,
-                                                        left: 20,
-                                                        right: 20),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                            child: Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  left: 20),
-                                                          child: Text(
-                                                              deliveryController
-                                                                  .mdGetVehicleCategories!
-                                                                  .categories![
-                                                                      index]
-                                                                  .name!),
-                                                        )),
-                                                        Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  right: 10),
-                                                          child: Image.network(
-                                                            'http://delivershipment.com/uploads/${deliveryController.mdGetVehicleCategories!.categories![index].image}',
-                                                            errorBuilder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    Object
-                                                                        exception,
-                                                                    StackTrace?
-                                                                        stackTrace) {
-                                                              return buildErrorWidget(
-                                                                  context,
-                                                                  exception); // Return a generic Widget
-                                                            },
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              itemCount: deliveryController
-                                                  .mdGetVehicleCategories!
-                                                  .categories!
-                                                  .length,
                                             ),
+                                            Icon(
+                                              Icons.arrow_drop_down,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  deliveryController.showDropDown.value == true
+                                      ? Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                            bottomRight: Radius.circular(13),
+                                            bottomLeft: Radius.circular(13))),
+                                    height: 100,
+                                    child: deliveryController
+                                        .mdGetVehicleCategories ==
+                                        null
+                                        ? Center(
+                                      child: CircularProgressIndicator(
+                                        color: Color(0xffBCA37F),
+                                      ),
                                     )
-                                  : Container()
-                            ],
-                          ),
+                                        : ListView.builder(
+                                      padding: EdgeInsets.all(0),
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            deliveryController
+                                                .tapOnVehicle(index);
+                                          },
+                                          child: Container(
+                                            height: 35,
+                                            decoration: BoxDecoration(
+                                                color: deliveryController
+                                                    .mdGetVehicleCategories!
+                                                    .categories![
+                                                index]
+                                                    .id ==
+                                                    deliveryController
+                                                        .selectedVehicleId
+                                                        .value
+                                                    ? Color(0xffBCA37F)
+                                                    : Colors
+                                                    .transparent,
+                                                borderRadius:
+                                                BorderRadius.all(
+                                                    Radius.circular(
+                                                        13))),
+                                            margin: EdgeInsets.only(
+                                                top: 5,
+                                                bottom: 5,
+                                                left: 20,
+                                                right: 20),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                    child: Container(
+                                                      margin:
+                                                      EdgeInsets.only(
+                                                          left: 20),
+                                                      child: Text(
+                                                          deliveryController
+                                                              .mdGetVehicleCategories!
+                                                              .categories![
+                                                          index]
+                                                              .name!),
+                                                    )),
+                                                Container(
+                                                  margin:
+                                                  EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Image.network(
+                                                    'http://delivershipment.com/uploads/${deliveryController
+                                                        .mdGetVehicleCategories!
+                                                        .categories![index]
+                                                        .image}',
+                                                    errorBuilder:
+                                                        (BuildContext
+                                                    context,
+                                                        Object
+                                                        exception,
+                                                        StackTrace?
+                                                        stackTrace) {
+                                                      return buildErrorWidget(
+                                                          context,
+                                                          exception); // Return a generic Widget
+                                                    },
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      itemCount: deliveryController
+                                          .mdGetVehicleCategories!
+                                          .categories!
+                                          .length,
+                                    ),
+                                  )
+                                      : Container()
+                                ],
+                              ),
                         ),
                         InkWell(
                           onTap: () {
@@ -447,7 +486,10 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                           },
                           child: Container(
                             margin: EdgeInsets.only(top: 30),
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             height: 45.h,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -459,7 +501,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                 children: [
                                   Text(
                                     deliveryController
-                                            .dateController.text.isNotEmpty
+                                        .dateController.text.isNotEmpty
                                         ? deliveryController.dateController.text
                                         : 'Please Select Delivery Date'.tr,
                                     style: TextStyle(color: Color(0xffBCA37F)),
@@ -481,27 +523,32 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                               print(
                                   '_receiverLan.value===${_receiverLan.value}');
                               print('_receiverMob===${_receiverMob.value}');
+                              print(
+                                  'deliveryController.selectedVehicleId.toString()===${deliveryController
+                                      .selectedVehicleId.toString()}');
+                              print('_parcelLoc.value===${parcelAddress}');
+                              print('receiverAddress===${receiverAddress}');
                               Get.find<RequestRideController>()
                                   .createRideRequest(
-                                      parcel_city: parcelCity.value,
-                                      image: pickedImage
-                                          .map((xFile) => File(xFile.path))
-                                          .toList(),
-                                      category_id:
-                                          deliveryController
-                                              .selectedVehicleId
-                                              .toString(),
-                                      delivery_date:
-                                          deliveryController
-                                              .dateController.text,
-                                      parcelLat: _parcelLat.value,
-                                      parcelLong: _parcelLan.value,
-                                      parcel_address: _parcelLoc.text,
-                                      receiveLat: _receiverLat.value,
-                                      receiverLong: _receiverLan.value,
-                                      receiverAddress: _receiverLoc.text,
-                                      receiverMob: _countryCode.value +
-                                          _receiverMob.text);
+                                  parcel_city: parcelCity.value,
+                                  image: pickedImage
+                                      .map((xFile) => File(xFile.path))
+                                      .toList(),
+                                  category_id:
+                                  deliveryController
+                                      .selectedVehicleId
+                                      .toString(),
+                                  delivery_date:
+                                  deliveryController
+                                      .dateController.text,
+                                  parcelLat: _parcelLat.value,
+                                  parcelLong: _parcelLan.value,
+                                  parcel_address: parcelAddress!,
+                                  receiveLat: _receiverLat.value,
+                                  receiverLong: _receiverLan.value,
+                                  receiverAddress: receiverAddress!,
+                                  receiverMob: _countryCode.value +
+                                      _receiverMob.text);
                             })
                       ],
                     ),
@@ -642,24 +689,24 @@ class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
               markers: _pickedLocation == null
                   ? {}
                   : {
-                      Marker(
-                        markerId: MarkerId('picked-location'),
-                        position: _pickedLocation!,
-                      ),
-                    },
+                Marker(
+                  markerId: MarkerId('picked-location'),
+                  position: _pickedLocation!,
+                ),
+              },
               circles: _pickedLocation == null
                   ? {}
                   : {
-                      Circle(
-                        circleId: CircleId('picked-location-circle'),
-                        center: _pickedLocation!,
-                        radius: 500,
-                        // radius in meters
-                        fillColor: Colors.blue.withOpacity(0.2),
-                        strokeColor: Colors.blue,
-                        strokeWidth: 1,
-                      ),
-                    },
+                Circle(
+                  circleId: CircleId('picked-location-circle'),
+                  center: _pickedLocation!,
+                  radius: 500,
+                  // radius in meters
+                  fillColor: Colors.blue.withOpacity(0.2),
+                  strokeColor: Colors.blue,
+                  strokeWidth: 1,
+                ),
+              },
             ),
           Positioned(
             top: 50,
@@ -675,12 +722,12 @@ class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
               itemClick: (p0) async {
                 _parcelLoc.text = p0.description ?? '';
                 List<Location> locations =
-                    await locationFromAddress(p0.description!);
+                await locationFromAddress(p0.description!);
                 if (locations.isNotEmpty) {
                   LatLng newPickedLocation = LatLng(
                       locations.first.latitude, locations.first.longitude);
                   String? city =
-                      await _extractCityFromLatLng(newPickedLocation);
+                  await _extractCityFromLatLng(newPickedLocation);
                   setState(() {
                     _pickedLocation = newPickedLocation;
                     _mapController?.moveCamera(
@@ -737,7 +784,8 @@ class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
       Placemark place = placemarks[0];
       setState(() {
         _pickedAddress =
-            '${place.street}, ${place.locality}, ${place.postalCode}, ${place.country}';
+        '${place.street}, ${place.locality}, ${place.postalCode}, ${place
+            .country}';
       });
     } catch (e) {
       print(e);
