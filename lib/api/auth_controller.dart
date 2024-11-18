@@ -57,7 +57,7 @@ class AuthController extends GetxController implements GetxService {
   Future<Map<String, dynamic>> login(
       {required String password,
       required String mobileNumber,
-      String? userType,
+      int? userType,
       required String fcmToken}) async {
     // Print out all parameters
     print('Password: $password');

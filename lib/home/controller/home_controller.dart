@@ -17,6 +17,7 @@ class HomeController extends GetxController implements GetxService {
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       dasboardModel.value =
           DashBoardModel.fromMap(response[APIRESPONSE.SUCCESS]);
+      print('dasboardModel.value======${dasboardModel.value!.currentRides.length}');
     }
   }
 

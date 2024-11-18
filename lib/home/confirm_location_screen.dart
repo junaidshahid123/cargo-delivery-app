@@ -80,14 +80,28 @@ class LocationPage extends StatelessWidget {
           child: CustomButton(
               buttonText: "confirm location".tr,
               onPress: () {
+                final userId = '${Get.find<AuthController>().getLoginUserData()?.user?.id}';
+                final address = controller.locationController.text;
+                final city = controller.city;
+                final latitude = '${controller.initialPos.latitude}';
+                final longitude = '${controller.initialPos.longitude}';
+
+                // Print all values
+                print('User ID: $userId');
+                print('Address: $address');
+                print('City: $city');
+                print('Latitude: $latitude');
+                print('Longitude: $longitude');
+
                 controller.setLocation(
-                    userId:
-                        '${Get.find<AuthController>().getLoginUserData()?.user?.id}',
-                    address: controller.locationController.text,
-                    city: controller.city,
-                    lat: '${controller.initialPos.latitude}',
-                    lang: '${controller.initialPos.longitude}');
-              }),
+                  userId: userId,
+                  address: address,
+                  city: city,
+                  lat: latitude,
+                  lang: longitude,
+                );
+              }
+          ),
         ),
       ),
     );

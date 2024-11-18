@@ -152,7 +152,8 @@ class LocationController extends GetxController implements GetxService {
       required String address,
       required String lat,
       required String lang,
-      required String city}) async {
+      required String city}) async
+  {
     var response = await userRepo.confirmLocation(
       userId: userId,
       address: address,

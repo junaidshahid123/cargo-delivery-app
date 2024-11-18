@@ -37,7 +37,7 @@ class DeliveryController extends GetxController {
   }
 
   Future<Map<String, dynamic>> getVehicleCategories() async {
-    final url = Uri.parse('http://delivershipment.com/api/getAllCategory');
+    final url = Uri.parse('https://thardi.com/api/getAllCategory');
     HttpOverrides.global = MyHttpOverrides();
 
     final response = await http.get(

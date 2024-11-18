@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
 import '../../api/application_url.dart';
 import 'api_constants.dart';
 import 'api_structure.dart';
@@ -7,6 +8,7 @@ import 'api_structure.dart';
 //testing comment
 class UserRepo {
   UserRepo();
+
 
   Future<Map<String, dynamic>> registerUser({
     required String cnic,
@@ -30,7 +32,7 @@ class UserRepo {
         isShowLoading: true, isCheckAuthorization: true);
   }
 
-//Confirm Locatiom
+// Confirm Location
   Future<Map<String, dynamic>> confirmLocation({
     required String userId,
     required String address,
@@ -38,21 +40,33 @@ class UserRepo {
     required String lang,
     required String city,
   }) async {
+    // Create the request body
+    final body = {
+      "user_id": userId,
+      "street_address": address,
+      "latitude": lat,
+      "longitude": lang,
+      "city": city,
+    };
+
+    // Print the request body
+    print('Request Body: $body');
+
+    // Set up the APISTRUCTURE
     APISTRUCTURE apiObject = APISTRUCTURE(
       apiUrl: ApplicationUrl.CONFIRMLOCATION_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
       isWantSuccessMessage: true,
-      body: {
-        "user_id": userId,
-        "street_address": address,
-        "latitude": lat,
-        "longitude": lang,
-        "city": city,
-      },
+      body: body,
     );
+
+    // Make the API request
     return await apiObject.requestAPI(
-        isShowLoading: true, isCheckAuthorization: true);
+      isShowLoading: true,
+      isCheckAuthorization: true,
+    );
   }
+
 
 // DashBoard Data
   Future<Map<String, dynamic>> getCategories(

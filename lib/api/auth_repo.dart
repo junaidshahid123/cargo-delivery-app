@@ -82,12 +82,15 @@ class AuthRepo {
     }
   }
 
+
+
   Future<Map<String, dynamic>> login({
     required String password,
     required String mobileNumber,
-    String? userType,
-    String? fcmToken
+    int? userType,
+    String? fcmToken,
   }) async {
+    // Creating the API object
     APISTRUCTURE apiObject = APISTRUCTURE(
       apiUrl: ApplicationUrl.LOGIN_URL,
       apiRequestMethod: APIREQUESTMETHOD.POST,
@@ -96,15 +99,28 @@ class AuthRepo {
         "password": password,
         "mobile": mobileNumber,
         "user_type": userType,
-        "device_id": 'this is device id',
+        "device_id": '1',
         "device_token": fcmToken,
       }),
     );
 
+    // Print the body to debug
+    print("Request Body:");
+    print({
+      "password": password,
+      "mobile": mobileNumber,
+      "user_type": userType,
+      "device_id": '1',
+      "device_token": fcmToken,
+    });
 
+    // Sending the API request and returning the result
     return await apiObject.requestAPI(
-        isShowLoading: true, isCheckAuthorization: false);
+      isShowLoading: true,
+      isCheckAuthorization: false,
+    );
   }
+
 
   Future<Map<String, dynamic>> deleteAccount() async {
     APISTRUCTURE apiObject = APISTRUCTURE(

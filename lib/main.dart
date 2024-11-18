@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cargo_delivery_app/bindings/controller_bindings.dart';
 import 'package:cargo_delivery_app/home/chat/chat_page.dart';
 import 'package:cargo_delivery_app/splash_screen.dart';
@@ -69,6 +71,7 @@ void main() async {
 
   await getFCMToken();
   await initServices(); // Initialize services
+  HttpOverrides.global = new MyHttpOverrides();
 
   runApp(
     CargoApp(),
@@ -177,4 +180,22 @@ class _CargoAppState extends State<CargoApp> {
           );
         });
   }
+
+
 }
+
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    // Return the HttpClient with a bad certificate callback
+    final client = super.createHttpClient(context);
+    client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+      // Log the certificate info for debugging
+      print('SSL cert error: $cert');
+      return true; // Allow all certificates for testing (not recommended for production)
+    };
+    return client;
+  }
+} 
+

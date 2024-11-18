@@ -12,6 +12,7 @@ import 'package:get/get_rx/get_rx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../alltrips/controller/delivery_controller.dart';
+import '../api/application_url.dart';
 import '../api/auth_controller.dart';
 import '../model/MDCreateRequest.dart';
 import '../model/MDGetPaymentMethodList.dart';
@@ -67,7 +68,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     print(
         'Get.find<AuthController>().authRepo.getAuthToken()==${Get.find<AuthController>().authRepo.getAuthToken()}');
 
-    final url = Uri.parse('http://delivershipment.com/api/paymentMethodList');
+    final url = Uri.parse(ApplicationUrl.PAYMENTMETHOD_URL);
     // HttpOverrides.global = MyHttpOverrides();
 
     // Logging URL and Headers
@@ -108,52 +109,78 @@ class _PaymentScreenState extends State<PaymentScreen> {
     required int paymentMethod,
     required String description,
   }) async {
-    final url = Uri.parse('http://delivershipment.com/api/acceptOffer');
+    final url = Uri.parse(ApplicationUrl.ACCEPTOFFER);
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization":
-            "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
-        // If authentication is required
-      },
-      body: json.encode({
-        'request_id': requestId,
-        'offer_id': offerId,
-        'amount': amount,
-        'payment_method': paymentMethod,
-        'description': description,
-      }),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization":
+              "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
+        },
+        body: json.encode({
+          'request_id': requestId,
+          'offer_id': offerId,
+          'amount': amount,
+          'payment_method': paymentMethod,
+          'description': description,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      // The request was successful
-      print('Offer accepted successfully');
-      print('response.body====${response.body}');
-      final responseBody = json.decode(response.body);
+      if (response.statusCode == 200) {
+        print('Offer accepted successfully');
+        final responseBody = json.decode(response.body);
 
-      if (responseBody.containsKey('data') &&
-          responseBody['data'].containsKey('invoice_link')) {
-        final paymentUrl = responseBody['data']['invoice_link'];
+        // Check if the response contains the expected data
+        if (responseBody.containsKey('data') &&
+            responseBody['data'].containsKey('invoice_link')) {
+          final paymentUrl = responseBody['data']['invoice_link'];
 
-        // Navigate to WebView
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PaymentWebviewScreen(url: paymentUrl),
-          ),
-        );
+          // Check if the widget is still mounted before navigating
+          if (mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PaymentWebviewScreen(url: paymentUrl),
+              ),
+            );
+          }
+        } else {
+          print('Invoice link not found in the response');
+          if (mounted) {
+            Get.snackbar(
+              'Success',
+              'Request Accepted',
+              backgroundColor: Colors.blue,
+              colorText: Colors.white,
+            );
+          }
+        }
       } else {
-        print('Invoice link not found in the response');
-        Get.snackbar('Success', 'Request Accepted',
-            backgroundColor: Colors.blue, colorText: Colors.white);
-        // Handle the case where the invoice link is not present
+        // Handle HTTP error
+        print('Failed to accept offer: ${response.statusCode}');
+        print('Failed to accept offer: ${response.body}');
+        if (mounted) {
+          Get.snackbar(
+            'Error',
+            'Failed to accept offer. Please try again later.',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
       }
-    } else {
-      // There was an error
-      print('Failed to accept offer: ${response.statusCode}');
-      print('Failed to accept offer: ${response.body}');
+    } catch (e) {
+      // Handle exceptions (network issues, etc.)
+      print('Error occurred while accepting offer: $e');
+      if (mounted) {
+        Get.snackbar(
+          'Error',
+          'An error occurred. Please try again later.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     }
   }
 

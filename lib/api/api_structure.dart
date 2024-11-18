@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:cargo_delivery_app/home/controller/location_controller.dart';
 import 'package:dio/dio.dart' as apiClient;
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +24,7 @@ class APISTRUCTURE {
   final bool isWantSuccessMessage;
   final String apiRequestMethod;
   String? contentType;
+  late Dio dio;
 
   APISTRUCTURE({
     this.body,
@@ -35,47 +37,63 @@ class APISTRUCTURE {
   Future<Map<String, dynamic>> requestAPI(
       {bool isShowLoading = false, bool isCheckAuthorization = true}) async {
     String api = "";
+
     if (isShowLoading) {
       ApiLoader.show();
+      print("Loading started");
     }
+
     try {
       api = BASE_URL + apiUrl;
+      print("API URL: $api");
+
       Map<String, String> header = {};
 
       if (contentType != null) {
         header.addAll({"Content-Type": contentType!});
+        print("Content-Type header: ${contentType!}");
       }
-      log('${Get.find<AuthController>().authRepo.getAuthToken()}');
-      header.addAll({
-        "Accept": "application/json",
-        "Authorization":
-            "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
-      });
+
+      if (isCheckAuthorization) {
+        String? authToken = Get.find<AuthController>().authRepo.getAuthToken();
+        header.addAll({
+          "Accept": "application/json",
+          "Authorization": "Bearer $authToken"
+        });
+        print('Authorization header added');
+      } else {
+        header.addAll({"Accept": "application/json"});
+      }
+
+      print('Request Headers: $header');
+
       apiClient.Dio dio = apiClient.Dio();
       apiClient.Options options = apiClient.Options(
-          followRedirects: false,
-          headers: header,
+        followRedirects: false,
+        headers: header,
+        validateStatus: (int? status) {
+          return (status ?? 500) < 600;
+        },
+      );
 
-          /// Enable for testing complete status
-          validateStatus: (int? status) {
-            return (status ?? 500) < 600;
-          });
       apiClient.Response<dynamic> response =
           apiRequestMethod == APIREQUESTMETHOD.GET
               ? await dio.get(api, options: options)
               : apiRequestMethod == APIREQUESTMETHOD.POST
                   ? await dio.post(api, data: body, options: options)
-
-                  /// Else for Delete Method
                   : apiRequestMethod == APIREQUESTMETHOD.DELETE
                       ? await dio.delete(api, options: options)
                       : await dio.put(api, data: body, options: options);
-      log('$api response:[${response.statusCode}]----> $response');
+
+      print('$api response:[${response.statusCode}]----> $response');
 
       if (isShowLoading) {
         ApiLoader.hide();
+        print("Loading hidden");
       }
+
       if (response.statusCode == 200) {
+        print("Response status code 200, returning data");
         return {APIRESPONSE.SUCCESS: response.data};
       }
 
@@ -85,11 +103,15 @@ class APISTRUCTURE {
       } else {
         responseResult = {APIRESPONSE.ERROR: "Something went wrong"};
       }
+
+      print("Error response: $responseResult");
       return responseResult;
     } on SocketException {
       if (isShowLoading) {
         ApiLoader.hide();
+        print("Loading hidden due to SocketException");
       }
+
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (context) => CupertinoAlertDialog(
@@ -102,12 +124,14 @@ class APISTRUCTURE {
           content: const Text('Internet Connection Error'),
         ),
       );
-
+      print("Caught SocketException, returning error");
       return {APIRESPONSE.EXCEPTION: APIEXCEPTION.SOCKET};
     } on HttpException {
       if (isShowLoading) {
         ApiLoader.hide();
+        print("Loading hidden due to HttpException");
       }
+
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (context) => CupertinoAlertDialog(
@@ -120,11 +144,14 @@ class APISTRUCTURE {
           content: const Text('Internet Connection Error'),
         ),
       );
+      print("Caught HttpException, returning error");
       return {APIRESPONSE.EXCEPTION: APIEXCEPTION.HTTP};
     } on FormatException {
       if (isShowLoading) {
         ApiLoader.hide();
+        print("Loading hidden due to FormatException");
       }
+
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (context) => CupertinoAlertDialog(
@@ -137,13 +164,16 @@ class APISTRUCTURE {
           content: const Text('Server Bad response'),
         ),
       );
-
+      print("Caught FormatException, returning error");
       return {APIRESPONSE.EXCEPTION: APIEXCEPTION.FORMAT};
     } on apiClient.DioException catch (e) {
       Map<String, dynamic> exception = {};
+
       if (isShowLoading) {
         ApiLoader.hide();
+        print("Loading hidden due to DioException");
       }
+
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (context) => CupertinoAlertDialog(
@@ -156,6 +186,9 @@ class APISTRUCTURE {
           content: Text(e.message ?? ''),
         ),
       );
+
+      print("Caught DioException, type: ${e.type}, message: ${e.message}");
+
       switch (e.type) {
         case apiClient.DioExceptionType.connectionTimeout:
           exception = {APIRESPONSE.EXCEPTION: "Connection timeout"};
@@ -171,14 +204,17 @@ class APISTRUCTURE {
           break;
         case apiClient.DioExceptionType.badCertificate:
           exception = {APIRESPONSE.EXCEPTION: "Server Certificate Error"};
-
           break;
         case apiClient.DioExceptionType.badResponse:
           exception = {APIRESPONSE.EXCEPTION: "Bad Request"};
           break;
         case apiClient.DioExceptionType.unknown:
           exception = {APIRESPONSE.EXCEPTION: "Server Unknown Error"};
-
+          print('Dio Error: $exception');
+          if (e.response != null) {
+            print('Response Body: ${e.response?.data}');
+          }
+          print('Request: ${e.requestOptions.uri}');
           break;
         case apiClient.DioExceptionType.cancel:
           showCupertinoModalPopup(
@@ -200,7 +236,9 @@ class APISTRUCTURE {
     } catch (error) {
       if (isShowLoading) {
         ApiLoader.hide();
+        print("Loading hidden due to general exception");
       }
+
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (context) => CupertinoAlertDialog(
@@ -215,6 +253,7 @@ class APISTRUCTURE {
               : error.toString()),
         ),
       );
+      print("Caught generic exception: $error");
 
       return error.toString().contains("SocketException")
           ? {APIRESPONSE.EXCEPTION: "Internet Connection Error"}

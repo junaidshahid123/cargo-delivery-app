@@ -79,22 +79,22 @@ class ProfilePage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.keyboard_arrow_right),
             ),
-            ListTile(
-              onTap: () =>
-                  Get.to(() => const DriverRequestNotificationScreen()),
-              dense: true,
-              leading: Image.asset(
-                'assets/images/driver_way.png',
-                color: Colors.black,
-                height: 20.h,
-                width: 20.h,
-              ),
-              title: Text(
-                'Near by drivers'.tr,
-                style: TextStyle(fontSize: 16.sp),
-              ),
-              trailing: const Icon(Icons.keyboard_arrow_right),
-            ),
+            // ListTile(
+            //   onTap: () =>
+            //       Get.to(() => const DriverRequestNotificationScreen()),
+            //   dense: true,
+            //   leading: Image.asset(
+            //     'assets/images/driver_way.png',
+            //     color: Colors.black,
+            //     height: 20.h,
+            //     width: 20.h,
+            //   ),
+            //   title: Text(
+            //     'Near by drivers'.tr,
+            //     style: TextStyle(fontSize: 16.sp),
+            //   ),
+            //   trailing: const Icon(Icons.keyboard_arrow_right),
+            // ),
             ListTile(
               onTap: () => Get.to(() => const AllTripsPage()),
               dense: true,

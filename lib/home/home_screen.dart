@@ -116,14 +116,22 @@ class HomeScreen extends StatelessWidget {
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(right: 15),
-                                          child: Image.network(
-                                            "${ApplicationUrl.IMAGE_ULR}/${controller.bannerModel.value?.banners?[index].image}",
-                                            height: 72.h,
-                                            errorBuilder:
-                                                (context, error, stackTrace) =>
+                                          child: Builder(
+                                            builder: (context) {
+                                              final imageUrl =
+                                                  "${ApplicationUrl.IMAGE_ULR}/images/${controller.bannerModel.value?.banners?[index].image}";
+                                              print(
+                                                  "Complete URL: $imageUrl"); // Prints the complete URL
+                                              return Image.network(
+                                                imageUrl,
+                                                height: 72.h,
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
                                                     const Icon(Icons.error),
+                                              );
+                                            },
                                           ),
-                                        )
+                                        ),
                                       ],
                                     )
                                   ],
@@ -211,7 +219,8 @@ class HomeScreen extends StatelessWidget {
                                             Expanded(
                                               child: InkWell(
                                                 onTap: () async {
-                                                  print('currentRide.requestId=======${currentRide.requestId}');
+                                                  print(
+                                                      'currentRide.requestId=======${currentRide.requestId}');
 
                                                   Get.to(() =>
                                                       DriverTrackingScreen(
@@ -368,8 +377,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              Get.to(() =>
-                              const DeliveryDetailsScreen());
+                              Get.to(() => const DeliveryDetailsScreen());
                             },
                             child: Container(
                                 margin: const EdgeInsets.all(5),
@@ -378,9 +386,7 @@ class HomeScreen extends StatelessWidget {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                     color: textBrownColor,
-                                    borderRadius:
-                                    BorderRadius.circular(
-                                        20)),
+                                    borderRadius: BorderRadius.circular(20)),
                                 child: Text(
                                   "Book now".tr,
                                   style: TextStyle(
@@ -415,8 +421,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              Get.to(() =>
-                              const DeliveryDetailsScreen());
+                              Get.to(() => const DeliveryDetailsScreen());
                             },
                             child: Container(
                                 margin: const EdgeInsets.all(5),
@@ -425,9 +430,7 @@ class HomeScreen extends StatelessWidget {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                     color: textBrownColor,
-                                    borderRadius:
-                                    BorderRadius.circular(
-                                        20)),
+                                    borderRadius: BorderRadius.circular(20)),
                                 child: Text(
                                   "Book now".tr,
                                   style: TextStyle(
