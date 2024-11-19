@@ -101,7 +101,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       throw Exception('Failed to load getPaymentMethods');
     }
   }
-
   Future<void> acceptOffer({
     required String requestId,
     required String offerId,
@@ -110,14 +109,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
     required String description,
   }) async {
     final url = Uri.parse(ApplicationUrl.ACCEPTOFFER);
+    // Print all the parameters being passed to the function
+    print('Request ID: $requestId');
+    print('Offer ID: $offerId');
+    print('Amount: $amount');
+    print('Payment Method: $paymentMethod');
+    print('Description: $description');
 
     try {
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
-          "Authorization":
-              "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
+          "Authorization": "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
         },
         body: json.encode({
           'request_id': requestId,
@@ -128,61 +132,65 @@ class _PaymentScreenState extends State<PaymentScreen> {
         }),
       );
 
+      // Log the complete server response for debugging
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         print('Offer accepted successfully');
         final responseBody = json.decode(response.body);
 
+        // Log the parsed response body for better debugging
+        print('Parsed Response Body: $responseBody');
+
         // Check if the response contains the expected data
-        if (responseBody.containsKey('data') &&
-            responseBody['data'].containsKey('invoice_link')) {
+        if (responseBody.containsKey('data') && responseBody['data'].containsKey('invoice_link')) {
           final paymentUrl = responseBody['data']['invoice_link'];
 
-          // Check if the widget is still mounted before navigating
-          if (mounted) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PaymentWebviewScreen(url: paymentUrl),
-              ),
-            );
-          }
+          // Navigate to PaymentWebviewScreen using Get.offAll() to clear previous routes
+          Get.offAll(() => PaymentWebviewScreen(url: paymentUrl));
         } else {
           print('Invoice link not found in the response');
-          if (mounted) {
-            Get.snackbar(
-              'Success',
-              'Request Accepted',
-              backgroundColor: Colors.blue,
-              colorText: Colors.white,
-            );
-          }
+          // Navigate to BottomBarScreen if no invoice link is found
+          Get.offAll(() => BottomBarScreen());
+
+          // Show a success message to the user
+          Get.snackbar(
+            'Success',
+            'Request Accepted',
+            backgroundColor: Colors.blue,
+            colorText: Colors.white,
+          );
         }
       } else {
-        // Handle HTTP error
-        print('Failed to accept offer: ${response.statusCode}');
-        print('Failed to accept offer: ${response.body}');
+        // Handle HTTP error and log the server response in detail
+        print('Failed to accept offer. Status Code: ${response.statusCode}');
+        print('Response Body: ${response.body}');
+
         if (mounted) {
           Get.snackbar(
             'Error',
-            'Failed to accept offer. Please try again later.',
+            'Failed to accept offer. Server returned an error. Please try again later.',
             backgroundColor: Colors.red,
             colorText: Colors.white,
           );
         }
       }
     } catch (e) {
-      // Handle exceptions (network issues, etc.)
+      // Handle exceptions (network issues, JSON parsing errors, etc.) and log the error
       print('Error occurred while accepting offer: $e');
+
       if (mounted) {
         Get.snackbar(
           'Error',
-          'An error occurred. Please try again later.',
+          'An error occurred. Please try again later. Details: $e',
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -362,16 +370,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           print(
                               'This Selected Payment Method Name====${selectedPaymentMethodName}');
                           acceptOffer(
-                              requestId: widget.mdCreateRequest.request!.id!
-                                  .toString(),
-                              offerId: widget.offerId.toString(),
-                              amount: widget.amount.toString(),
-                              paymentMethod: selectedPaymentMethodName ==
-                                      'Click Payment Method'
-                                  ? 1
-                                  : 2,
-                              description: 'Safe Drive');
-                          Get.offAll(() => BottomBarScreen());
+                                  requestId: widget.mdCreateRequest.request!.id!
+                                      .toString(),
+                                  offerId: widget.offerId.toString(),
+                                  amount: widget.amount.toString(),
+                                  paymentMethod: selectedPaymentMethodName ==
+                                          'Click Payment Method'
+                                      ? 2
+                                      : 3,
+                                  description: 'Safe Drive');
                         },
                       ),
                     ],

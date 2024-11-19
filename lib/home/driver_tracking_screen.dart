@@ -131,7 +131,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
   Future<void> trackShipment(String requestId) async {
     print(
         'Get.find<AuthController>().authRepo.getAuthToken()====${Get.find<AuthController>().authRepo.getAuthToken()}');
-    final url = Uri.parse('http://delivershipment.com/public/api/tracking');
+    final url = Uri.parse('https://thardi.com/api/tracking');
 
     try {
       final response = await http.post(
@@ -253,8 +253,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
                     ),
                   ),
                   Expanded(
-                    child:
-                    GoogleMap(
+                    child: GoogleMap(
                       polylines: _polyline,
                       markers: _polyline.isNotEmpty
                           ? {

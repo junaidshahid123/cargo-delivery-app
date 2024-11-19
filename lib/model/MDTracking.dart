@@ -32,14 +32,15 @@ class Data {
   String? status;
   String? paymentStatus;
   String? amount;
-  Null? invoiceId;
+  String? invoiceId;
   String? offerId;
   Null? channelName;
   String? categoryId;
-  Null? code;
+  String? code;
+  String? paymentMethod;
   String? createdAt;
   String? updatedAt;
-  Null? driverCurrentRecord;
+  DriverCurrentRecord? driverCurrentRecord;
 
   Data(
       {this.id,
@@ -62,6 +63,7 @@ class Data {
         this.channelName,
         this.categoryId,
         this.code,
+        this.paymentMethod,
         this.createdAt,
         this.updatedAt,
         this.driverCurrentRecord});
@@ -87,9 +89,12 @@ class Data {
     channelName = json['channel_name'];
     categoryId = json['category_id'];
     code = json['code'];
+    paymentMethod = json['payment_method'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    driverCurrentRecord = json['driver_current_record'];
+    driverCurrentRecord = json['driver_current_record'] != null
+        ? new DriverCurrentRecord.fromJson(json['driver_current_record'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -114,9 +119,69 @@ class Data {
     data['channel_name'] = this.channelName;
     data['category_id'] = this.categoryId;
     data['code'] = this.code;
+    data['payment_method'] = this.paymentMethod;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['driver_current_record'] = this.driverCurrentRecord;
+    if (this.driverCurrentRecord != null) {
+      data['driver_current_record'] = this.driverCurrentRecord!.toJson();
+    }
+    return data;
+  }
+}
+
+class DriverCurrentRecord {
+  int? id;
+  String? requestId;
+  String? userId;
+  String? lat;
+  String? long;
+  String? address;
+  String? isStart;
+  String? isEnd;
+  String? isRead;
+  String? createdAt;
+  String? updatedAt;
+
+  DriverCurrentRecord(
+      {this.id,
+        this.requestId,
+        this.userId,
+        this.lat,
+        this.long,
+        this.address,
+        this.isStart,
+        this.isEnd,
+        this.isRead,
+        this.createdAt,
+        this.updatedAt});
+
+  DriverCurrentRecord.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    requestId = json['request_id'];
+    userId = json['user_id'];
+    lat = json['lat'];
+    long = json['long'];
+    address = json['address'];
+    isStart = json['is_start'];
+    isEnd = json['is_end'];
+    isRead = json['is_read'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['request_id'] = this.requestId;
+    data['user_id'] = this.userId;
+    data['lat'] = this.lat;
+    data['long'] = this.long;
+    data['address'] = this.address;
+    data['is_start'] = this.isStart;
+    data['is_end'] = this.isEnd;
+    data['is_read'] = this.isRead;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }
