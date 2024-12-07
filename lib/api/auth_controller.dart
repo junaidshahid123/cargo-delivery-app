@@ -65,7 +65,6 @@ class AuthController extends GetxController implements GetxService {
     print('User Type: $userType');
     print('FCM Token: $fcmToken');
 
-<<<<<<< HEAD
     // Call the login API
     Map<String, dynamic> response = await authRepo.login(
       password: password,
@@ -78,22 +77,14 @@ class AuthController extends GetxController implements GetxService {
     log('API Response: $response');
 
     // Check for a valid SUCCESS response
-=======
-    Map<String, dynamic> response = await authRepo.login(
-        password: password,
-        mobileNumber: mobileNumber,
-        userType: userType,
-        fcmToken: fcmToken);
-    log(response.toString());
-    response['message'];
->>>>>>> 55ebfe9 (firebase updated)
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       Map<String, dynamic> result = response[APIRESPONSE.SUCCESS];
 
       // Debug: Log the result payload
       print('Result Payload: $result');
 
-      if (result.containsKey('message') && result['message'] == 'User not found') {
+      if (result.containsKey('message') &&
+          result['message'] == 'User not found') {
         print('Condition matched: User not found');
         String message = 'User not found'.tr;
 
@@ -133,7 +124,8 @@ class AuthController extends GetxController implements GetxService {
       }
     }
     // Handle error responses (e.g., 403 status code)
-    else if (response.containsKey('message') && response['message'] == 'User not found') {
+    else if (response.containsKey('message') &&
+        response['message'] == 'User not found') {
       print('Condition matched: User not found in error response');
       String message = 'User not found'.tr;
 
@@ -167,7 +159,6 @@ class AuthController extends GetxController implements GetxService {
     }
     return response;
   }
-
 
   Future<Map<String, dynamic>> registerUser({
     required String fullName,
@@ -219,10 +210,11 @@ class AuthController extends GetxController implements GetxService {
 
 // Function to Format Validation Errors Based on Locale
   String _formatValidationErrors(Map<String, dynamic>? errors) {
-    if (errors == null || errors.isEmpty) return 'An unexpected error occurred.'.tr;
+    if (errors == null || errors.isEmpty)
+      return 'An unexpected error occurred.'.tr;
 
     // Determine Current Locale
-    Locale currentLocale = Get.locale ?? Locale('en');
+    Locale currentLocale = Get.locale ?? const Locale('en');
     bool isArabic = currentLocale.languageCode == 'ar';
 
     // Error Translations

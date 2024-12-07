@@ -63,11 +63,6 @@ Future<String?> getFCMToken() async {
     print('Error fetching FCM Token: $e');
     return null;
   }
-  // Get the token
-  String? token = await messaging.getToken();
-  fcmToken = token;
-  print('fcmToken==$fcmToken');
-  return token;
 }
 
 final _firebaseMessaging = FirebaseMessaging.instance;
@@ -81,19 +76,16 @@ Future<void> initNotifications() async {
       announcement: true,
       criticalAlert: true,
     );
-    final fcmToken = await _firebaseMessaging.getAPNSToken();
+    fcmToken = await _firebaseMessaging.getAPNSToken();
     print('iOS FCM Token: $fcmToken');
   } else if (Platform.isAndroid) {
     print("Running on Android platform");
     // Perform Android-specific logic here
-    final fcmToken = await _firebaseMessaging.getToken();
+    fcmToken = await _firebaseMessaging.getToken();
     print('Android FCM Token: $fcmToken');
   } else {
     print("Platform not supported");
   }
-  await _firebaseMessaging.requestPermission();
-  final fcmToken = await _firebaseMessaging.getToken();
-  print('token=====$fcmToken');
 }
 
 void main() async {
