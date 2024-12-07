@@ -63,6 +63,11 @@ Future<String?> getFCMToken() async {
     print('Error fetching FCM Token: $e');
     return null;
   }
+  // Get the token
+  String? token = await messaging.getToken();
+  fcmToken = token;
+  print('fcmToken==$fcmToken');
+  return token;
 }
 
 final _firebaseMessaging = FirebaseMessaging.instance;
@@ -86,6 +91,9 @@ Future<void> initNotifications() async {
   } else {
     print("Platform not supported");
   }
+  await _firebaseMessaging.requestPermission();
+  final fcmToken = await _firebaseMessaging.getToken();
+  print('token=====$fcmToken');
 }
 
 void main() async {

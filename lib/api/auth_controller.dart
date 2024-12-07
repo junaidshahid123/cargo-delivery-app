@@ -65,6 +65,7 @@ class AuthController extends GetxController implements GetxService {
     print('User Type: $userType');
     print('FCM Token: $fcmToken');
 
+<<<<<<< HEAD
     // Call the login API
     Map<String, dynamic> response = await authRepo.login(
       password: password,
@@ -77,6 +78,15 @@ class AuthController extends GetxController implements GetxService {
     log('API Response: $response');
 
     // Check for a valid SUCCESS response
+=======
+    Map<String, dynamic> response = await authRepo.login(
+        password: password,
+        mobileNumber: mobileNumber,
+        userType: userType,
+        fcmToken: fcmToken);
+    log(response.toString());
+    response['message'];
+>>>>>>> 55ebfe9 (firebase updated)
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       Map<String, dynamic> result = response[APIRESPONSE.SUCCESS];
 
