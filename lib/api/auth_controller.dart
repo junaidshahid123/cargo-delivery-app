@@ -4,7 +4,6 @@ import 'package:cargo_delivery_app/auth_screen/login_screen.dart';
 import 'package:cargo_delivery_app/home/confirm_location_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:googleapis/calendar/v3.dart';
 
 import '../../api/api_constants.dart';
 

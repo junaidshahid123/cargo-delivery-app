@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cargo_delivery_app/bindings/controller_bindings.dart';
+import 'package:cargo_delivery_app/firebase_options.dart';
 import 'package:cargo_delivery_app/home/chat/chat_page.dart';
 import 'package:cargo_delivery_app/splash_screen.dart';
 import 'package:cargo_delivery_app/welcome_screen.dart';
@@ -26,9 +27,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void changeLanguage(String languageCode) {
   // Set the new language locale
   if (languageCode == "en") {
-    LocalizationService.changeLocale(Locale('en'));
+    LocalizationService.changeLocale(const Locale('en'));
   } else if (languageCode == "ar") {
-    LocalizationService.changeLocale(Locale('ar'));
+    LocalizationService.changeLocale(const Locale('ar'));
   }
 }
 
@@ -46,7 +47,7 @@ Future<String?> getFCMToken() async {
   // Get the token
   String? token = await messaging.getToken();
   fcmToken = token;
-  print('fcmToken==${fcmToken}');
+  print('fcmToken==$fcmToken');
   return token;
 }
 
@@ -55,13 +56,13 @@ final _firebaseMessaging = FirebaseMessaging.instance;
 Future<void> initNotifications() async {
   await _firebaseMessaging.requestPermission();
   final fcmToken = await _firebaseMessaging.getToken();
-  print('token=====${fcmToken}');
+  print('token=====$fcmToken');
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // Initialize Firebase Messaging
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await initNotifications();
@@ -71,10 +72,10 @@ void main() async {
 
   await getFCMToken();
   await initServices(); // Initialize services
-  HttpOverrides.global = new MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
 
   runApp(
-    CargoApp(),
+    const CargoApp(),
   );
 }
 
@@ -142,10 +143,10 @@ class _CargoAppState extends State<CargoApp> {
             // Use the wrapper class
             locale: Get.deviceLocale,
             // Set the default locale
-            fallbackLocale: Locale('en'),
-            supportedLocales: [Locale('en'), Locale('ar')],
+            fallbackLocale: const Locale('en'),
+            supportedLocales: const [Locale('en'), Locale('ar')],
             // Add localization delegates for handling Arabic translations
-            localizationsDelegates: [
+            localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -180,22 +181,19 @@ class _CargoAppState extends State<CargoApp> {
           );
         });
   }
-
-
 }
-
 
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     // Return the HttpClient with a bad certificate callback
     final client = super.createHttpClient(context);
-    client.badCertificateCallback = (X509Certificate cert, String host, int port) {
+    client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) {
       // Log the certificate info for debugging
       print('SSL cert error: $cert');
       return true; // Allow all certificates for testing (not recommended for production)
     };
     return client;
   }
-} 
-
+}
