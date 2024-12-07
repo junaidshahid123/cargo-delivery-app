@@ -9,6 +9,7 @@ class LocalizationService {
   static Map<String, Map<String, String>> translations = {
     'en': {
       "Driver": "Driver",
+      "No Wallet Yet": "No Wallet Yet",
       "hello": "Hello",
       "welcome": "Welcome",
       "confirm location": "Confirm Location",
@@ -41,7 +42,7 @@ class LocalizationService {
       "Your Request Sent": "Your Request Sent",
       "We have sent your Delivery Request to your nearby diver":
           "We have sent your Delivery Request to your nearby diver",
-      "OK": "OK",
+      "Ok": "Ok",
       "Proceed": "Proceed",
       "How May i help you?": "How May i help you?",
       "Password": "Password",
@@ -102,9 +103,57 @@ class LocalizationService {
       "confirm password do not match": "confirm password do not match",
       "Confirm New Password": "Confirm New Password",
       "Reset & Login": "Reset & Login",
+      "User Type does not matched, Try another number":
+          "User Type does not matched, Try another number",
+      "User not found": "User not found",
+      "Home": "Home",
+      "Orders": "Orders",
+      "Chat": "Chat",
+      "Wallet": "Wallet",
+      "More": "More",
+      "Camera": "Camera",
+      "Gallery": "Gallery",
+      "GallerySelect your Parcel Location": "Select your Parcel Location",
+      "Select your Receiver Location": "Select your Receiver Location",
+      "Image Not Available": "Image Not Available",
+      "Place Picker Map": "Place Picker Map",
+      "Search Location Here": "Search Location Here",
+      "Truck Selected": "Truck Selected",
+      "Car Selected": "Car Selected",
+      "No Orders Yet": "No Orders Yet",
+      "Change Language": "Change Language",
+      "Select Language": "Select Language",
+      "English": "English",
+      "Arabic": "Arabic",
+      "registered successfully": "registered successfully",
+      "Something went wrong": "Something went wrong",
       // Add more key-value pairs for English translations
     },
     'ar': {
+      "registered successfully": "تم التسجيل بنجاح",
+      "Something went wrong": "حدث خطأ ما",
+      "English": "الإنجليزية",
+      "Arabic": "العربية",
+      "Select Language": "اختر اللغة",
+      "No Wallet Yet": "لا توجد محفظة بعد",
+      "Change Language": "تغيير اللغة",
+      "No Orders Yet": "لا توجد طلبات بعد",
+      "Car Selected": "تم اختيار السيارة",
+      "Truck Selected": "تم اختيار الشاحنة",
+      "Search Location Here": "ابحث عن الموقع هنا",
+      "Select your Parcel Location": "اختر موقع الطرد الخاص بك",
+      "Place Picker Map": "خريطة اختيار المكان",
+      "Image Not Available": "الصورة غير متوفرة",
+      "Select your Receiver Location": "اختر موقع المستلم الخاص بك",
+      "Orders": "الطلبات",
+      "Gallery": "معرض",
+      "Camera": "كاميرا",
+      "Chat": "الدردشة",
+      "Home": "الصفحة الرئيسية",
+      "More": "المزيد",
+      "Wallet": "المحفظة",
+      "Fill Your Details or Continue with\n Social media":
+          "املأ بياناتك أو تابع مع\n وسائل التواصل الاجتماعي",
       "Reset & Login": "إعادة التعيين وتسجيل الدخول",
       "Confirm New Password": "تأكيد كلمة المرور الجديدة",
       "confirm password do not match": "غير مطابق تأكيد كلمة المرور",
@@ -197,10 +246,14 @@ class LocalizationService {
       "Your Request Sent": "تم إرسال طلبك",
       "We have sent your Delivery Request to your nearby diver":
           "لقد أرسلنا طلب التسليم الخاص بك إلى السائق القريب منك",
-      "OK": "موافق",
-      "Proceed": "تابع"
+      // "OK": "موافق",
+      "Proceed": "تابع",
+      "User Type does not matched, Try another number":
+          "نوع المستخدم غير متطابق، جرب رقمًا آخر",
+      "Ok": "حسنًا ",
+      "User not found": "المستخدم غير موجود"
 
-      // Add more key-value pairs for Arabic translations
+// Add more key-value pairs for Arabic translations
     },
   };
 

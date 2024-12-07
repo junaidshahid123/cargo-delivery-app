@@ -54,49 +54,95 @@ class AuthController extends GetxController implements GetxService {
 
   //Login Api
 
-  Future<Map<String, dynamic>> login(
-      {required String password,
-      required String mobileNumber,
-      int? userType,
-      required String fcmToken}) async {
-    // Print out all parameters
+  Future<Map<String, dynamic>> login({
+    required String password,
+    required String mobileNumber,
+    int? userType,
+    required String fcmToken,
+  }) async {
+    // Debug: Print input parameters
     print('Password: $password');
     print('Mobile Number: $mobileNumber');
     print('User Type: $userType');
     print('FCM Token: $fcmToken');
 
-     Map<String, dynamic> response = await authRepo.login(
-        password: password,
-        mobileNumber: mobileNumber,
-        userType: userType,
-        fcmToken: fcmToken);
-    log(response.toString());
-    response['message'];
+    // Call the login API
+    Map<String, dynamic> response = await authRepo.login(
+      password: password,
+      mobileNumber: mobileNumber,
+      userType: userType,
+      fcmToken: fcmToken,
+    );
+
+    // Debug: Log the entire response
+    log('API Response: $response');
+
+    // Check for a valid SUCCESS response
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       Map<String, dynamic> result = response[APIRESPONSE.SUCCESS];
 
-      if (result['message'] == 'user_type does not matched') {
-        print('result[message]====${result['message']}');
-        String message = 'User Type does not matched, Try another number';
+      // Debug: Log the result payload
+      print('Result Payload: $result');
+
+      if (result.containsKey('message') && result['message'] == 'User not found') {
+        print('Condition matched: User not found');
+        String message = 'User not found'.tr;
+
         showCupertinoModalPopup(
           context: Get.context!,
           builder: (_) => CupertinoAlertDialog(
-            content: Text('${message}'),
-            actions: [  
+            content: Text(message),
+            actions: [
               CupertinoDialogAction(
                 onPressed: Get.back,
-                child: const Text('Ok'),
-              )
+                child: Text('Ok'.tr),
+              ),
+            ],
+          ),
+        );
+      } else if (result.containsKey('message') &&
+          result['message'] == 'user_type does not matched') {
+        print('Condition matched: user_type does not matched');
+        String message = 'User Type does not matched, Try another number'.tr;
+
+        showCupertinoModalPopup(
+          context: Get.context!,
+          builder: (_) => CupertinoAlertDialog(
+            content: Text(message),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: Get.back,
+                child: Text('Ok'.tr),
+              ),
             ],
           ),
         );
       } else {
-        print('result[message]====${result['message']}');
-
+        print('Login successful, proceeding to save user data.');
         authRepo.saveLoginUserData(user: UserModel.fromJson(result));
         Get.offAll(() => const LocationPage());
       }
+    }
+    // Handle error responses (e.g., 403 status code)
+    else if (response.containsKey('message') && response['message'] == 'User not found') {
+      print('Condition matched: User not found in error response');
+      String message = 'User not found'.tr;
+
+      showCupertinoModalPopup(
+        context: Get.context!,
+        builder: (_) => CupertinoAlertDialog(
+          content: Text(message),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: Get.back,
+              child: Text('Ok'.tr),
+            ),
+          ],
+        ),
+      );
     } else {
+      // Handle other error responses
+      print('Error Response: ${response['message']}');
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (_) => CupertinoAlertDialog(
@@ -104,8 +150,8 @@ class AuthController extends GetxController implements GetxService {
           actions: [
             CupertinoDialogAction(
               onPressed: Get.back,
-              child: const Text('Ok'),
-            )
+              child: Text('Ok'.tr),
+            ),
           ],
         ),
       );
@@ -113,7 +159,7 @@ class AuthController extends GetxController implements GetxService {
     return response;
   }
 
-  //Sign Up Api
+
   Future<Map<String, dynamic>> registerUser({
     required String fullName,
     required String mobileNumber,
@@ -129,23 +175,26 @@ class AuthController extends GetxController implements GetxService {
         confirmPass: confirmPass ?? '');
 
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
+      // Successful Registration
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (_) => CupertinoAlertDialog(
-          content: const Text('registered successfully'),
+          content: Text('registered successfully'.tr),
           actions: [
             CupertinoDialogAction(
               onPressed: () => Get.to(() => LoginScreen()),
-              child: const Text('Ok'),
+              child: Text('Ok'.tr),
             )
           ],
         ),
       );
     } else {
+      // Handle Validation Errors
+      String errorMessage = _formatValidationErrors(response['errors']);
       showCupertinoModalPopup(
         context: Get.context!,
         builder: (_) => CupertinoAlertDialog(
-          content: Text('${response['message']}'),
+          content: Text(errorMessage),
           actions: [
             CupertinoDialogAction(
               onPressed: Get.back,
@@ -157,6 +206,40 @@ class AuthController extends GetxController implements GetxService {
     }
 
     return response;
+  }
+
+// Function to Format Validation Errors Based on Locale
+  String _formatValidationErrors(Map<String, dynamic>? errors) {
+    if (errors == null || errors.isEmpty) return 'An unexpected error occurred.'.tr;
+
+    // Determine Current Locale
+    Locale currentLocale = Get.locale ?? Locale('en');
+    bool isArabic = currentLocale.languageCode == 'ar';
+
+    // Error Translations
+    Map<String, Map<String, String>> translations = {
+      'email': {
+        'validation.unique': isArabic
+            ? 'هذا البريد الإلكتروني مسجل بالفعل.'
+            : 'This email is already registered.',
+      },
+      'mobile': {
+        'validation.unique': isArabic
+            ? 'هذا الرقم مسجل بالفعل.'
+            : 'This mobile number is already registered.',
+      },
+    };
+
+    List<String> formattedErrors = [];
+    errors.forEach((field, messages) {
+      for (var messageKey in messages) {
+        String translatedMessage =
+            translations[field]?[messageKey] ?? '$field: $messageKey';
+        formattedErrors.add(translatedMessage);
+      }
+    });
+
+    return formattedErrors.join('\n');
   }
 
   //UpdateUser

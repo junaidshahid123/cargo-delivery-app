@@ -40,7 +40,7 @@ class ApplicationUrl {
   static String get REGISTER_URL => _REGISTER_URL;
   static const String _CONFIRMLOCATION_URL = '$_BASE_URL/setLocation';
 
-  static String get CONFIRMLOCATION_URL => _CONFIRMLOCATION_URL;
+  static String get CONFIRMLOCATION_URL => _CONFIRMLOCATION_URL; 
   static const String _LOGOUT_URL = '$_BASE_URL/logout';
 
   static String get LOGOUT_URL => _LOGOUT_URL;

@@ -192,9 +192,10 @@ class AuthRepo {
       apiUrl: ApplicationUrl.LOGOUT_URL,
       apiRequestMethod: APIREQUESTMETHOD.GET,
       isWantSuccessMessage: true,
+
     );
     return await apiObject.requestAPI(
-        isShowLoading: true, isCheckAuthorization: false);
+        isShowLoading: true, isCheckAuthorization: true);
   }
 
 // Reset Password

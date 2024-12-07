@@ -16,6 +16,7 @@ class LocationPage extends StatelessWidget {
       builder: (controller) => Scaffold(
         body: Stack(
           children: [
+            // Google Map
             Container(
               foregroundDecoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -37,9 +38,27 @@ class LocationPage extends StatelessWidget {
                 onCameraIdle: () async {
                   controller.getMoveCamera();
                 },
-
               ),
             ),
+
+            // Full-Screen Loader
+            Obx(() {
+              if (controller.isLoading.value) {
+                return Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    // Semi-transparent overlay
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox
+                  .shrink(); // Return an empty widget when not loading
+            }),
+
+            // Location TextField
             Positioned(
               top: 100.h,
               left: 20.w,
@@ -49,23 +68,23 @@ class LocationPage extends StatelessWidget {
                 controller: controller.locationController,
                 style: const TextStyle(color: Colors.grey),
                 decoration: const InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.grey,
-                    ),
-                    contentPadding: EdgeInsets.zero,
-                    fillColor: Colors.white12,
-                    filled: true,
-                    focusedBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    disabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    errorBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedErrorBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none)),
+                  prefixIcon: Icon(
+                    Icons.location_on_outlined,
+                    color: Colors.grey,
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                  fillColor: Colors.white12,
+                  filled: true,
+                  focusedBorder:
+                      OutlineInputBorder(borderSide: BorderSide.none),
+                  enabledBorder:
+                      OutlineInputBorder(borderSide: BorderSide.none),
+                  disabledBorder:
+                      OutlineInputBorder(borderSide: BorderSide.none),
+                  errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  focusedErrorBorder:
+                      OutlineInputBorder(borderSide: BorderSide.none),
+                ),
               ),
             ),
           ],
@@ -78,29 +97,30 @@ class LocationPage extends StatelessWidget {
             right: 10,
           ),
           child: CustomButton(
-              buttonText: "confirm location".tr,
-              onPress: () {
-                final userId = '${Get.find<AuthController>().getLoginUserData()?.user?.id}';
-                final address = controller.locationController.text;
-                final city = controller.city;
-                final latitude = '${controller.initialPos.latitude}';
-                final longitude = '${controller.initialPos.longitude}';
+            buttonText: "confirm location".tr,
+            onPress: () {
+              final userId =
+                  '${Get.find<AuthController>().getLoginUserData()?.user?.id}';
+              final address = controller.locationController.text;
+              final city = controller.city;
+              final latitude = '${controller.initialPos.latitude}';
+              final longitude = '${controller.initialPos.longitude}';
 
-                // Print all values
-                print('User ID: $userId');
-                print('Address: $address');
-                print('City: $city');
-                print('Latitude: $latitude');
-                print('Longitude: $longitude');
+              // Print all values
+              print('User ID: $userId');
+              print('Address: $address');
+              print('City: $city');
+              print('Latitude: $latitude');
+              print('Longitude: $longitude');
 
-                controller.setLocation(
-                  userId: userId,
-                  address: address,
-                  city: city,
-                  lat: latitude,
-                  lang: longitude,
-                );
-              }
+              controller.setLocation(
+                userId: userId,
+                address: address,
+                city: city,
+                lat: latitude,
+                lang: longitude,
+              );
+            },
           ),
         ),
       ),

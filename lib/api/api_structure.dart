@@ -101,7 +101,7 @@ class APISTRUCTURE {
       if (response.statusCode != null) {
         responseResult = response.data;
       } else {
-        responseResult = {APIRESPONSE.ERROR: "Something went wrong"};
+        responseResult = {APIRESPONSE.ERROR: "Something went wrong".tr};
       }
 
       print("Error response: $responseResult");

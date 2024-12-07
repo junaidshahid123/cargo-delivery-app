@@ -19,6 +19,7 @@ class LocationController extends GetxController implements GetxService {
   late LatLng _gpsActual;
   LatLng _initialPosition = const LatLng(-12.122711, -77.027475);
   var activeGps = true.obs;
+  var isLoading = false.obs; // Loader state
   TextEditingController locationController = TextEditingController();
   late String city;
   late GoogleMapController _mapController;
@@ -70,44 +71,53 @@ class LocationController extends GetxController implements GetxService {
   }
 
   void getMoveCamera() async {
-    List<Placemark> placemark = await placemarkFromCoordinates(
-      _initialPosition.latitude,
-      _initialPosition.longitude,
-    );
-    city = placemark[0].locality!;
-    locationController.text = placemark[0].name!;
+    isLoading.value = true; // Start loader
+    try {
+      List<Placemark> placemark = await placemarkFromCoordinates(
+        _initialPosition.latitude,
+        _initialPosition.longitude,
+      );
+      city = placemark[0].locality!;
+      locationController.text = placemark[0].name!;
+    } finally {
+      isLoading.value = false; // Stop loader
+    }
   }
 
   void getUserLocation() async {
     if (!(await Geolocator.isLocationServiceEnabled())) {
       activeGps.value = false;
     } else {
-      activeGps.value = true;
-      LocationPermission permission;
-      permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
+      isLoading.value = true; // Start loader
+      try {
+        activeGps.value = true;
+        LocationPermission permission;
+        permission = await Geolocator.checkPermission();
         if (permission == LocationPermission.denied) {
-          return Future.error('Location permissions are denied');
+          permission = await Geolocator.requestPermission();
+          if (permission == LocationPermission.denied) {
+            throw ('Location permissions are denied');
+          }
         }
-      }
-      if (permission == LocationPermission.deniedForever) {
-        // Permissions are denied forever, handle appropriately.
-        return Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
-      }
+        if (permission == LocationPermission.deniedForever) {
+          throw ('Location permissions are permanently denied, we cannot request permissions.');
+        }
 
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      List<Placemark> placemark =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      _initialPosition = LatLng(position.latitude, position.longitude);
-      log("the latitude is: ${position.latitude} and the longitude is: ${position.longitude} ");
-      locationController.text = placemark[0].name!;
-      log("initial position is : ${placemark[0].name}");
-      _addMarker(_initialPosition, placemark[0].name!);
-      update();
-      _mapController.moveCamera(CameraUpdate.newLatLng(_initialPosition));
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        List<Placemark> placemark = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
+        _initialPosition = LatLng(position.latitude, position.longitude);
+        log("the latitude is: ${position.latitude} and the longitude is: ${position.longitude} ");
+        locationController.text = placemark[0].name!;
+        log("initial position is : ${placemark[0].name}");
+        _addMarker(_initialPosition, placemark[0].name!);
+        update();
+        _mapController.moveCamera(CameraUpdate.newLatLng(_initialPosition));
+      } finally {
+        isLoading.value = false; // Stop loader
+        update();
+      }
     }
   }
 
@@ -147,35 +157,40 @@ class LocationController extends GetxController implements GetxService {
     _initialPosition = position.target;
   }
 
-  void setLocation(
-      {required String userId,
-      required String address,
-      required String lat,
-      required String lang,
-      required String city}) async
-  {
-    var response = await userRepo.confirmLocation(
-      userId: userId,
-      address: address,
-      lat: lat,
-      lang: lang,
-      city: city,
-    );
-    if (response.containsKey(APIRESPONSE.SUCCESS)) {
-      Get.to(() => const BottomBarScreen());
-    } else {
-      showCupertinoModalPopup(
-        context: Get.context!,
-        builder: (_) => CupertinoAlertDialog(
-          content: const Text('Some thing went wrong'),
-          actions: [
-            CupertinoDialogAction(
-              onPressed: Get.back,
-              child: const Text('Ok'),
-            )
-          ],
-        ),
+  void setLocation({
+    required String userId,
+    required String address,
+    required String lat,
+    required String lang,
+    required String city,
+  }) async {
+    // isLoading.value = true; // Start loader
+    try {
+      var response = await userRepo.confirmLocation(
+        userId: userId,
+        address: address,
+        lat: lat,
+        lang: lang,
+        city: city,
       );
+      if (response.containsKey(APIRESPONSE.SUCCESS)) {
+        Get.offAll(() => const BottomBarScreen());
+      } else {
+        showCupertinoModalPopup(
+          context: Get.context!,
+          builder: (_) => CupertinoAlertDialog(
+            content: const Text('Something went wrong'),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: Get.back,
+                child: const Text('Ok'),
+              )
+            ],
+          ),
+        );
+      }
+    } finally {
+      // isLoading.value = false; // Stop loader
     }
   }
 }

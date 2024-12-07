@@ -183,84 +183,88 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Future<void> onLoginTap() async {
-    final url = Uri.parse('https://thardi.com/api/login');
-
-    // Request Body
-    Map<String, String> requestBody = {
-      "mobile": '1',
-      "password": '1',
-      "device_token": fcmToken!,
-      "user_type": '1',
-    };
-
-    Map<String, String> headers = {
-      "Accept": "application/json",
-    };
-
-    try {
-      final client = http.Client();
-
-      // Print request body and headers
-      print('Request URL: $url');
-      print('Request Headers: $headers');
-      print('Request Body: $requestBody');
-
-      // Sending the POST request
-      final http.Response response = await client.post(
-        url,
-        headers: headers,
-        body: requestBody,
-      );
-
-      // Print response status and body
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Success case
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        print('Response Data: $responseData');
-
-        // Extract necessary details from the response
-        String token = responseData['authorization']['token'] ?? '';
-        String userName = responseData['user']['name'] ?? '';
-        String userEmail = responseData['user']['email'] ?? '';
-        String emailVerified = responseData['user']['email_verified_at'] ?? '';
-
-        print('Token: $token');
-        print('User Name: $userName');
-        print('User Email: $userEmail');
-        print('Email Verified At: $emailVerified');
-
-        // Optionally navigate to the OTP verification screen
-        Get.snackbar('Success', 'User Login successfully!',
-            backgroundColor: Color(0xFFB7A06A), colorText: Colors.white);
-        await Future.delayed(Duration(seconds: 3));
-      } else {
-        // Error case
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        String errorMessage =
-            responseData['message'] ?? 'Failed to register user';
-
-        print('Error Message: $errorMessage');
-
-        if (responseData.containsKey('errors')) {
-          final errors = responseData['errors'] as Map<String, dynamic>;
-          errors.forEach((key, value) {
-            errorMessage += '\n${value.join(', ')}';
-            print('Error Detail: $key -> ${value.join(', ')}');
-          });
-        }
-
-        Get.snackbar('Error', errorMessage,
-            backgroundColor: Colors.red, colorText: Colors.white);
-      }
-    } catch (e) {
-      // Catch any other errors
-      print('Error occurred: $e');
-      Get.snackbar('Error', 'An error occurred: $e',
-          backgroundColor: Colors.red, colorText: Colors.white);
-    }
-  }
+  // Future<void> onLoginTap() async {
+  //   final url = Uri.parse('https://thardi.com/api/login');
+  //
+  //   // Request Body
+  //   Map<String, String> requestBody = {
+  //     "mobile": '1',
+  //     "password": '1',
+  //     "device_token": fcmToken!,
+  //     "user_type": '1',
+  //   };
+  //
+  //   Map<String, String> headers = {
+  //     "Accept": "application/json",
+  //   };
+  //
+  //   try {
+  //     final client = http.Client();
+  //
+  //     // Print request body and headers
+  //     print('Request URL: $url');
+  //     print('Request Headers: $headers');
+  //     print('Request Body: $requestBody');
+  //
+  //     // Sending the POST request
+  //     final http.Response response = await client.post(
+  //       url,
+  //       headers: headers,
+  //       body: requestBody,
+  //     );
+  //
+  //     // Print response status and body
+  //     print('Response Status Code: ${response.statusCode}');
+  //     print('Response Body: ${response.body}');
+  //
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       // Success case
+  //       final Map<String, dynamic> responseData = json.decode(response.body);
+  //       print('Response Data: $responseData');
+  //
+  //       // Extract necessary details from the response
+  //       String token = responseData['authorization']['token'] ?? '';
+  //       String userName = responseData['user']['name'] ?? '';
+  //       String userEmail = responseData['user']['email'] ?? '';
+  //       String emailVerified = responseData['user']['email_verified_at'] ?? '';
+  //
+  //       print('Token: $token');
+  //       print('User Name: $userName');
+  //       print('User Email: $userEmail');
+  //       print('Email Verified At: $emailVerified');
+  //
+  //       // Optionally navigate to the OTP verification screen
+  //       try {
+  //         Get.snackbar('Success'.tr, 'User Login successfully!'.tr,
+  //             backgroundColor: Color(0xFFB7A06A), colorText: Colors.white);
+  //       } catch (e, s) {
+  //         print(s);
+  //       }
+  //       await Future.delayed(Duration(seconds: 3));
+  //     } else {
+  //       // Error case
+  //       final Map<String, dynamic> responseData = json.decode(response.body);
+  //       String errorMessage =
+  //           responseData['message'] ?? 'Failed to register user';
+  //
+  //       print('Error Message: $errorMessage');
+  //
+  //       if (responseData.containsKey('errors')) {
+  //         final errors = responseData['errors'] as Map<String, dynamic>;
+  //         errors.forEach((key, value) {
+  //           errorMessage += '\n${value.join(', ')}';
+  //           print('Error Detail: $key -> ${value.join(', ')}');
+  //         });
+  //       }
+  //
+  //       Get.snackbar('Error', errorMessage,
+  //           backgroundColor: Colors.red, colorText: Colors.white);
+  //     }
+  //   } catch (e) {
+  //     // Catch any other errors
+  //     print('Error occurred: $e');
+  //     Get.snackbar('Error', 'An error occurred: $e',
+  //         backgroundColor: Colors.red, colorText: Colors.white);
+  //   }
+  // }
 }

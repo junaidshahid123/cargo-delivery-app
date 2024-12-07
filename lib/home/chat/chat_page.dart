@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api/auth_controller.dart';
 import '../../widgets/search_widget.dart';
+import '../bottom_navbar.dart';
 
 class ChatPage extends StatefulWidget {
   final RemoteMessage?
@@ -129,114 +130,124 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: const Alignment(0, 0),
-            colors: [
-              textcyanColor,
-              textcyanColor.withOpacity(0.1),
+    return WillPopScope(
+      onWillPop: () async {
+        // Navigate to the home screen when the back button is pressed
+        Get.offAll(() => const BottomBarScreen());
+        return false;
+      },
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: const Alignment(0, 0),
+              colors: [
+                textcyanColor,
+                textcyanColor.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50.h,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () => Get.offAll(() => const BottomBarScreen()),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                     Text(
+                      'Driver'.tr,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    InkWell(
+                      onTap: () => showSearch(
+                          context: context, delegate: CustomSearchDelegate()),
+                      child: const Icon(
+                        Icons.search,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                      childCount: chatList.length,
+                      (context, index) => Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildChatBubble(
+                          chatList[index].text!,
+                          chatList[index].isUser!,
+                          chatList[index].isDriver!,
+                        ),
+                      ),
+                    ))
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0.h),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.attachment_outlined,
+                    ),
+                    SizedBox(
+                      width: 4.h,
+                    ),
+                    Flexible(
+                      child: TextField(
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.only(left: 10),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: _addMessage,
+                          ),
+                          constraints: const BoxConstraints(
+                              maxHeight: 40, minHeight: 40),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(13),
+                              borderSide:
+                                  const BorderSide(color: Colors.white)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(13),
+                              borderSide:
+                                  const BorderSide(color: Colors.white)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(13),
+                              borderSide:
+                                  const BorderSide(color: Colors.white)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4.h,
+                    ),
+                    const Icon(Icons.emoji_emotions_outlined)
+                  ],
+                ),
+              )
             ],
           ),
-        ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 50.h,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () => Get.back(),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Text(
-                    'Driver',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  InkWell(
-                    onTap: () => showSearch(
-                        context: context, delegate: CustomSearchDelegate()),
-                    child: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                    childCount: chatList.length,
-                    (context, index) => Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: buildChatBubble(
-                        chatList[index].text!,
-                        chatList[index].isUser!,
-                        chatList[index].isDriver!,
-                      ),
-                    ),
-                  ))
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0.h),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.attachment_outlined,
-                  ),
-                  SizedBox(
-                    width: 4.h,
-                  ),
-                  Flexible(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.only(left: 10),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.send),
-                          onPressed: _addMessage,
-                        ),
-                        constraints:
-                            const BoxConstraints(maxHeight: 40, minHeight: 40),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                            borderSide: const BorderSide(color: Colors.white)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                            borderSide: const BorderSide(color: Colors.white)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                            borderSide: const BorderSide(color: Colors.white)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 4.h,
-                  ),
-                  const Icon(Icons.emoji_emotions_outlined)
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );

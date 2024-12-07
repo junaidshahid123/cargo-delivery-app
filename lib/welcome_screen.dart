@@ -67,7 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "طرد",
+                        "طردي",
                         style: TextStyle(
                             fontSize: 50.sp,
                             fontFamily: 'RadioCanada',

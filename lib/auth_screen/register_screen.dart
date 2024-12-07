@@ -96,7 +96,7 @@ class RegisterScreen extends StatelessWidget {
                       CustomTextField(
                         validator: (p0) {
                           if (!p0!.isEmail) {
-                            return 'Enter valid email';
+                            return 'Enter valid email'.tr;
                           }
                           return null;
                         },
