@@ -39,24 +39,53 @@ String? accessToken;
 DateTime? expiry;
 
 Future<String?> getFCMToken() async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  try {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  // Request permission to receive notifications
-  await messaging.requestPermission();
+    // Request permission to receive notifications
+    NotificationSettings settings = await messaging.requestPermission();
 
-  // Get the token
-  String? token = await messaging.getToken();
-  fcmToken = token;
-  print('fcmToken==$fcmToken');
-  return token;
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      // Get the token
+      String? token = await messaging.getToken();
+      if (token != null) {
+        print('FCM Token: $token');
+        return token;
+      } else {
+        print('Failed to retrieve FCM Token');
+        return null;
+      }
+    } else {
+      print('User denied notification permissions');
+      return null;
+    }
+  } catch (e) {
+    print('Error fetching FCM Token: $e');
+    return null;
+  }
 }
 
 final _firebaseMessaging = FirebaseMessaging.instance;
 
 Future<void> initNotifications() async {
-  await _firebaseMessaging.requestPermission();
-  final fcmToken = await _firebaseMessaging.getToken();
-  print('token=====$fcmToken');
+  if (Platform.isIOS) {
+    print("Running on iOS platform");
+    // Perform iOS-specific logic here
+    await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: true,
+      criticalAlert: true,
+    );
+    final fcmToken = await _firebaseMessaging.getAPNSToken();
+    print('iOS FCM Token: $fcmToken');
+  } else if (Platform.isAndroid) {
+    print("Running on Android platform");
+    // Perform Android-specific logic here
+    final fcmToken = await _firebaseMessaging.getToken();
+    print('Android FCM Token: $fcmToken');
+  } else {
+    print("Platform not supported");
+  }
 }
 
 void main() async {
