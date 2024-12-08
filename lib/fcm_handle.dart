@@ -44,32 +44,19 @@ class MessagingService {
     debugPrint(
         'User granted notifications permission: ${settings.authorizationStatus}');
     // Retrieving the FCM token
-    fcmToken = await _fcm.getToken();
-
-    _fcm.getAPNSToken();
-    log('fcmToken: $fcmToken');
-    // Save FcmToken
-    await SharedPreferences.getInstance()
-        .then((value) => value.setString('fcm_token', fcmToken ?? ''));
-
     if (Platform.isIOS) {
       String? apnsToken = await _fcm.getAPNSToken();
-      if (apnsToken != null) {
-        await _fcm.subscribeToTopic('1313133');
-      } else {
-        await Future<void>.delayed(
-          const Duration(
-            seconds: 3,
-          ),
-        );
-        apnsToken = await _fcm.getAPNSToken();
-        if (apnsToken != null) {
-          await _fcm.subscribeToTopic('1313133');
-        }
-      }
+      fcmToken = apnsToken;
+      await SharedPreferences.getInstance()
+          .then((value) => value.setString('fcm_token', fcmToken ?? ''));
     } else {
-      await _fcm.subscribeToTopic('1313133');
+      fcmToken = await _fcm.getToken();
+      log('fcmToken: $fcmToken');
+      // Save FcmToken
+      await SharedPreferences.getInstance()
+          .then((value) => value.setString('fcm_token', fcmToken ?? ''));
     }
+
     // Handling background messages using the specified handler
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     // Listening for incoming messages while the app is in the foreground
@@ -139,7 +126,9 @@ class MessagingService {
   void _handleNotificationClick(BuildContext context, RemoteMessage message) {
     final notificationData = message.data;
     if (message.notification?.title == 'New Message') {
-      Get.offAll(() => ChatPage(message: message,));
+      Get.offAll(() => ChatPage(
+            message: message,
+          ));
     }
   }
 }

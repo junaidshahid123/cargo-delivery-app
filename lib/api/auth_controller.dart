@@ -4,7 +4,6 @@ import 'package:cargo_delivery_app/auth_screen/login_screen.dart';
 import 'package:cargo_delivery_app/home/confirm_location_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:googleapis/calendar/v3.dart';
 
 import '../../api/api_constants.dart';
 
@@ -84,7 +83,8 @@ class AuthController extends GetxController implements GetxService {
       // Debug: Log the result payload
       print('Result Payload: $result');
 
-      if (result.containsKey('message') && result['message'] == 'User not found') {
+      if (result.containsKey('message') &&
+          result['message'] == 'User not found') {
         print('Condition matched: User not found');
         String message = 'User not found'.tr;
 
@@ -124,7 +124,8 @@ class AuthController extends GetxController implements GetxService {
       }
     }
     // Handle error responses (e.g., 403 status code)
-    else if (response.containsKey('message') && response['message'] == 'User not found') {
+    else if (response.containsKey('message') &&
+        response['message'] == 'User not found') {
       print('Condition matched: User not found in error response');
       String message = 'User not found'.tr;
 
@@ -158,7 +159,6 @@ class AuthController extends GetxController implements GetxService {
     }
     return response;
   }
-
 
   Future<Map<String, dynamic>> registerUser({
     required String fullName,
@@ -210,10 +210,11 @@ class AuthController extends GetxController implements GetxService {
 
 // Function to Format Validation Errors Based on Locale
   String _formatValidationErrors(Map<String, dynamic>? errors) {
-    if (errors == null || errors.isEmpty) return 'An unexpected error occurred.'.tr;
+    if (errors == null || errors.isEmpty)
+      return 'An unexpected error occurred.'.tr;
 
     // Determine Current Locale
-    Locale currentLocale = Get.locale ?? Locale('en');
+    Locale currentLocale = Get.locale ?? const Locale('en');
     bool isArabic = currentLocale.languageCode == 'ar';
 
     // Error Translations
