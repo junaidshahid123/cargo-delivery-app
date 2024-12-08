@@ -8,9 +8,8 @@ import '../../api/auth_controller.dart';
 import 'orders_model.dart';
 
 class OrdersLogic extends GetxController {
-  ResponseModel? allRidesData;
+  MDAllRides? allRidesData;
   RxBool isLoading = false.obs;
-
 
   @override
   void onInit() {
@@ -19,65 +18,49 @@ class OrdersLogic extends GetxController {
   }
 
   Future<void> getAllRidesData() async {
-    print('Get.find<AuthController>().authRepo.getAuthToken()=========${Get.find<AuthController>().authRepo.getAuthToken()}');
-    final url = Uri.parse('https://thardi.com/api/allUserRides');
+    print(
+        'Authorization Token: Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}');
 
-    // Set isLoading to true before making the request (this is where the loading starts)
+    final url = Uri.parse('https://thardi.com/api/allUserRides');
     isLoading.value = true;
 
     try {
-      // Set up headers including the token
       Map<String, String> headers = {
-        'Authorization': 'Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}',
+        'Authorization':
+            'Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}',
         'Content-Type': 'application/json',
       };
 
-      // Sending GET request to the API with headers
       final response = await http.get(url, headers: headers);
 
-      // Checking if the response is successful
-      if (response.statusCode == 200) {
-        // Decoding the JSON response
-        final Map<String, dynamic> data = json.decode(response.body);
+      // Step 1: Print the raw response body for debugging
+      print('Response body: ${response.body}');
 
-        // Print the raw data received from the server
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
         print('Raw data received from server: $data');
 
-        // Parsing status safely
-        int status = data['status'] ?? 0;
+        // Step 2: Parse the data into MdAllRides
+        allRidesData = MDAllRides.fromJson(data);
 
-        // Safely parse the allRides field
-        List<AllRide>? rides = [];
-        if (data['allRides'] is List) {
-          rides = (data['allRides'] as List<dynamic>)
-              .map((rideData) => AllRide.fromJson(rideData))
-              .toList();
+        // Step 3: Handle the fetched rides
+        if (allRidesData!.allRides!.isNotEmpty) {
+          print('Fetched ${allRidesData!.allRides!.length} rides');
+          // Update your UI or state here with the 'allRidesData.allRides' list
+          update();
+        } else {
+          print('No rides found');
         }
 
-        // Initialize MdAllRides with the parsed data
-        allRidesData = ResponseModel(
-          status: status,
-          allRides: rides,
-        );
-
-        // Log the address if it's available
-        if (allRidesData?.allRides?.isNotEmpty == true) {
-          print(allRidesData!.allRides![0].request!.receiverAddress);
-          print(allRidesData!.allRides![0].request!.parcelAddress);
-        }
-
-        // Update the UI
-        update();
+        isLoading.value = false;
       } else {
-        // Handle the error if the response is not successful
-        print('Failed to load rides data: ${response.statusCode}');
+        // Handle error: API did not return 200 OK
+        print('Failed to fetch data: ${response.statusCode}');
+        isLoading.value = false;
       }
-    } catch (e) {
-      // Handle exceptions, like network errors
-      print('Error: $e');
+    } catch (error) {
+      print('Error occurred while fetching rides data: $error');
+      isLoading.value = false;
     }
-
-    // Set isLoading to false after the request is complete (either success or failure)
-    isLoading.value = false;
   }
 }

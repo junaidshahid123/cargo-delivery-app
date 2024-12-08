@@ -35,16 +35,6 @@ class OrdersView extends StatelessWidget {
         if (allRidesData != null) {
           print('allRidesData: ${allRidesData.toString()}');
           // If allRidesData contains a list, print each ride's details
-          if (allRidesData.allRides != null &&
-              allRidesData.allRides!.isNotEmpty) {
-            for (var ride in allRidesData.allRides!) {
-              print('Ride: ${ride.toString()}');
-              if (ride.request != null) {
-                print('Receiver Address: ${ride.request!.receiverAddress}');
-                print('Parcel Address: ${ride.request!.parcelAddress}');
-              }
-            }
-          }
         } else {
           print('allRidesData is null');
         }
@@ -112,7 +102,7 @@ class OrdersView extends StatelessWidget {
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(16),
                                     title: Text(
-                                      ride.request!.status == 1
+                                      ride.status == 1
                                           ? 'Status: Active and Current'
                                           : 'Status: Delivered',
                                       style: TextStyle(
@@ -128,7 +118,8 @@ class OrdersView extends StatelessWidget {
                                       children: [
                                         // Display "From" and "To" locations
                                         Text(
-                                          'From: ${ride.request!.parcelAddress}', // Assuming 'fromLocation' is available
+                                          'From: ${ride.parcelAddress}',
+                                          // Assuming 'fromLocation' is available
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors
@@ -136,7 +127,8 @@ class OrdersView extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          'To: ${ride.request!.receiverAddress}', // Assuming 'toLocation' is available
+                                          'To: ${ride.receiverAddress}',
+                                          // Assuming 'toLocation' is available
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors
@@ -147,8 +139,8 @@ class OrdersView extends StatelessWidget {
                                         Text(
                                           'Amount: ${ride.amount ?? 'N/A'}',
                                           style: TextStyle(
-                                            color: Colors
-                                                .green, // Highlighting the amount with a different color
+                                            color: Colors.green,
+                                            // Highlighting the amount with a different color
                                             fontSize: 16,
                                           ),
                                         ),
