@@ -132,7 +132,8 @@ class LocalizationService {
       "Something went wrong": "Something went wrong",
       "Please Enter Description": "Please Enter Description",
       "Please Enter Parcel Address": "Please Enter Parcel Address",
-      "Please Enter Receiver Mobile Number": "Please Enter Receiver Mobile Number",
+      "Please Enter Receiver Mobile Number":
+          "Please Enter Receiver Mobile Number",
       "Please Select Vehicle": "Please Select Vehicle",
       "Enter your receiver mobile number": "Enter your receiver mobile number",
       "Current Shipping": "Current Shipping",
@@ -147,9 +148,18 @@ class LocalizationService {
       "from": "From",
       "to": "To",
       "amount": "Amount",
+      "All TRIPS": "All TRIPS",
+      "No Data Found!": "No Data Found!",
+      "earning_sar": "Earning: SAR",
+      "trip_id": "Trip ID:",
+
       // Add more key-value pairs for English translations
     },
     'ar': {
+      "trip_id": "رقم الرحلة:",
+      "No Data Found!": "لم يتم العثور على بيانات!",
+      "earning_sar": "الإيرادات: ريال سعودي",
+      "All TRIPS": "جميع الرحلات",
       "to": "إلى",
       "amount": "المبلغ",
       "status_pending": "الحالة: قيد الانتظار",
@@ -158,7 +168,7 @@ class LocalizationService {
       "status_cancel": "الحالة: تم الإلغاء",
       "status_complete": "الحالة: مكتمل",
       "status_driver_done": "الحالة: انتهى السائق",
-      "status_unknown": "الحالة: غير معروف",      "Track": "مسار",
+      "status_unknown": "الحالة: غير معروف", "Track": "مسار",
       "Current Shipping": "الشحن الحالي",
       "ID": "رقم الهوية",
       "Enter your receiver mobile number": "أدخل رقم هاتف المرسل إليه",

@@ -46,7 +46,7 @@ class AllTripsPage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(10.0.h),
               child: Text(
-                'All TRIPS',
+                'All TRIPS'.tr,
                 style: TextStyle(
                     decoration: TextDecoration.underline,
                     fontSize: 16.sp,
@@ -75,23 +75,17 @@ class AllTripsPage extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                         color: const Color(0xffFFFFFF),
                                       ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      child:
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(Get.find<AuthController>()
-                                                      .getLoginUserData()
-                                                      ?.user
-                                                      ?.name ??
-                                                  ''),
+                                              Text(Get.find<AuthController>().getLoginUserData()?.user?.name ?? ''),
                                               Text(
-                                                  'Trip ID: ${controler.allTripsMode.value?.data?.data?[index].id ?? ''}')
+                                                  '${'trip_id'.tr}: ${controler.allTripsMode.value?.data?.data?[index].id ?? ''}')
                                             ],
                                           ),
                                           SizedBox(
@@ -99,28 +93,25 @@ class AllTripsPage extends StatelessWidget {
                                           ),
                                           RichText(
                                               text: TextSpan(children: [
-                                            TextSpan(
-                                                text:
+                                                TextSpan(
+                                                    text:
                                                     '${controler.allTripsMode.value?.data?.data?[index].fromDate ?? ''} ',
-                                                style: TextStyle(
-                                                    color: textBrownColor)),
-                                            const TextSpan(
-                                                text: ' to ',
-                                                style: TextStyle(
-                                                    color: Colors.black)),
-                                            TextSpan(
-                                                text:
+                                                    style: TextStyle(color: textBrownColor)),
+                                                TextSpan(
+                                                    text: ' ${'to'.tr} ',
+                                                    style: TextStyle(color: Colors.black)),
+                                                TextSpan(
+                                                    text:
                                                     ' ${controler.allTripsMode.value?.data?.data?[index].toDate ?? ''}',
-                                                style: TextStyle(
-                                                    color: textBrownColor))
-                                          ])),
+                                                    style: TextStyle(color: textBrownColor))
+                                              ])),
                                           SizedBox(
                                             height: 10.h,
                                           ),
                                           Text(
-                                              ' Earning: SAR ${controler.allTripsMode.value?.data?.data?[index].amount ?? '0.0'}'),
+                                              '${'earning_sar'.tr} ${controler.allTripsMode.value?.data?.data?[index].amount ?? '0.0'}'),
                                         ],
-                                      ),
+                                      )
                                     ),
                                   ),
                                 )
