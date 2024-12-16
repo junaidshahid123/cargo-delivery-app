@@ -8,12 +8,20 @@ class ContactField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String? Function(String value)? onchange;
+  final String? hintText; // Property for hint text
+  final double? hintTextFontSize; // Property for hint text font size
+  final Color? hintTextColor; // Property for hint text color
+  final FocusNode? focusNode; // Property for focus node
 
   const ContactField({
     Key? key,
     this.controller,
     this.validator,
     this.onchange,
+    this.hintText, // Optional hint text
+    this.hintTextFontSize, // Optional font size
+    this.hintTextColor, // Optional hint text color
+    this.focusNode, // Optional focus node
   }) : super(key: key);
 
   @override
@@ -21,17 +29,19 @@ class ContactField extends StatefulWidget {
 }
 
 class _ContactFieldState extends State<ContactField> {
-  late FocusNode _focusNode;
+  late FocusNode _internalFocusNode;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
+    _internalFocusNode = widget.focusNode ?? FocusNode();
   }
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    if (widget.focusNode == null) {
+      _internalFocusNode.dispose();
+    }
     super.dispose();
   }
 
@@ -43,10 +53,12 @@ class _ContactFieldState extends State<ContactField> {
       children: [
         Container(
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(13),
-                  bottomLeft: Radius.circular(13)),
-              color: Colors.white),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(13),
+              bottomLeft: Radius.circular(13),
+            ),
+            color: Colors.white,
+          ),
           child: CountryCodePicker(
             backgroundColor: Colors.white,
             onChanged: (value) {
@@ -62,45 +74,56 @@ class _ContactFieldState extends State<ContactField> {
         ),
         Flexible(
           child: TextFormField(
-            focusNode: _focusNode,
+            focusNode: _internalFocusNode,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: widget.validator,
             controller: widget.controller,
             onFieldSubmitted: (value) {
-              _focusNode.unfocus(); // Unfocus the text field when user is done inputting
+              _internalFocusNode.unfocus(); // Unfocus the text field when user is done inputting
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              hintText: widget.hintText ?? "123456789", // Use the passed hint text or default
               counterText: '',
-              contentPadding: EdgeInsets.all(1),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(13),
-                      bottomRight: Radius.circular(13)),
-                  borderSide: BorderSide.none),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(13),
-                      bottomRight: Radius.circular(13)),
-                  borderSide: BorderSide.none),
-              errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(13),
-                      bottomRight: Radius.circular(13)),
-                  borderSide: BorderSide.none),
-              disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(13),
-                      bottomRight: Radius.circular(13)),
-                  borderSide: BorderSide.none),
+              contentPadding: const EdgeInsets.all(1),
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(13),
+                  bottomRight: Radius.circular(13),
+                ),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(13),
+                  bottomRight: Radius.circular(13),
+                ),
+                borderSide: BorderSide.none,
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(13),
+                  bottomRight: Radius.circular(13),
+                ),
+                borderSide: BorderSide.none,
+              ),
+              disabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(13),
+                  bottomRight: Radius.circular(13),
+                ),
+                borderSide: BorderSide.none,
+              ),
               filled: true,
               fillColor: Colors.white,
               border: InputBorder.none,
-              hintText: "123456789",
-              errorStyle: TextStyle(height: 0.05),
-              hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
+              errorStyle: const TextStyle(height: 0.05),
+              hintStyle: TextStyle(
+                fontSize: widget.hintTextFontSize ?? 16, // Use provided font size or default
+                color: widget.hintTextColor ?? Colors.grey, // Use provided color or default to grey
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

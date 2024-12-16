@@ -120,7 +120,7 @@ class AuthController extends GetxController implements GetxService {
       } else {
         print('Login successful, proceeding to save user data.');
         authRepo.saveLoginUserData(user: UserModel.fromJson(result));
-        Get.offAll(() => const LocationPage());
+        Get.offAll(() => LocationPage());
       }
     }
     // Handle error responses (e.g., 403 status code)
@@ -428,7 +428,7 @@ class AuthController extends GetxController implements GetxService {
     if (response.containsKey(APIRESPONSE.SUCCESS)) {
       authRepo.saveLoginUserData(user: UserModel());
       Future.delayed(const Duration(seconds: 1), () async {
-        await Get.to(() => const LocationPage());
+        await Get.to(() => LocationPage());
       });
     } else {
       showCupertinoModalPopup(

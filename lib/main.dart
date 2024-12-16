@@ -90,22 +90,19 @@ Future<void> initNotifications() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  await initNotifications();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-  );
-
-  await getFCMToken();
-  await initServices(); // Initialize services
   HttpOverrides.global = MyHttpOverrides();
 
-  runApp(
-    const CargoApp(),
-  );
+  await Firebase.initializeApp(
+      // options: DefaultFirebaseOptions.currentPlatform,
+      );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Comment out additional initializations
+  await initNotifications();
+  await getFCMToken();
+  await initServices();
+
+  runApp(const CargoApp());
 }
 
 Future<void> initServices() async {
@@ -202,7 +199,7 @@ class _CargoAppState extends State<CargoApp> {
                 _navigateToInitialRoute();
                 if (_initialMessage == null) {
                   Get.offAll(() => Get.find<AuthController>().isLogedIn()
-                      ? const LocationPage()
+                      ?  LocationPage()
                       : const WelcomeScreen());
                 }
               },

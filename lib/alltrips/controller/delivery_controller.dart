@@ -61,18 +61,27 @@ class DeliveryController extends GetxController {
   }
 
   Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    showDialog(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      builder: (BuildContext context) {
+        return Dialog(
+          child: CalendarDatePicker(
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2101),
+            onDateChanged: (DateTime picked) {
+              // Automatically set the selected date and update the controller
+              _selectedDate = picked;
+              dateController.text = "${picked.toLocal()}".split(' ')[0];
+              update();
+              Navigator.pop(
+                  context); // Close the dialog after selecting the date
+              print('dateController=====${dateController.text}');
+            },
+          ),
+        );
+      },
     );
-    if (picked != null && picked != _selectedDate) {
-      _selectedDate = picked;
-      dateController.text = "${picked.toLocal()}".split(' ')[0];
-    }
-    update();
-    print('dateController=====${dateController.text}');
   }
 }
 

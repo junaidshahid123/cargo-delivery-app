@@ -44,6 +44,8 @@ dependencies:
   url_launcher: ^6.3.0
   flutter_background_service: ^5.0.6
   flutter_typeahead: ^5.2.0
+  image: ^4.5.0
+
 
 dev_dependencies:
   flutter_test:

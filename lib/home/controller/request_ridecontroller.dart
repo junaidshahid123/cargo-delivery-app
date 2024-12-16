@@ -9,6 +9,7 @@ import '../../constant/colors_utils.dart';
 import '../../model/MDCreateRequest.dart';
 import '../../widgets/custom_button.dart';
 import '../MySample.dart';
+import '../bottom_navbar.dart';
 import '../riderrequest/rider_request_page.dart';
 
 class RequestRideController extends GetxController implements GetxService {
@@ -25,9 +26,9 @@ class RequestRideController extends GetxController implements GetxService {
     required String delivery_date,
     required String parcelLong,
     required String parcel_address,
-    required String receiveLat,
-    required String receiverLong,
-    required String receiverAddress,
+    // required String receiveLat,
+    // required String receiverLong,
+    // required String receiverAddress,
     required String receiverMob,
   }) async {
     var response = await userRepo.createRideRequest(
@@ -35,9 +36,9 @@ class RequestRideController extends GetxController implements GetxService {
         parcelLat: parcelLat,
         parcelLong: parcelLong,
         parcellAddress: parcel_address,
-        receiveLat: receiveLat,
-        receiverLong: receiverLong,
-        receiverAddress: receiverAddress,
+        // receiveLat: receiveLat,
+        // receiverLong: receiverLong,
+        // receiverAddress: receiverAddress,
         receiverMob: receiverMob,
         category_id: category_id,
         delivery_date: delivery_date,
@@ -95,8 +96,9 @@ void requestAlert(mdCreateRequest) {
                 buttonText: "OK".tr,
                 onPress: () {
                   print('mdCreateRequest.drivers=${mdCreateRequest}');
-                  Get.to(() => DriverRequestNotificationScreen(
-                      mdCreateRequest: mdCreateRequest));
+                  Get.offAll(const BottomBarScreen());
+                  // Get.to(() => DriverRequestNotificationScreen(
+                  //     mdCreateRequest: mdCreateRequest));
                 },
                 width: 97.w,
                 height: 38.h,

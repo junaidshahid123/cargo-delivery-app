@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data'; // Correct library to import
 import 'package:cargo_delivery_app/constant/colors_utils.dart';
 import 'package:cargo_delivery_app/home/controller/request_ridecontroller.dart';
 import 'package:cargo_delivery_app/widgets/contact_field.dart';
 import 'package:cargo_delivery_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,8 +16,19 @@ import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import '../alltrips/controller/delivery_controller.dart';
 import '../api/application_url.dart';
+import '../profile/profile_page.dart';
 import '../widgets/auto_place_textfield.dart';
 import 'package:http/http.dart' as http;
+import 'dart:typed_data'; // Only this import should be used
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
+
+import 'bottom_navbar.dart';
+import 'chat/chat_page.dart';
+import 'home_screen.dart';
+import 'more/more_view.dart';
+import 'orders/orders_view.dart'; // Import the image package
 
 // ignore: must_be_immutable
 class DeliveryDetailsScreen extends StatefulWidget {
@@ -28,11 +41,15 @@ class DeliveryDetailsScreen extends StatefulWidget {
 }
 
 class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
+  final FocusNode descriptionFocusNode = FocusNode();
+  final FocusNode mobileNuFocusNode = FocusNode();
+  int _currentIndex = 0;
+
   String? parcelAddress;
   String? receiverAddress;
   DeliveryController deliveryController = Get.put(DeliveryController());
   var fromCity = Rx<String?>(null);
-
+  TextEditingController descriptionController = TextEditingController();
   var toCity = Rx<String?>(null);
 
   List<XFile> pickedImage = [];
@@ -115,9 +132,21 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     }
   }
 
+  final List<Widget> _pages = [
+    HomeScreen(),
+    OrdersView(),
+    ChatPage(),
+    WalletView(),
+    ProfilePage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus(); // Unfocuses any focused field
+      },
+      child: Scaffold(
         body: GetBuilder<DeliveryController>(
             init: DeliveryController(),
             builder: (deliveryController) {
@@ -166,7 +195,6 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         child: Column(
                           children: [
                             // SizedBox(height: 10.h),
-
                             SizedBox(height: 20.h),
                             InkWell(
                               onTap: () {
@@ -261,8 +289,59 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                               ),
                             ),
                             SizedBox(height: 30.h),
+                            SizedBox(
+                              height: 60,
+                              // Fixed height for the TextField
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                                // Padding for horizontal spacing
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(13.0),
+                                ),
+                                child: TextField(
+                                  controller: descriptionController,
+                                  focusNode: descriptionFocusNode,
+                                  decoration: InputDecoration(
+                                    hintText: 'Add Description'.tr,
+                                    hintStyle: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontFamily: 'RadioCanada',
+                                      fontWeight: FontWeight.w400,
+                                      color: textBrownColor,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical:
+                                            18.0), // Centers hint text vertically
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontFamily: 'RadioCanada',
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  // Aligns input text to start
+                                  textAlignVertical: TextAlignVertical.center,
+                                  // Vertically centers the input text
+                                  onEditingComplete: () {
+                                    descriptionFocusNode
+                                        .unfocus(); // Close focus when editing is complete
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
                             InkWell(
                               onTap: () async {
+                                descriptionFocusNode.unfocus();
+                                mobileNuFocusNode.unfocus();
                                 LatLng? pickedLocation =
                                     await Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -285,8 +364,10 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                   print(
                                       '_parcelLan.value ====${_parcelLan.value}');
                                 }
-                                _getAddressFromLatLngForParcelAddress(
-                                    pickedLocation!);
+                                if (pickedLocation != null) {
+                                  _getAddressFromLatLngForParcelAddress(
+                                      pickedLocation);
+                                }
                               },
                               child: Container(
                                 width: MediaQuery.of(context).size.width,
@@ -313,68 +394,76 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                 ),
                               ),
                             ),
+                            // SizedBox(height: 20.h),
+                            // InkWell(
+                            //   onTap: () async {
+                            //     LatLng? pickedLocation =
+                            //         await Navigator.of(context).push(
+                            //       MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             PlacePickerMapScreen(),
+                            //       ),
+                            //     );
+                            //     print('pickedLocation====${pickedLocation}');
+                            //     String? city =
+                            //         await _extractCityFor(pickedLocation);
+                            //     print('city In Receiver====${city}');
+                            //     _receiverLat.value =
+                            //         pickedLocation!.latitude.toString();
+                            //     _receiverLan.value =
+                            //         pickedLocation.longitude.toString();
+                            //     print(
+                            //         '_receiverLat.value====${_receiverLat.value}');
+                            //     print(
+                            //         '_receiverLan.value====${_receiverLan.value}');
+                            //
+                            //     _getAddressFromLatLngForReceiverAddress(
+                            //         pickedLocation);
+                            //   },
+                            //   child: Container(
+                            //     width: MediaQuery.of(context).size.width,
+                            //     padding: EdgeInsets.all(12.0),
+                            //     // margin: EdgeInsets.all(8.0),
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.white,
+                            //       border: Border.all(
+                            //         color: Colors.white,
+                            //         width: 1.0,
+                            //       ),
+                            //       borderRadius: BorderRadius.circular(13.0),
+                            //     ),
+                            //     child: Text(
+                            //       receiverAddress != null
+                            //           ? receiverAddress!
+                            //           : 'Select your Receiver Location'.tr,
+                            //       style: TextStyle(
+                            //           fontSize: 16.sp,
+                            //           fontFamily: 'RadioCanada',
+                            //           fontWeight: FontWeight.w400,
+                            //           color: textBrownColor),
+                            //       textAlign: TextAlign.center,
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(height: 20.h),
-                            InkWell(
-                              onTap: () async {
-                                LatLng? pickedLocation =
-                                    await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        PlacePickerMapScreen(),
-                                  ),
-                                );
-                                print('pickedLocation====${pickedLocation}');
-                                String? city =
-                                    await _extractCityFor(pickedLocation);
-                                print('city In Receiver====${city}');
-                                _receiverLat.value =
-                                    pickedLocation!.latitude.toString();
-                                _receiverLan.value =
-                                    pickedLocation.longitude.toString();
-                                print(
-                                    '_receiverLat.value====${_receiverLat.value}');
-                                print(
-                                    '_receiverLan.value====${_receiverLan.value}');
-
-                                _getAddressFromLatLngForReceiverAddress(
-                                    pickedLocation);
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.all(12.0),
-                                // margin: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(13.0),
-                                ),
-                                child: Text(
-                                  receiverAddress != null
-                                      ? receiverAddress!
-                                      : 'Select your Receiver Location'.tr,
-                                  style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontFamily: 'RadioCanada',
-                                      fontWeight: FontWeight.w400,
-                                      color: textBrownColor),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 40.h),
                             ContactField(
                               onchange: (value) => _countryCode.value = value,
                               controller: _receiverMob,
+                              hintText: "Enter your receiver mobile number".tr,
+                              hintTextFontSize: 14.5,
+                              hintTextColor: textBrownColor,
+                              focusNode:
+                                  mobileNuFocusNode, // Provide a custom FocusNode if needed
                             ),
-                            SizedBox(height: 40.h),
+
+                            SizedBox(height: 20.h),
                             Obx(
                               () => Column(
                                 children: [
                                   InkWell(
                                     onTap: () {
+                                      descriptionFocusNode.unfocus();
+                                      mobileNuFocusNode.unfocus();
                                       if (widget.selectedVehicle == null) {
                                         deliveryController.toggleDropDown();
                                       }
@@ -545,6 +634,9 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                             ),
                             InkWell(
                               onTap: () {
+                                // Unfocus both focus nodes
+                                descriptionFocusNode.unfocus();
+                                mobileNuFocusNode.unfocus();
                                 deliveryController.selectDate(context);
                               },
                               child: Container(
@@ -590,7 +682,10 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                   print(
                                       'deliveryController.selectedVehicleId.value=======${deliveryController.selectedVehicleId.value}');
                                 }
-
+                                print(
+                                    'deliveryController.selectedVehicleId.value========${deliveryController.selectedVehicleId.value}');
+                                print(
+                                    'descriptionController.text========${descriptionController.text}');
                                 // Debug: Print all parameters before calling `createRideRequest`
                                 print('parcel_city: ${parcelCity.value}');
                                 print(
@@ -602,32 +697,76 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                 print('parcelLat: ${_parcelLat.value}');
                                 print('parcelLong: ${_parcelLan.value}');
                                 print('parcel_address: $parcelAddress');
-                                print('receiveLat: ${_receiverLat.value}');
-                                print('receiverLong: ${_receiverLan.value}');
-                                print('receiverAddress: $receiverAddress');
+                                // print('receiveLat: ${_receiverLat.value}');
+                                // print('receiverLong: ${_receiverLan.value}');
+                                // print('receiverAddress: $receiverAddress');
                                 print(
                                     'receiverMob: ${_countryCode.value + _receiverMob.text}');
-
-                                // Call the method with the parameters
-                                Get.find<RequestRideController>()
-                                    .createRideRequest(
-                                  parcel_city: parcelCity.value,
-                                  image: pickedImage
-                                      .map((xFile) => File(xFile.path))
-                                      .toList(),
-                                  category_id: deliveryController
-                                      .selectedVehicleId.value,
-                                  delivery_date:
-                                      deliveryController.dateController.text,
-                                  parcelLat: _parcelLat.value,
-                                  parcelLong: _parcelLan.value,
-                                  parcel_address: parcelAddress!,
-                                  receiveLat: _receiverLat.value,
-                                  receiverLong: _receiverLan.value,
-                                  receiverAddress: receiverAddress!,
-                                  receiverMob:
-                                      _countryCode.value + _receiverMob.text,
-                                );
+                                if (pickedImage.isEmpty) {
+                                  Get.snackbar(
+                                    'Alert'.tr,
+                                    'Please select at least one image'.tr,
+                                    backgroundColor: Colors.red,
+                                    colorText: Colors.white,
+                                  );
+                                }
+                                if (descriptionController.text.isEmpty) {
+                                  Get.snackbar(
+                                      'Alert'.tr, 'Please Enter Description'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else if (parcelAddress == null) {
+                                  Get.snackbar('Alert'.tr,
+                                      'Please Enter Parcel Address'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else if (_receiverMob.text.isEmpty) {
+                                  Get.snackbar('Alert'.tr,
+                                      'Please Enter Receiver Mobile Number'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else if (deliveryController
+                                        .selectedVehicleId.value ==
+                                    '0') {
+                                  Get.snackbar(
+                                      'Alert'.tr, 'Please Select Vehicle'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else if (deliveryController
+                                        .selectedVehicleId.value ==
+                                    '0') {
+                                  Get.snackbar(
+                                      'Alert'.tr, 'Please Select Vehicle'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else if (deliveryController
+                                    .dateController.text.isEmpty) {
+                                  Get.snackbar('Alert'.tr,
+                                      'Please Select Delivery Date'.tr,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else {
+                                  //  Call the method with the parameters
+                                  Get.find<RequestRideController>()
+                                      .createRideRequest(
+                                    parcel_city: parcelCity.value,
+                                    image: pickedImage
+                                        .map((xFile) => File(xFile.path))
+                                        .toList(),
+                                    category_id: deliveryController
+                                        .selectedVehicleId.value,
+                                    delivery_date:
+                                        deliveryController.dateController.text,
+                                    parcelLat: _parcelLat.value,
+                                    parcelLong: _parcelLan.value,
+                                    parcel_address: parcelAddress!,
+                                    // receiveLat: _receiverLat.value,
+                                    // receiverLong: _receiverLan.value,
+                                    // receiverAddress: receiverAddress!,
+                                    receiverMob:
+                                        _countryCode.value + _receiverMob.text,
+                                  );
+                                }
                               },
                             )
                           ],
@@ -637,7 +776,77 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                   ),
                 ),
               );
-            }));
+            }),
+        bottomNavigationBar: BottomNavigationBar(
+          elevation: 0,
+          selectedItemColor: textcyanColor,
+          // Color for selected item (icon + label)
+          unselectedItemColor: Colors.grey,
+          // Color for unselected items (icon + label)
+          selectedLabelStyle:
+              const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          // Label style for selected item
+          unselectedLabelStyle:
+              const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+          // Label style for unselected item
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            // Pass the selected index to the BottomBarScreen
+            Get.offAll(BottomBarScreen(
+                initialIndex: index)); // Sending the selected index here
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          showSelectedLabels: true,
+          // Always show labels for selected item
+          showUnselectedLabels: true,
+          // Always show labels for unselected items
+          items: [
+            BottomNavigationBarItem(
+              label: "Home".tr, // Label for Home tab
+              icon: Image.asset(
+                "assets/images/homeIcon.png",
+                height: 30.h,
+                width: 30.w,
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Orders".tr, // Label for Orders tab
+              icon: Image.asset(
+                "assets/images/oderImage.jpg",
+                height: 30.h,
+                width: 30.w,
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Chat".tr, // Label for Chat tab
+              icon: Image.asset(
+                "assets/images/chat_icon.png",
+                height: 30.h,
+                width: 30.w,
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Wallet".tr, // Label for Profile tab
+              icon: Image.asset(
+                "assets/images/walletIcon.jpg",
+                height: 30.h,
+                width: 30.w,
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "More".tr, // Label for More tab
+              icon: Image.asset(
+                "assets/images/moreImage.jpg",
+                height: 30.h,
+                width: 30.w,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildErrorWidget(BuildContext context, Object exception) {
@@ -662,6 +871,192 @@ class PlacePickerMapScreen extends StatefulWidget {
 
 class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
   GoogleMapController? _mapController;
+  LatLng? _currentLocation;
+  LatLng? _pickedLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    // Request location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // Get the current position
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+      _pickedLocation = _currentLocation;
+    });
+  }
+
+  void _zoomIn() {
+    _mapController?.animateCamera(CameraUpdate.zoomIn());
+  }
+
+  void _zoomOut() {
+    _mapController?.animateCamera(CameraUpdate.zoomOut());
+  }
+
+  void _goToCurrentLocation() {
+    if (_currentLocation != null) {
+      _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: _currentLocation!, zoom: 14),
+      ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pick a Location'),
+      ),
+      body: _currentLocation == null
+          ? Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                // Google Map
+                GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: _currentLocation!,
+                    zoom: 14,
+                  ),
+                  onMapCreated: (controller) {
+                    _mapController = controller;
+                  },
+                  onCameraMove: (position) {
+                    setState(() {
+                      _pickedLocation = position.target;
+                    });
+                  },
+                  // Disable default controls
+                  myLocationButtonEnabled: false,
+                  // Disable the default location button
+                  myLocationEnabled: false,
+                  // Disable the default location layer
+                  zoomControlsEnabled: false,
+                  // Disable zoom controls
+                  compassEnabled: false, // Disable the compass
+                ),
+
+                // Custom Pin in the center of the map
+                Center(
+                  child: Image.asset(
+                    'assets/images/locationIcon.png',
+                    height: 75,
+                    width: 75,
+                    color: Colors.red,
+                  ),
+                ),
+
+                // Zoom-in Button
+                Positioned(
+                  bottom: 100,
+                  right: 20,
+                  child: Column(
+                    children: [
+                      // Zoom In
+                      FloatingActionButton(
+                        heroTag: "zoomIn",
+                        onPressed: _zoomIn,
+                        mini: true,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(Icons.add, color: Colors.black),
+                      ),
+                      SizedBox(height: 10),
+                      // Zoom Out
+                      FloatingActionButton(
+                        heroTag: "zoomOut",
+                        onPressed: _zoomOut,
+                        mini: true,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(Icons.remove, color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Back to Current Location Button
+                Positioned(
+                  bottom: 100,
+                  left: 20,
+                  child: FloatingActionButton(
+                    heroTag: "currentLocation",
+                    onPressed: _goToCurrentLocation,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.my_location, color: Colors.black),
+                  ),
+                ),
+
+                // Confirmation button at the bottom
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffBCA37F),
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_pickedLocation != null) {
+                        Navigator.of(context).pop(_pickedLocation);
+                      }
+                    },
+                    child: Text(
+                      'Confirm Location',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+}
+
+class PlacePickerMapScreenA extends StatefulWidget {
+  @override
+  _PlacePickerMapScreenAState createState() => _PlacePickerMapScreenAState();
+}
+
+class _PlacePickerMapScreenAState extends State<PlacePickerMapScreenA> {
+  GoogleMapController? _mapController;
   LatLng? _pickedLocation;
   String? _pickedAddress;
   LatLng? _currentLocation;
@@ -681,11 +1076,13 @@ class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
 
   final parcelCity = Rx<String>('0.0');
   final receiverCity = Rx<String>('0.0');
+  BitmapDescriptor? _customIcon;
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
+    _loadCustomMarker(size: 100);
   }
 
   Future<String?> _extractCity(Prediction prediction) async {
@@ -736,6 +1133,30 @@ class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
     await _getAddressFromLatLng(_currentLocation!);
   }
 
+  Future<void> _loadCustomMarker({required double size}) async {
+    // Load the image from assets
+    final ByteData data =
+        await rootBundle.load('assets/images/junaidImage-removebg-preview.ico');
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    // Decode the image
+    img.Image image = img.decodeImage(Uint8List.fromList(bytes))!;
+
+    // Resize the image to the desired size
+    img.Image resizedImage =
+        img.copyResize(image, width: size.toInt(), height: size.toInt());
+
+    // Convert the resized image to bytes
+    Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resizedImage));
+
+    // Create a BitmapDescriptor from the resized byte array
+    BitmapDescriptor customIcon = BitmapDescriptor.fromBytes(resizedBytes);
+
+    setState(() {
+      _customIcon = customIcon; // Set the custom icon
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -774,6 +1195,8 @@ class _PlacePickerMapScreenState extends State<PlacePickerMapScreen> {
                       Marker(
                         markerId: MarkerId('picked-location'),
                         position: _pickedLocation!,
+                        icon: _customIcon ?? BitmapDescriptor.defaultMarker,
+                        // Custom marker
                       ),
                     },
               circles: _pickedLocation == null

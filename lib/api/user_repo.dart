@@ -9,7 +9,6 @@ import 'api_structure.dart';
 class UserRepo {
   UserRepo();
 
-
   Future<Map<String, dynamic>> registerUser({
     required String cnic,
     required String fullName,
@@ -66,7 +65,6 @@ class UserRepo {
       isCheckAuthorization: true,
     );
   }
-
 
 // DashBoard Data
   Future<Map<String, dynamic>> getCategories(
@@ -168,9 +166,9 @@ class UserRepo {
     required String? parcelLat,
     required String? parcelLong,
     required String? parcellAddress,
-    required String? receiveLat,
-    required String? receiverLong,
-    required String? receiverAddress,
+    // required String? receiveLat,
+    // required String? receiverLong,
+    // required String? receiverAddress,
     required String? receiverMob,
     required String? delivery_date,
   }) async {
@@ -190,9 +188,9 @@ class UserRepo {
         "parcel_lat": parcelLat,
         "parcel_long": parcelLong,
         "parcel_address": parcellAddress,
-        "receiver_lat": receiveLat,
-        "receiver_long": receiverLong,
-        "receiver_address": receiverAddress,
+        // "receiver_lat": receiveLat,
+        // "receiver_long": receiverLong,
+        // "receiver_address": receiverAddress,
         "receiver_mobile": receiverMob,
         "category_id": category_id,
         "delivery_date": delivery_date,

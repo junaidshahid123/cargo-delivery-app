@@ -36,7 +36,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             children: [
               // Row to hold language selection buttons at the top right corner
               Container(
-                margin: EdgeInsets.only(top: 50,right: 20),
+                margin: EdgeInsets.only(top: 50, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -45,6 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         // Change language to English
                         // Add logic here to change the language to English
                         changeLanguage('en');
+                        Get.offAll(LoginScreen());
                       },
                       child: Text("en"),
                     ),
@@ -53,8 +54,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       onPressed: () {
                         // Change language to Arabic
                         // Add logic here to change the language to Arabic
-                       changeLanguage('ar');
-
+                        changeLanguage('ar');
+                        Get.offAll(LoginScreen());
                       },
                       child: Text("عربى"),
                     ),
@@ -78,7 +79,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         onTap: () {
                           // Handle button tap logic
                           Get.to(() => Get.find<AuthController>().isLogedIn()
-                              ? const LocationPage()
+                              ?  LocationPage()
                               : LoginScreen());
                         },
                         child: Text(
@@ -100,5 +101,4 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
-
 }

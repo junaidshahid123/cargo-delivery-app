@@ -35,7 +35,8 @@ class APISTRUCTURE {
   });
 
   Future<Map<String, dynamic>> requestAPI(
-      {bool isShowLoading = false, bool isCheckAuthorization = true}) async {
+      {bool isShowLoading = false, bool isCheckAuthorization = true}) async
+  {
     String api = "";
 
     if (isShowLoading) {

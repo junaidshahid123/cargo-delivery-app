@@ -12,14 +12,16 @@ import '../profile/profile_page.dart';
 import 'orders/orders_view.dart';
 
 class BottomBarScreen extends StatefulWidget {
-  const BottomBarScreen({Key? key}) : super(key: key);
+  final int initialIndex; // Add this field to accept an initial index
+
+  const BottomBarScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   State<BottomBarScreen> createState() => _BottomBarScreenState();
 }
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
-  int _currentIndex = 0;
+  late int _currentIndex;
 
   final List<Widget> _pages = [
     HomeScreen(),
@@ -27,8 +29,13 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     ChatPage(),
     WalletView(),
     ProfilePage(),
-
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex; // Initialize _currentIndex with the passed value
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +44,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         selectedItemColor: textcyanColor,
-        // Color for selected item (icon + label)
         unselectedItemColor: Colors.grey,
-        // Color for unselected items (icon + label)
         selectedLabelStyle:
-            const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        // Label style for selected item
+        const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         unselectedLabelStyle:
-            const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-        // Label style for unselected item
+        const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
         currentIndex: _currentIndex,
         onTap: (int index) {
           setState(() {
@@ -53,12 +56,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           });
         },
         showSelectedLabels: true,
-        // Always show labels for selected item
         showUnselectedLabels: true,
-        // Always show labels for unselected items
         items: [
           BottomNavigationBarItem(
-            label: "Home".tr, // Label for Home tab
+            label: "Home".tr,
             icon: Image.asset(
               "assets/images/homeIcon.png",
               height: 30.h,
@@ -66,7 +67,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            label: "Orders".tr, // Label for Orders tab
+            label: "Orders".tr,
             icon: Image.asset(
               "assets/images/oderImage.jpg",
               height: 30.h,
@@ -74,7 +75,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            label: "Chat".tr, // Label for Chat tab
+            label: "Chat".tr,
             icon: Image.asset(
               "assets/images/chat_icon.png",
               height: 30.h,
@@ -82,7 +83,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            label: "Wallet".tr, // Label for Profile tab
+            label: "Wallet".tr,
             icon: Image.asset(
               "assets/images/walletIcon.jpg",
               height: 30.h,
@@ -90,7 +91,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            label: "More".tr, // Label for More tab
+            label: "More".tr,
             icon: Image.asset(
               "assets/images/moreImage.jpg",
               height: 30.h,

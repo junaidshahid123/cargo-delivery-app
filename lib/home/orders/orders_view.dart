@@ -79,92 +79,99 @@ class OrdersView extends StatelessWidget {
 
                     Expanded(
                       child: !isLoading &&
-                              allRidesData != null &&
-                              allRidesData.allRides!.isNotEmpty
+                          allRidesData != null &&
+                          allRidesData.allRides!.isNotEmpty
                           ? ListView.builder(
-                              itemCount: allRidesData.allRides!.length,
-                              itemBuilder: (context, index) {
-                                final ride = allRidesData.allRides![index];
-                                return Container(
-                                  margin: const EdgeInsets.only(bottom: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 2,
-                                        blurRadius: 6,
-                                        offset: Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.all(16),
-                                    title: Text(
-                                      ride.status == 1
-                                          ? 'Status: Active and Current'
-                                          : 'Status: Delivered',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors
-                                            .black87, // Lighter text color
-                                      ),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // Display "From" and "To" locations
-                                        Text(
-                                          'From: ${ride.parcelAddress}',
-                                          // Assuming 'fromLocation' is available
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors
-                                                .blueGrey, // Lighter text color
-                                          ),
-                                        ),
-                                        Text(
-                                          'To: ${ride.receiverAddress}',
-                                          // Assuming 'toLocation' is available
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors
-                                                .blueGrey, // Lighter text color
-                                          ),
-                                        ),
-                                        // Display the amount
-                                        Text(
-                                          'Amount: ${ride.amount ?? 'N/A'}',
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            // Highlighting the amount with a different color
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: Icon(Icons.arrow_forward),
-                                    onTap: () {
-                                      // Handle ride tap action
-                                    },
-                                  ),
-                                );
-                              },
-                            )
-                          : Center(
-                              child: Text(
-                                'No Orders Yet'.tr,
+                        itemCount: allRidesData.allRides!.length,
+                        itemBuilder: (context, index) {
+                          final ride = allRidesData.allRides![index];
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(16),
+                              title: Text(
+                                    () {
+                                  switch (ride.status) {
+                                    case '0':
+                                      return 'status_pending'.tr;
+                                    case '1':
+                                      return 'status_processing'.tr;
+                                    case '2':
+                                      return 'status_cancel'.tr;
+                                    case '3':
+                                      return 'status_complete'.tr;
+                                    case '4':
+                                      return 'status_driver_done'.tr;
+                                    default:
+                                      return 'status_unknown'.tr;
+                                  }
+                                }(),
                                 style: TextStyle(
-                                  color: backGroundColor,
-                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.black87, // Lighter text color
                                 ),
                               ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${'from'.tr}: ${ride.parcelAddress ?? 'N/A'}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blueGrey, // Lighter text color
+                                    ),
+                                  ),
+
+
+                                  Text(
+                                    '${'to'.tr}: ${ride.receiverAddress ?? 'N/A'}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blueGrey, // Lighter text color
+                                    ),
+                                  ),
+                                  Text(
+                                    '${'amount'.tr}: ${ride.amount ?? 'N/A'}',
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                              trailing: Icon(Icons.arrow_forward),
+                              onTap: () {
+                                // Handle ride tap action
+                              },
                             ),
-                    ),
+                          );
+                        },
+                      )
+                          : Center(
+                        child: Text(
+                          'No Orders Yet'.tr,
+                          style: TextStyle(
+                            color: backGroundColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

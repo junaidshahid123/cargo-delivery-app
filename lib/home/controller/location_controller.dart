@@ -21,8 +21,8 @@ class LocationController extends GetxController implements GetxService {
   var activeGps = true.obs;
   var isLoading = false.obs; // Loader state
   TextEditingController locationController = TextEditingController();
-  late String city;
-  late GoogleMapController _mapController;
+   String? city;
+   GoogleMapController? _mapController;
 
   LatLng get gpsPosition => _gpsActual;
 
@@ -31,7 +31,7 @@ class LocationController extends GetxController implements GetxService {
 
   Set<Marker> get markers => _markers;
 
-  GoogleMapController get mapController => _mapController;
+  GoogleMapController get mapController => _mapController!;
 
   Future<void> setDriverLocation(LatLng loc) async {
     _driverLocation = loc;
@@ -65,7 +65,7 @@ class LocationController extends GetxController implements GetxService {
       position: location,
       icon: BitmapDescriptor.fromBytes(icon),
     ));
-    _mapController.animateCamera(CameraUpdate.newCameraPosition(
+    _mapController!.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(target: location, zoom: 14.4746),
     ));
   }
@@ -113,7 +113,7 @@ class LocationController extends GetxController implements GetxService {
         log("initial position is : ${placemark[0].name}");
         _addMarker(_initialPosition, placemark[0].name!);
         update();
-        _mapController.moveCamera(CameraUpdate.newLatLng(_initialPosition));
+        _mapController!.moveCamera(CameraUpdate.newLatLng(_initialPosition));
       } finally {
         isLoading.value = false; // Stop loader
         update();
@@ -157,13 +157,15 @@ class LocationController extends GetxController implements GetxService {
     _initialPosition = position.target;
   }
 
-  void setLocation({
+  void setLocation(
+      {
     required String userId,
     required String address,
     required String lat,
     required String lang,
     required String city,
-  }) async {
+  }) async
+  {
     // isLoading.value = true; // Start loader
     try {
       var response = await userRepo.confirmLocation(

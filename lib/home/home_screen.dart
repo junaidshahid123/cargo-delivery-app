@@ -211,7 +211,7 @@ class HomeScreen extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Current Shipping",
+                                                    "Current Shipping".tr,
                                                     style: TextStyle(
                                                       fontSize: 22.sp,
                                                       fontWeight:
@@ -220,14 +220,36 @@ class HomeScreen extends StatelessWidget {
                                                     ),
                                                   ),
                                                   SizedBox(height: 5.h),
-                                                  Text(
-                                                    "ID: ${currentRide.requestId}",
-                                                    style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "ID".tr,
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        ':',
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${currentRide.requestId}',
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 ],
                                               ),
@@ -256,7 +278,7 @@ class HomeScreen extends StatelessWidget {
                                                               20),
                                                     ),
                                                     child: Text(
-                                                      "Track",
+                                                      "Track".tr,
                                                       style: TextStyle(
                                                         fontSize: 14.sp,
                                                         fontWeight:
