@@ -79,7 +79,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         onTap: () {
                           // Handle button tap logic
                           Get.to(() => Get.find<AuthController>().isLogedIn()
-                              ?  LocationPage()
+                              ? LocationPage()
                               : LoginScreen());
                         },
                         child: Text(

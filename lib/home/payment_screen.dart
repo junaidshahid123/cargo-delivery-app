@@ -24,13 +24,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'bottom_navbar.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final MDCreateRequest mdCreateRequest;
+  // final MDCreateRequest mdCreateRequest;
   final String? amount;
   final int? offerId;
 
-  const PaymentScreen(this.mdCreateRequest, this.amount, this.offerId,
-      {Key? key})
-      : super(key: key);
+  const PaymentScreen(this.amount, this.offerId, {Key? key}) : super(key: key);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -46,21 +44,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? to;
   String? rate;
   String? selectedPaymentMethodName;
+  RxBool isLoading = false.obs;
 
   @override
   void initState() {
     super.initState();
-    print(
-        'widget.mdCreateRequest.request!.parcelAddress==${widget.mdCreateRequest.request!.parcelAddress}');
-    print(
-        'widget.mdCreateRequest.request!.parcelAddress==${widget.mdCreateRequest.request!.parcelAddress}');
-    print('widget.amount==${widget.amount}');
-    setState(() {
-      from = widget.mdCreateRequest.request!.parcelAddress;
-      to = widget.mdCreateRequest.request!.receiverAddress;
-      rate = widget.amount;
-      print('widget.offerId======${widget.offerId}');
-    });
+    // print(
+    //     'widget.mdCreateRequest.request!.parcelAddress==${widget.mdCreateRequest.request!.parcelAddress}');
+    // print(
+    //     'widget.mdCreateRequest.request!.parcelAddress==${widget.mdCreateRequest.request!.parcelAddress}');
+    // print('widget.amount==${widget.amount}');
+    // setState(() {
+    //   from = widget.mdCreateRequest.request!.parcelAddress;
+    //   to = widget.mdCreateRequest.request!.receiverAddress;
+    //   rate = widget.amount;
+    //   print('widget.offerId======${widget.offerId}');
+    // });
     paymentMethods = getPaymentMethods();
   }
 
@@ -101,6 +100,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       throw Exception('Failed to load getPaymentMethods');
     }
   }
+
   Future<void> acceptOffer({
     required String requestId,
     required String offerId,
@@ -108,6 +108,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     required int paymentMethod,
     required String description,
   }) async {
+    isLoading.value = true;
     final url = Uri.parse(ApplicationUrl.ACCEPTOFFER);
     // Print all the parameters being passed to the function
     print('Request ID: $requestId');
@@ -121,7 +122,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
         url,
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
+          "Authorization":
+              "Bearer ${Get.find<AuthController>().authRepo.getAuthToken()}"
         },
         body: json.encode({
           'request_id': requestId,
@@ -137,6 +139,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
+        isLoading.value = false;
+
         print('Offer accepted successfully');
         final responseBody = json.decode(response.body);
 
@@ -144,12 +148,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
         print('Parsed Response Body: $responseBody');
 
         // Check if the response contains the expected data
-        if (responseBody.containsKey('data') && responseBody['data'].containsKey('invoice_link')) {
+        if (responseBody.containsKey('data') &&
+            responseBody['data'].containsKey('invoice_link')) {
           final paymentUrl = responseBody['data']['invoice_link'];
+          isLoading.value = false;
 
           // Navigate to PaymentWebviewScreen using Get.offAll() to clear previous routes
           Get.offAll(() => PaymentWebviewScreen(url: paymentUrl));
         } else {
+          isLoading.value = false;
+
           print('Invoice link not found in the response');
           // Navigate to BottomBarScreen if no invoice link is found
           Get.offAll(() => BottomBarScreen());
@@ -163,6 +171,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           );
         }
       } else {
+        isLoading.value = false;
+
         // Handle HTTP error and log the server response in detail
         print('Failed to accept offer. Status Code: ${response.statusCode}');
         print('Response Body: ${response.body}');
@@ -177,10 +187,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
         }
       }
     } catch (e) {
+      isLoading.value = false;
+
       // Handle exceptions (network issues, JSON parsing errors, etc.) and log the error
       print('Error occurred while accepting offer: $e');
 
       if (mounted) {
+        isLoading.value = false;
+
         Get.snackbar(
           'Error',
           'An error occurred. Please try again later. Details: $e',
@@ -190,7 +204,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -265,17 +278,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         height: 1.h,
                         color: curvedBlueColor.withOpacity(0.37),
                       ),
-                      Center(
-                        child: Text(
-                          "From ${from} To ${to} \nin SAR ${rate}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                            color: curvedBlueColor,
-                          ),
-                        ),
-                      ),
+                      // Center(
+                      //   child: Text(
+                      //     "From ${from} To ${to} \nin SAR ${rate}",
+                      //     textAlign: TextAlign.center,
+                      //     style: TextStyle(
+                      //       fontSize: 16.sp,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: curvedBlueColor,
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 20),
@@ -355,32 +368,53 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       //   hintText: "Password",
                       // ),
                       SizedBox(height: 40.h),
-                      CustomButton(
-                        buttonText: "Proceed",
-                        onPress: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.setString('request_id',
-                              widget.mdCreateRequest.request!.id.toString());
-                          print(
-                              'This is Request ID====${widget.mdCreateRequest.request!.id}');
+                      Obx(
+                        () => isLoading.value == true
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: textBrownColor,
+                                ),
+                              )
+                            : CustomButton(
+                                buttonText: "Proceed",
+                                onPress: () async {
+                                  // Get an instance of SharedPreferences
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
 
-                          print('This is Offer ID====${widget.offerId}');
-                          print('Amount====${widget.amount}');
-                          print(
-                              'This Selected Payment Method Name====${selectedPaymentMethodName}');
-                          acceptOffer(
-                                  requestId: widget.mdCreateRequest.request!.id!
-                                      .toString(),
-                                  offerId: widget.offerId.toString(),
-                                  amount: widget.amount.toString(),
-                                  paymentMethod: selectedPaymentMethodName ==
-                                          'Click Payment Method'
-                                      ? 2
-                                      : 3,
-                                  description: 'Safe Drive');
-                        },
-                      ),
+                                  // Retrieve the request_id from SharedPreferences
+                                  String? requestId =
+                                      prefs.getString('request_id');
+
+                                  if (requestId != null) {
+                                    print(
+                                        'Retrieved request_id from SharedPreferences: $requestId');
+                                  } else {
+                                    print(
+                                        'No request_id found in SharedPreferences');
+                                  }
+
+                                  print(
+                                      'This is Offer ID====${widget.offerId}');
+                                  print('Amount====${widget.amount}');
+                                  print(
+                                      'This Selected Payment Method Name====${selectedPaymentMethodName}');
+
+                                  // You can now use the requestId as needed, for example, in the acceptOffer function
+                                  acceptOffer(
+                                      requestId: requestId ?? '',
+                                      // Use request_id from SharedPreferences
+                                      offerId: widget.offerId.toString(),
+                                      amount: widget.amount.toString(),
+                                      paymentMethod:
+                                          selectedPaymentMethodName ==
+                                                  'Click Payment Method'
+                                              ? 2
+                                              : 3,
+                                      description: 'Safe Drive');
+                                },
+                              ),
+                      )
                     ],
                   ),
                 ),

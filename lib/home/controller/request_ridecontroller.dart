@@ -5,6 +5,7 @@ import 'package:cargo_delivery_app/apputils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constant/colors_utils.dart';
 import '../../model/MDCreateRequest.dart';
 import '../../widgets/custom_button.dart';
@@ -92,19 +93,37 @@ void requestAlert(mdCreateRequest) {
                     color: curvedBlueColor),
               ),
               SizedBox(height: 20.h),
+
+// Custom Button Code
               CustomButton(
                 buttonText: "OK".tr,
-                onPress: () {
+                onPress: () async {
                   print('mdCreateRequest.drivers=${mdCreateRequest}');
-                  Get.offAll(const BottomBarScreen());
-                  // Get.to(() => DriverRequestNotificationScreen(
-                  //     mdCreateRequest: mdCreateRequest));
+                  print(
+                      'mdCreateRequest!.request!.id!${mdCreateRequest!.request!.id!}');
+
+                  // Extract the ID
+                  int requestId = mdCreateRequest!.request!.id!;
+
+                  // Store the ID in SharedPreferences
+                  await storeRequestId(requestId);
+
+                  // Example: Navigate to another screen or perform further actions
+                  Get.offAll(BottomBarScreen());
+                  // Get.to(() => DriverRequestNotificationScreen(mdCreateRequest: mdCreateRequest));
                 },
                 width: 97.w,
                 height: 38.h,
-              )
+              ),
             ],
           ),
         );
       });
+}
+
+// Function to store data in SharedPreferences
+Future<void> storeRequestId(int requestId) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setInt('request_id', requestId);
+  print('Request ID saved: $requestId');
 }

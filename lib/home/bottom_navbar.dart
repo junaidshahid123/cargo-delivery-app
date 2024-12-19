@@ -6,13 +6,13 @@ import 'package:cargo_delivery_app/profile/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import '../constant/colors_utils.dart';
+import '../model/MDCreateRequest.dart';
 import '../profile/profile_page.dart';
 import 'orders/orders_view.dart';
 
 class BottomBarScreen extends StatefulWidget {
-  final int initialIndex; // Add this field to accept an initial index
+  final int initialIndex; // Accept an initial index
 
   const BottomBarScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
@@ -22,6 +22,7 @@ class BottomBarScreen extends StatefulWidget {
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
   late int _currentIndex;
+  late PageController _pageController;
 
   final List<Widget> _pages = [
     HomeScreen(),
@@ -34,27 +35,53 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.initialIndex; // Initialize _currentIndex with the passed value
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  void _onBottomNavTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _pages,
+        physics: const BouncingScrollPhysics(), // Optional for bounce effect
+      ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         elevation: 0,
         selectedItemColor: textcyanColor,
         unselectedItemColor: Colors.grey,
         selectedLabelStyle:
-        const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         unselectedLabelStyle:
-        const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+            const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
         currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onBottomNavTapped,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         items: [

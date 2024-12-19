@@ -111,7 +111,7 @@ Future<void> initServices() async {
 }
 
 class CargoApp extends StatefulWidget {
-  const CargoApp({super.key});
+  const   CargoApp({super.key});
 
   @override
   _CargoAppState createState() => _CargoAppState();

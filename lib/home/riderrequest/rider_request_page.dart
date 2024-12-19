@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/MDCreateRequest.dart';
 import '../MySample.dart';
 import '../bottom_navbar.dart';
@@ -29,10 +30,15 @@ class DriverRequestNotificationScreen extends StatefulWidget {
 
 class _DriverRequestNotificationScreenState
     extends State<DriverRequestNotificationScreen> {
-  final controller = Get.put(LocationController(userRepo: UserRepo()));
+  // final controller = Get.put(LocationController(userRepo: UserRepo()));
   Set<Marker> markers = {};
   Set<Circle> circles = {};
   final Set<Polyline> _polylines = {};
+
+  Future<int?> getStoredRequestId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('request_id'); // Retrieve the stored request_id
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,76 +47,76 @@ class _DriverRequestNotificationScreenState
     print('circles.length====${circles.length}');
 
     return Scaffold(
-      bottomSheet: Container(
-        decoration: BoxDecoration(
-            color: curvedBlueColor.withOpacity(0.76),
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: CustomButton(
-              buttonText: "Proceed".tr,
-              onPress: () {
-                Get.to(() => const BottomBarScreen());
-              }),
-        ),
+      appBar: AppBar(
+        title: Center(child: Text('Offers')),
       ),
-      body: Stack(
-        children: [
-          Container(
-            foregroundDecoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomRight,
-                colors: [
-                  const Color(0xff113946),
-                  const Color(0xff113946).withOpacity(0.02),
-                ],
-              ),
-            ),
-            decoration: const BoxDecoration(),
-            child: GoogleMap(
-              zoomControlsEnabled: true,
-              compassEnabled: true,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              polylines: _polylines,
-              myLocationEnabled: true,
-              zoomGesturesEnabled: true,
-              markers: Set<Marker>.of(markers),
-              mapType: MapType.terrain,
-              mapToolbarEnabled: true,
-              initialCameraPosition: CameraPosition(
-                target: controller.initialPos,
-                zoom: 17,
-              ),
-              onMapCreated: controller.onCreated,
-              onCameraMove: (CameraPosition position) =>
-                  controller.onCameraMove(position),
-              onCameraIdle: () async => controller.getMoveCamera(),
-              circles: Set<Circle>.of(circles),
-            ),
-          ),
-          Positioned(
-            height: MediaQuery.sizeOf(context).height / 6,
-            child: IconButton(
-              onPressed: () {
-                // You can use controller. () here to animate the camera to the initial position
-              },
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Positioned(
-            left: 10,
-            right: 10,
-            top: MediaQuery.sizeOf(context).height / 10,
-            height: MediaQuery.sizeOf(context).height - 180,
-            child: _buildRiderRequests(widget.mdCreateRequest),
-          ),
-        ],
+      backgroundColor: Colors.black,
+      // bottomSheet: Container(
+      //   decoration: BoxDecoration(
+      //       color: curvedBlueColor.withOpacity(0.76),
+      //       borderRadius: const BorderRadius.only(
+      //           topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      //   child: Padding(
+      //     padding: const EdgeInsets.all(30.0),
+      //     child: CustomButton(
+      //         buttonText: "Proceed".tr,
+      //         onPress: () {
+      //           Get.to(() => const BottomBarScreen());
+      //         }),
+      //   ),
+      // ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Container(
+            //   foregroundDecoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //       begin: Alignment.topCenter,
+            //       end: Alignment.bottomRight,
+            //       colors: [
+            //         const Color(0xff113946),
+            //         const Color(0xff113946).withOpacity(0.02),
+            //       ],
+            //     ),
+            //   ),
+            //   decoration: const BoxDecoration(),
+            //   child: GoogleMap(
+            //     zoomControlsEnabled: true,
+            //     compassEnabled: true,
+            //     rotateGesturesEnabled: true,
+            //     scrollGesturesEnabled: true,
+            //     polylines: _polylines,
+            //     myLocationEnabled: true,
+            //     zoomGesturesEnabled: true,
+            //     markers: Set<Marker>.of(markers),
+            //     mapType: MapType.terrain,
+            //     mapToolbarEnabled: true,
+            //     initialCameraPosition: CameraPosition(
+            //       target: controller.initialPos,
+            //       zoom: 17,
+            //     ),
+            //     onMapCreated: controller.onCreated,
+            //     onCameraMove: (CameraPosition position) =>
+            //         controller.onCameraMove(position),
+            //     onCameraIdle: () async => controller.getMoveCamera(),
+            //     circles: Set<Circle>.of(circles),
+            //   ),
+            // ),
+            // Positioned(
+            //   height: MediaQuery.sizeOf(context).height / 6,
+            //   child: IconButton(
+            //     onPressed: () {
+            //       // You can use controller. () here to animate the camera to the initial position
+            //     },
+            //     icon: const Icon(
+            //       Icons.menu,
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
+            _buildRiderRequests(widget.mdCreateRequest),
+          ],
+        ),
       ),
     );
   }
@@ -257,28 +263,29 @@ class _DriverRequestNotificationScreenState
                                 buttonTextColor: Colors.white,
                                 borderRadius: 100,
                                 buttonText: "Accept",
-                                onPress: () {
+                                onPress: () async {
                                   print(
                                       'Driver lat : ${request?.user?.latitude}');
                                   print(
                                       'Driver lng : ${request?.user?.longitude}');
-                                  Get.find<LocationController>()
-                                      .setDriverLocation(LatLng(
-                                    double.tryParse(
-                                          request?.user?.latitude ?? '0.0',
-                                        ) ??
-                                        0.0,
-                                    double.tryParse(
-                                          request?.user?.longitude ?? '0.0',
-                                        ) ??
-                                        0.0,
-                                  ));
+                                  // Get.find<LocationController>()
+                                  //     .setDriverLocation(LatLng(
+                                  //   double.tryParse(
+                                  //         request?.user?.latitude ?? '0.0',
+                                  //       ) ??
+                                  //       0.0,
+                                  //   double.tryParse(
+                                  //         request?.user?.longitude ?? '0.0',
+                                  //       ) ??
+                                  //       0.0,
+                                  // ));
                                   print('requestAmount====${request!.amount}');
-                                  print(
-                                      'requestAmount====${mdCreateRequest!.request!.id!}');
+                                  int? offerId = rideController
+                                      .requests.value!.offers![index].id;
+                                  print('offerId====${offerId}');
 
-                                  Get.to(() => PaymentScreen(mdCreateRequest,
-                                      request.amount, request.id));
+                                  Get.to(() =>
+                                      PaymentScreen(request.amount, offerId!));
                                   // Get.find<RideRequestsController>()
                                   //     .acceptDriverRequest(
                                   //   requestId: '${request?.requestId}',
@@ -310,78 +317,78 @@ class _DriverRequestNotificationScreenState
   initState() {
     super.initState();
 
-    if (widget.mdCreateRequest!.drivers != null) {
-      addInitialPositionMarker();
-      addDriverMarkers();
-      final Polyline polyline = Polyline(
-        polylineId: PolylineId('polyline_1'),
-        points: [
-          LatLng(31.4835, 74.3782),
-          LatLng(
-              controller.initialPos.latitude, controller.initialPos.longitude),
-          LatLng(31.4834, 74.3969),
-        ],
-        color: Colors.black,
-        width: 5,
-      );
-
-      circles.add(
-        Circle(
-          circleId: CircleId('1'),
-          center: LatLng(31.4834, 74.3969),
-          radius: 50,
-          // Set your desired radius here
-          fillColor: Colors.blue.withOpacity(0.3),
-          strokeColor: Colors.blue,
-          strokeWidth: 2,
-        ),
-      );
-      circles.add(
-        Circle(
-          circleId: CircleId('2'),
-          center: LatLng(31.4835, 74.3782),
-          radius: 50,
-          // Set your desired radius here
-          fillColor: Colors.blue.withOpacity(0.3),
-          strokeColor: Colors.blue,
-          strokeWidth: 2,
-        ),
-      );
-      circles.add(
-        Circle(
-          circleId: CircleId('3'),
-          center: controller.initialPos,
-          radius: 50,
-          // Set your desired radius here
-          fillColor: Colors.blue.withOpacity(0.3),
-          strokeColor: Colors.blue,
-          strokeWidth: 2,
-        ),
-      );
-    } else {
-      print("No drivers data available");
-    }
+    // if (widget.mdCreateRequest!.drivers != null) {
+    //   addInitialPositionMarker();
+    //   addDriverMarkers();
+    //   final Polyline polyline = Polyline(
+    //     polylineId: PolylineId('polyline_1'),
+    //     points: [
+    //       LatLng(31.4835, 74.3782),
+    //       LatLng(
+    //           controller.initialPos.latitude, controller.initialPos.longitude),
+    //       LatLng(31.4834, 74.3969),
+    //     ],
+    //     color: Colors.black,
+    //     width: 5,
+    //   );
+    //
+    //   circles.add(
+    //     Circle(
+    //       circleId: CircleId('1'),
+    //       center: LatLng(31.4834, 74.3969),
+    //       radius: 50,
+    //       // Set your desired radius here
+    //       fillColor: Colors.blue.withOpacity(0.3),
+    //       strokeColor: Colors.blue,
+    //       strokeWidth: 2,
+    //     ),
+    //   );
+    //   circles.add(
+    //     Circle(
+    //       circleId: CircleId('2'),
+    //       center: LatLng(31.4835, 74.3782),
+    //       radius: 50,
+    //       // Set your desired radius here
+    //       fillColor: Colors.blue.withOpacity(0.3),
+    //       strokeColor: Colors.blue,
+    //       strokeWidth: 2,
+    //     ),
+    //   );
+    //   circles.add(
+    //     Circle(
+    //       circleId: CircleId('3'),
+    //       center: controller.initialPos,
+    //       radius: 50,
+    //       // Set your desired radius here
+    //       fillColor: Colors.blue.withOpacity(0.3),
+    //       strokeColor: Colors.blue,
+    //       strokeWidth: 2,
+    //     ),
+    //   );
+    // } else {
+    //   print("No drivers data available");
+    // }
   }
 
-  addInitialPositionMarker() async {
-    markers.add(
-      Marker(
-        markerId: MarkerId('initial_pos'),
-        position: controller.initialPos,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      ),
-    );
-    markers.add(
-      Marker(
-        markerId: MarkerId('31.4834, 74.3969'),
-        position: LatLng(31.4834, 74.3969),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      ),
-    );
-
-    setState(() {});
-    print('markers.length in addInitialPositionMarker=${markers.length}');
-  }
+  // addInitialPositionMarker() async {
+  //   markers.add(
+  //     Marker(
+  //       markerId: MarkerId('initial_pos'),
+  //       position: controller.initialPos,
+  //       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+  //     ),
+  //   );
+  //   markers.add(
+  //     Marker(
+  //       markerId: MarkerId('31.4834, 74.3969'),
+  //       position: LatLng(31.4834, 74.3969),
+  //       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+  //     ),
+  //   );
+  //
+  //   setState(() {});
+  //   print('markers.length in addInitialPositionMarker=${markers.length}');
+  // }
 
   addDriverMarkers() {
     for (int i = 0; i < widget.mdCreateRequest!.drivers!.length; i++) {

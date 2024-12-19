@@ -357,7 +357,9 @@ class _LocationPageState extends State<LocationPage> {
                 ),
               ),
               onPressed: () {
-
+print(Get
+    .find<AuthController>()
+    .getLoginUserData()!.token);
                 if (_pickedLocation != null) {
                   final userId =
                       '${Get

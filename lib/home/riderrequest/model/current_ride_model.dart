@@ -23,22 +23,21 @@ class DashBoardModel {
   });
 
   factory DashBoardModel.fromMap(Map<String, dynamic> json) => DashBoardModel(
-    status: json["status"],
-    categories: List<Category>.from(
-        json["categories"].map((x) => Category.fromMap(x))),
-    imageBaseUrl: json["image_base_url"],
-    currentRides: List<CurrentRides>.from(
-        json["currentRides"].map((x) => CurrentRides.fromJson(x))),
-  );
+        status: json["status"],
+        categories: List<Category>.from(
+            json["categories"].map((x) => Category.fromMap(x))),
+        imageBaseUrl: json["image_base_url"],
+        currentRides: List<CurrentRides>.from(
+            json["currentRides"].map((x) => CurrentRides.fromJson(x))),
+      );
 
   Map<String, dynamic> toMap() => {
-    "status": status,
-    "categories": List<dynamic>.from(categories.map((x) => x.toMap())),
-    "image_base_url": imageBaseUrl,
-    "currentRides": List<dynamic>.from(currentRides.map((x) => x.toMap())),
-  };
+        "status": status,
+        "categories": List<dynamic>.from(categories.map((x) => x.toMap())),
+        "image_base_url": imageBaseUrl,
+        "currentRides": List<dynamic>.from(currentRides.map((x) => x.toMap())),
+      };
 }
-
 
 class Category {
   String id;
@@ -92,7 +91,6 @@ class Category {
       };
 }
 
-
 class CurrentRides {
   int id;
   String requestId;
@@ -134,19 +132,18 @@ class CurrentRides {
   }
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "request_id": requestId,
-    "amount": amount,
-    "user_id": userId,
-    "is_accept": isAccept,
-    "created_at": createdAt.toIso8601String(),
-    "updated_at": updatedAt.toIso8601String(),
-    "data": data,
-    "request": request,
-    "user": user,
-  };
+        "id": id,
+        "request_id": requestId,
+        "amount": amount,
+        "user_id": userId,
+        "is_accept": isAccept,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+        "data": data,
+        "request": request,
+        "user": user,
+      };
 }
-
 
 class Data {
   Headers headers;
@@ -202,9 +199,6 @@ class Request {
   String parcelLat;
   String parcelLong;
   String parcelAddress;
-  String receiverLat;
-  String receiverLong;
-  String receiverAddress;
 
   Request({
     required this.id,
@@ -212,9 +206,6 @@ class Request {
     required this.parcelLat,
     required this.parcelLong,
     required this.parcelAddress,
-    required this.receiverLat,
-    required this.receiverLong,
-    required this.receiverAddress,
   });
 
   factory Request.fromJson(Map<String, dynamic> json) {
@@ -224,9 +215,6 @@ class Request {
       parcelLat: json['parcel_lat'],
       parcelLong: json['parcel_long'],
       parcelAddress: json['parcel_address'],
-      receiverLat: json['receiver_lat'],
-      receiverLong: json['receiver_long'],
-      receiverAddress: json['receiver_address'],
     );
   }
 }
@@ -262,4 +250,3 @@ class User {
     );
   }
 }
-

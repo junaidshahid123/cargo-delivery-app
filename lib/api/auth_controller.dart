@@ -58,7 +58,8 @@ class AuthController extends GetxController implements GetxService {
     required String mobileNumber,
     int? userType,
     required String fcmToken,
-  }) async {
+  }) async
+  {
     // Debug: Print input parameters
     print('Password: $password');
     print('Mobile Number: $mobileNumber');

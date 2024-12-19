@@ -11,6 +11,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home/bottom_navbar.dart';
+import 'home/riderrequest/rider_request_page.dart';
 
 class MessagingService {
   static String? fcmToken; // Variable to store the FCM token
@@ -123,12 +124,33 @@ class MessagingService {
   }
 
   // Handling a notification click event by navigating to the specified screen
-  void _handleNotificationClick(BuildContext context, RemoteMessage message) {
+  Future<void> _handleNotificationClick(
+      BuildContext context, RemoteMessage message) async {
     final notificationData = message.data;
     if (message.notification?.title == 'New Message') {
       Get.offAll(() => ChatPage(
             message: message,
           ));
+    }
+
+    if (message.notification?.title == 'New Offer') {
+      print('message.data=========${message.data}');
+
+      // Extract the request_id from message.data
+      String? requestId = message.data['request_id'];
+
+      if (requestId != null) {
+        // Store the request_id in SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('request_id', requestId);
+
+        print('Stored request_id in SharedPreferences: $requestId');
+      } else {
+        print('No request_id found in message.data');
+      }
+
+      // Navigate to the DriverRequestNotificationScreen
+      Get.offAll(() => DriverRequestNotificationScreen());
     }
   }
 }
@@ -145,7 +167,9 @@ class LocalNoticationsService {
   LocalNoticationsService(
     this._notificationsPlugin,
   );
+
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
+
   Future init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings(

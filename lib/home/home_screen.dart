@@ -390,110 +390,314 @@ class HomeScreen extends StatelessWidget {
                             color: curvedBlueColor),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Get.to(() => const DeliveryDetailsScreen(
-                                selectedVehicle: 'Truck'));
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                "assets/images/truck.png",
-                                height: 102.h,
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.all(10.w),
+                        // Add padding for overall spacing
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Get.to(() => const DeliveryDetailsScreen(
+                                  selectedVehicle: 'Truck'));
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 100.h,
+                              // Adjusted height for consistency
+                              margin: EdgeInsets.symmetric(vertical: 12.h),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 3,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 5.h),
-                              Text(
-                                "Truck".tr,
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xff575353)),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    // Half width for image
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/truck.png"),
+                                        fit: BoxFit
+                                            .fill, // Ensures the image fills the container
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Optional rounded corners
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  // Space between image and text
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Truck".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: const Color(0xff575353),
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        // Space between name and price
+                                        Text(
+                                          "SAR 3.22/Km".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: curvedBlueColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "SAR 3.22/Km".tr,
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: curvedBlueColor),
-                              ),
-                              // InkWell(
-                              //   onTap: () {
-                              //     Get.to(() => const DeliveryDetailsScreen(selectedVehicle: 'Truck'));
-                              //   },
-                              //   child: Container(
-                              //       margin: const EdgeInsets.all(5),
-                              //       height: 36.h,
-                              //       width: 103.w,
-                              //       alignment: Alignment.center,
-                              //       decoration: BoxDecoration(
-                              //           color: textBrownColor,
-                              //           borderRadius: BorderRadius.circular(20)),
-                              //       child: Text(
-                              //         "Book now".tr,
-                              //         style: TextStyle(
-                              //             fontSize: 14.sp,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white),
-                              //       )),
-                              // ),
-                            ],
+                            ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Get.to(() => const DeliveryDetailsScreen(
-                                selectedVehicle: 'Car'));
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                "assets/images/car.png",
-                                height: 102.h,
+                          // Repeat the same structure for the other containers
+                          InkWell(
+                            onTap: () {
+                              Get.to(() => const DeliveryDetailsScreen(
+                                  selectedVehicle: 'Car'));
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 100.h,
+                              // Adjusted height for consistency
+                              margin: EdgeInsets.symmetric(vertical: 12.h),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 3,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 5.h),
-                              Text(
-                                "Car".tr,
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xff575353)),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    // Half width for image
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            AssetImage("assets/images/car.png"),
+                                        fit: BoxFit
+                                            .fill, // Ensures the image fills the container
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Optional rounded corners
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  // Space between image and text
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Car".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: const Color(0xff575353),
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        // Space between name and price
+                                        Text(
+                                          "SAR 3.22/Km".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: curvedBlueColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "SAR 3.22/Km".tr,
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: curvedBlueColor),
-                              ),
-                              // InkWell(
-                              //   onTap: () {
-                              //     Get.to(() => const DeliveryDetailsScreen(selectedVehicle: 'Car'));
-                              //   },
-                              //   child: Container(
-                              //       margin: const EdgeInsets.all(5),
-                              //       height: 36.h,
-                              //       width: 103.w,
-                              //       alignment: Alignment.center,
-                              //       decoration: BoxDecoration(
-                              //           color: textBrownColor,
-                              //           borderRadius: BorderRadius.circular(20)),
-                              //       child: Text(
-                              //         "Book now".tr,
-                              //         style: TextStyle(
-                              //             fontSize: 14.sp,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.white),
-                              //       )),
-                              // ),
-                            ],
+                            ),
                           ),
-                        )
-                      ],
+                          InkWell(
+                            onTap: () {
+                              Get.to(() => const DeliveryDetailsScreen(
+                                  selectedVehicle: 'Plane'));
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 100.h,
+                              // Adjusted height for consistency
+                              margin: EdgeInsets.symmetric(vertical: 12.h),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 3,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    // Half width for image
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/planeIcon.jpg"),
+                                        fit: BoxFit
+                                            .fill, // Ensures the image fills the container
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Optional rounded corners
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  // Space between image and text
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Plane".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: const Color(0xff575353),
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        // Space between name and price
+                                        Text(
+                                          "SAR 3.22/Km".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: curvedBlueColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Get.to(() => const DeliveryDetailsScreen(
+                                  selectedVehicle: 'Train'));
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 100.h,
+                              // Adjusted height for consistency
+                              margin: EdgeInsets.symmetric(vertical: 12.h),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 3,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    // Half width for image
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/trainIcon.jpg"),
+                                        fit: BoxFit
+                                            .fill, // Ensures the image fills the container
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Optional rounded corners
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  // Space between image and text
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Train".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: const Color(0xff575353),
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        // Space between name and price
+                                        Text(
+                                          "SAR 3.22/Km".tr,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: curvedBlueColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),
