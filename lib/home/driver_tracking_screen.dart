@@ -51,7 +51,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
     try {
       // Request route from current location to source
       var currentToSourceResponse = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/directions/json?origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=$apiKey'));
+          'https://maps.googleapis.com/maps/api/directions/json?origin=$sourceLatitude,$sourceLongitude&destination=$destinationLatitude,$destinationLongitude&key=$apiKey'));
       var currentToSourceData = jsonDecode(currentToSourceResponse.body);
       if (currentToSourceData['routes'].isEmpty) {
         throw Exception('No routes found from current location to source.');
@@ -63,7 +63,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
 
       // Request route from source to destination
       var sourceToDestinationResponse = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/directions/json?origin=${sourceLatitude},${sourceLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=$apiKey'));
+          'https://maps.googleapis.com/maps/api/directions/json?origin=$sourceLatitude,$sourceLongitude&destination=$destinationLatitude,$destinationLongitude&key=$apiKey'));
       var sourceToDestinationData =
           jsonDecode(sourceToDestinationResponse.body);
       if (sourceToDestinationData['routes'].isEmpty) {
@@ -162,7 +162,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
       }
     } catch (e) {
       print('Error: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -205,7 +205,7 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: mdTracking == null
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Container(
@@ -220,7 +220,10 @@ class _DriverTrackingScreenState extends State<DriverTrackingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.only(
+                      top: 50,
+                      left: 20,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop();
