@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import '../constant/colors_utils.dart';
 import '../home/bottom_navbar.dart';
 import '../home/controller/home_controller.dart';
+import '../offers/offers_view.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -162,6 +163,21 @@ class ProfilePage extends StatelessWidget {
                 ),
                 title: Text(
                   'Trips'.tr,
+                  style: TextStyle(fontSize: 16.sp),
+                ),
+                trailing: const Icon(Icons.keyboard_arrow_right),
+              ),
+              ListTile(
+                onTap: () => Get.to(() => const OffersView()),
+                dense: true,
+                leading: Image.asset(
+                  'assets/images/offer.png',
+                  color: Colors.black,
+                  height: 20.h,
+                  width: 20.h,
+                ),
+                title: Text(
+                  'Offers'.tr,
                   style: TextStyle(fontSize: 16.sp),
                 ),
                 trailing: const Icon(Icons.keyboard_arrow_right),

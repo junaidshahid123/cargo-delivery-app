@@ -152,10 +152,19 @@ class LocalizationService {
       "No Data Found!": "No Data Found!",
       "earning_sar": "Earning: SAR",
       "trip_id": "Trip ID:",
+      "Offers": "Offers",
+      "Accept":"Accept",
+      "Decline":"Decline",
+      "Price:":"Price:",
+      "Time:":"Time:",
+      "Date:":"Date:",
+      "To:":"To:",
+      "From:":"From:"
 
       // Add more key-value pairs for English translations
     },
     'ar': {
+      "Offers": "عروض",
       "trip_id": "رقم الرحلة:",
       "No Data Found!": "لم يتم العثور على بيانات!",
       "earning_sar": "الإيرادات: ريال سعودي",

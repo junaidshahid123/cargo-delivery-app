@@ -111,7 +111,7 @@ Future<void> initServices() async {
 }
 
 class CargoApp extends StatefulWidget {
-  const   CargoApp({super.key});
+  const CargoApp({super.key});
 
   @override
   _CargoAppState createState() => _CargoAppState();
@@ -199,7 +199,7 @@ class _CargoAppState extends State<CargoApp> {
                 _navigateToInitialRoute();
                 if (_initialMessage == null) {
                   Get.offAll(() => Get.find<AuthController>().isLogedIn()
-                      ?  LocationPage()
+                      ? LocationPage()
                       : const WelcomeScreen());
                 }
               },

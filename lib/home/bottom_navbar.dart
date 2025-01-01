@@ -1,5 +1,4 @@
 import 'package:cargo_delivery_app/home/chat/chat_page.dart';
-import 'package:cargo_delivery_app/home/delivery_details_screen.dart';
 import 'package:cargo_delivery_app/home/home_screen.dart';
 import 'package:cargo_delivery_app/home/more/more_view.dart';
 import 'package:cargo_delivery_app/profile/update_profile.dart';

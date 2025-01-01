@@ -134,6 +134,7 @@ class LoginScreen extends StatelessWidget {
                   CustomButton(
                       buttonText: "Login".tr,
                       onPress: () async {
+                        print('fcmToken=========${fcmToken!}');
                         if (_formKey.currentState!.validate()) {
                           Get.find<AuthController>().login(
                               userType: 1,

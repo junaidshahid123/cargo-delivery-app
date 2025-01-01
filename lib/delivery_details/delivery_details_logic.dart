@@ -6,18 +6,34 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../model/MDGetVehicleCategories.dart';
 import '../../model/user_model.dart';
+import 'delivery_details_model.dart';
 
 class DeliveryController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    getVehicleCategories();
+    init();
   }
+
+  init() async {
+    isLoading.value = true;
+    await getVehicleCategories();
+    await getAllCities();
+    isLoading.value = false;
+    update();
+  }
+  String selectedCityFromId='-1';
+  String selectedCityToId='-1';
+
+  String? fromValue;
+  String? toValue;
+  RxBool isLoading = false.obs;
 
   RxString selectedVehicleId = '0'.obs;
   RxString selectedVehicleName = '-1'.obs;
   MDGetVehicleCategories? mdGetVehicleCategories;
+  List<MDCities> mdCities = [];
   RxBool showDropDown = false.obs;
   DateTime? _selectedDate;
   final TextEditingController dateController = TextEditingController();
@@ -57,6 +73,35 @@ class DeliveryController extends GetxController {
       return jsonResponse;
     } else {
       throw Exception('Failed to load getVehicleCategories');
+    }
+  }
+
+  Future<List> getAllCities() async {
+    final url = Uri.parse('https://thardi.com/api/cities');
+    HttpOverrides.global = MyHttpOverrides();
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        "Authorization": "Bearer${UserModel().token}"
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      print('This is jsonResponse in getAllCities=========${jsonResponse}');
+      if (jsonResponse is List) {
+        mdCities = jsonResponse
+            .map((city) => MDCities.fromJson(city as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Expected a list but got something else');
+      }
+      update();
+      return jsonResponse;
+    } else {
+      throw Exception('Failed to load getAllCities');
     }
   }
 

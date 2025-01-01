@@ -76,11 +76,24 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  // Function to retrieve the request_id from SharedPreferences
   Future<String?> getRequestId() async {
     HttpOverrides.global = MyHttpOverrides();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('request_id');
+
+    // Ensure the value is converted to a String, if necessary
+    final requestId = prefs.get(
+        'request_id'); // Use `get` instead of `getString` to support multiple types
+    return requestId?.toString();
+  }
+
+// Usage example
+  Future<void> fetchRequestId() async {
+    try {
+      final requestId = await getRequestId();
+      print("Request ID: $requestId");
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   void _addMessage() async {
@@ -166,7 +179,7 @@ class _ChatPageState extends State<ChatPage> {
                         color: Colors.white,
                       ),
                     ),
-                     Text(
+                    Text(
                       'Driver'.tr,
                       style: TextStyle(color: Colors.white),
                     ),
@@ -237,6 +250,11 @@ class _ChatPageState extends State<ChatPage> {
                               borderSide:
                                   const BorderSide(color: Colors.white)),
                         ),
+                        onSubmitted: (value) {
+                          if (value.trim().isNotEmpty) {
+                            _addMessage(); // Trigger message sending
+                          }
+                        },
                       ),
                     ),
                     SizedBox(

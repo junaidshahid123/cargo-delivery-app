@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../alltrips/controller/delivery_controller.dart';
 import '../api/application_url.dart';
 import '../api/auth_controller.dart';
 import '../model/MDCreateRequest.dart';

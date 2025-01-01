@@ -2,7 +2,6 @@ import 'package:cargo_delivery_app/api/application_url.dart';
 import 'package:cargo_delivery_app/api/user_repo.dart';
 import 'package:cargo_delivery_app/constant/colors_utils.dart';
 import 'package:cargo_delivery_app/home/controller/home_controller.dart';
-import 'package:cargo_delivery_app/home/delivery_details_screen.dart';
 import 'package:cargo_delivery_app/home/driver_tracking_screen.dart';
 import 'package:cargo_delivery_app/profile/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../delivery_details/delivery_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});

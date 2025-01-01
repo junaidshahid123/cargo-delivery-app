@@ -48,7 +48,7 @@ class _DriverRequestNotificationScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Offers')),
+        title: Center(child: Text('Offers'.tr)),
       ),
       backgroundColor: Colors.black,
       // bottomSheet: Container(
@@ -164,7 +164,7 @@ class _DriverRequestNotificationScreenState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Car',
+                                      'Car'.tr,
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -245,7 +245,7 @@ class _DriverRequestNotificationScreenState
                                 borderRadius: 100,
                                 buttonColor: const Color(0xffF5F5F5),
                                 buttonTextColor: const Color(0xffCF442B),
-                                buttonText: "Decline",
+                                buttonText: "Decline".tr,
                                 onPress: () {
                                   rideController.requests.value?.offers
                                       ?.removeAt(index);
@@ -262,7 +262,7 @@ class _DriverRequestNotificationScreenState
                                 buttonColor: const Color(0xff03AB3C),
                                 buttonTextColor: Colors.white,
                                 borderRadius: 100,
-                                buttonText: "Accept",
+                                buttonText: "Accept".tr,
                                 onPress: () async {
                                   print(
                                       'Driver lat : ${request?.user?.latitude}');
